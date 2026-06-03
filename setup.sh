@@ -19,6 +19,9 @@ npm install -g @anthropic-ai/claude-code
 uv tool install claude-tg
 pip3 install requests
 
+echo "==> Применяю патчи claude-tg (голос-only, Обрабатываю, multi-account)"
+python3 patches/apply_patches.py
+
 echo ""
 echo "==> Базовая установка готова. Осталось вручную:"
 echo "  1. claude setup-token   (на машине с браузером) → CLAUDE_CODE_OAUTH_TOKEN"

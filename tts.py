@@ -11,33 +11,43 @@ import os
 import subprocess
 import sys
 import tempfile
+import time
 
 import requests
 
 MODEL = "eleven_multilingual_v2"
 
 
-def fetch_audio(text: str) -> bytes:
-    """Запросить озвучку у ElevenLabs, вернуть mp3-байты."""
+def fetch_audio(text: str, retries: int = 3) -> bytes:
+    """Запросить озвучку у ElevenLabs, вернуть mp3-байты. С повторами при сбое."""
     voice_id = os.environ["ELEVENLABS_VOICE_ID"]
     api_key = os.environ["ELEVENLABS_API_KEY"]
     url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
-    resp = requests.post(
-        url,
-        headers={"xi-api-key": api_key, "Content-Type": "application/json"},
-        json={
-            "text": text,
-            "model_id": MODEL,
-            "voice_settings": {
-                "stability": 0.5,
-                "similarity_boost": 0.75,
-                "style": 0.3,
-            },
+    payload = {
+        "text": text,
+        "model_id": MODEL,
+        "voice_settings": {
+            "stability": 0.5,
+            "similarity_boost": 0.75,
+            "style": 0.3,
         },
-        timeout=30,
-    )
-    resp.raise_for_status()
-    return resp.content
+    }
+    last_err = None
+    for attempt in range(retries):
+        try:
+            resp = requests.post(
+                url,
+                headers={"xi-api-key": api_key, "Content-Type": "application/json"},
+                json=payload,
+                timeout=30,
+            )
+            resp.raise_for_status()
+            return resp.content
+        except Exception as e:
+            last_err = e
+            if attempt < retries - 1:
+                time.sleep(1.5 * (attempt + 1))  # backoff: 1.5s, 3s
+    raise last_err
 
 
 def to_voice(mp3_bytes: bytes, out_path: str) -> str:
