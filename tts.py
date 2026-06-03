@@ -8,6 +8,7 @@ Usage: python3 tts.py "текст ответа" [output.ogg]
   to_voice(mp3, out) -> путь .ogg  (ffmpeg mp3→opus, формат Telegram voice)
 """
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -16,6 +17,17 @@ import time
 import requests
 
 MODEL = "eleven_multilingual_v2"
+
+
+def normalize_for_tts(text: str) -> str:
+    """Очистить текст для озвучки: убрать разметку/эмодзи, склеить переносы,
+    тире → запятая (мягкая пауза). Это чинит «рваные» паузы ElevenLabs."""
+    text = re.sub(r"[*_#`>]", "", text)            # markdown
+    text = text.replace("\n", " ")                  # переносы строк → пробел
+    text = re.sub(r"\s*[—–]\s*", ", ", text)        # длинное тире → запятая
+    text = re.sub(r"[^\w\s.,!?;:()«»\"'\-]", "", text, flags=re.UNICODE)  # убрать эмодзи/символы
+    text = re.sub(r"\s+", " ", text)                # схлопнуть пробелы
+    return text.strip()
 
 
 def fetch_audio(text: str, retries: int = 3) -> bytes:
@@ -27,9 +39,10 @@ def fetch_audio(text: str, retries: int = 3) -> bytes:
         "text": text,
         "model_id": MODEL,
         "voice_settings": {
-            "stability": 0.5,
-            "similarity_boost": 0.75,
-            "style": 0.3,
+            "stability": 0.65,
+            "similarity_boost": 0.8,
+            "style": 0.0,
+            "use_speaker_boost": True,
         },
     }
     last_err = None
@@ -67,7 +80,7 @@ def to_voice(mp3_bytes: bytes, out_path: str) -> str:
 
 
 def synthesize(text: str, out_path: str = "/tmp/answer.ogg") -> str:
-    return to_voice(fetch_audio(text), out_path)
+    return to_voice(fetch_audio(normalize_for_tts(text)), out_path)
 
 
 if __name__ == "__main__":

@@ -218,6 +218,23 @@ def _current_chat_id():
     open(p, "w").write(m)
 
 
+def patch_media(base):
+    """Groq STT: явный русский язык + научный prompt → точнее распознаёт термины."""
+    p = os.path.join(base, "media.py")
+    m = open(p).read()
+    if 'language="ru"' in m:
+        return
+    marker = 'model="whisper-large-v3",'
+    if marker not in m:
+        return
+    add = (marker
+           + '\n                language="ru",'
+           + '\n                prompt="Научно-популярный вопрос о физике, астрономии, '
+             'химии, биологии, экологии. Термины: рассеяние, гравитация, спектр, '
+             'молекула, энергия, частота, орбита, давление.",')
+    open(p, "w").write(m.replace(marker, add, 1))
+
+
 def main():
     base = find_base()
     patch_stream(base)
@@ -225,7 +242,8 @@ def main():
     patch_config(base)
     patch_bot_multiaccount(base)
     patch_mcp(base)
-    for f in ("bot.py", "stream.py", "config.py", "mcp_server.py"):
+    patch_media(base)
+    for f in ("bot.py", "stream.py", "config.py", "mcp_server.py", "media.py"):
         ast.parse(open(os.path.join(base, f)).read())
     shutil.rmtree(os.path.join(base, "__pycache__"), ignore_errors=True)
     print(f"OK: все патчи применены к {base}")
