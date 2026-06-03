@@ -39,8 +39,8 @@ def fetch_audio(text: str, retries: int = 3) -> bytes:
         "text": text,
         "model_id": MODEL,
         "voice_settings": {
-            "stability": 0.65,
-            "similarity_boost": 0.8,
+            "stability": 0.5,
+            "similarity_boost": 0.75,
             "style": 0.0,
             "use_speaker_boost": True,
         },
