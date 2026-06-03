@@ -25,7 +25,7 @@ def normalize_for_tts(text: str) -> str:
     text = re.sub(r"[*_#`>]", "", text)            # markdown
     text = text.replace("\n", " ")                  # переносы строк → пробел
     text = re.sub(r"\s*[—–]\s*", ", ", text)        # длинное тире → запятая
-    text = re.sub(r"[^\w\s.,!?;:()«»\"'\-]", "", text, flags=re.UNICODE)  # убрать эмодзи/символы
+    text = re.sub(r"[^\w\s.,!?;:()«»\"'\-́]", "", text, flags=re.UNICODE)  # убрать эмодзи/символы (СОХРАНИТЬ ударение ´ U+0301)
     text = re.sub(r"\s+", " ", text)                # схлопнуть пробелы
     return text.strip()
 
