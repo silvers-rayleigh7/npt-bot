@@ -1,37 +1,32 @@
-"""Тест tts.py: конвертация mp3 → opus ogg (формат Telegram voice).
-
-fetch_audio() (ElevenLabs) мокается; to_voice() тестируется на реальном
-ffmpeg-сгенерированном mp3 — без расхода ElevenLabs-токенов.
-"""
+"""Тесты tts.py (Yandex SpeechKit): нормализация текста + формирование запроса.
+Сеть мокается — токены Yandex не расходуются."""
 import os
-import subprocess
 import sys
-import tempfile
+from unittest.mock import patch, MagicMock
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from tts import to_voice
+import tts
 
 
-def _make_test_mp3(path):
-    """Сгенерировать валидный 1-сек mp3 тоном 440 Гц (без ElevenLabs)."""
-    subprocess.run(
-        ["ffmpeg", "-f", "lavfi", "-i", "sine=frequency=440:duration=1",
-         "-c:a", "libmp3lame", path, "-y"],
-        check=True, capture_output=True,
-    )
+def test_normalize_убирает_разметку_и_эмодзи():
+    r = tts.normalize_for_tts("Вот **парадокс** — свет белый.\n\nНебо голубое! 🌌")
+    assert "*" not in r and "🌌" not in r and "\n" not in r
+    assert "—" not in r  # тире → запятая
+    assert "парадокс" in r and "голубое" in r
 
 
-def test_to_voice_produces_opus_ogg():
-    with tempfile.TemporaryDirectory() as d:
-        mp3 = os.path.join(d, "in.mp3")
-        ogg = os.path.join(d, "out.ogg")
-        _make_test_mp3(mp3)
-        with open(mp3, "rb") as f:
-            result = to_voice(f.read(), ogg)
-        assert os.path.exists(result)
-        probe = subprocess.run(
-            ["ffprobe", "-v", "error", "-select_streams", "a:0",
-             "-show_entries", "stream=codec_name", "-of", "csv=p=0", result],
-            capture_output=True, text=True,
-        )
-        assert "opus" in probe.stdout  # Telegram voice требует opus
+def test_synthesize_запрашивает_oggopus_ru():
+    with patch.dict(os.environ, {"YANDEX_API_KEY": "k", "YANDEX_FOLDER_ID": "f"}):
+        with patch("tts.requests.post") as post:
+            resp = MagicMock()
+            resp.content = b"OGGfake"
+            resp.raise_for_status = MagicMock()
+            post.return_value = resp
+            out = tts.synthesize("Привет, наука.", "/tmp/_t.ogg")
+            assert out == "/tmp/_t.ogg"
+            data = post.call_args.kwargs["data"]
+            assert data["format"] == "oggopus"
+            assert data["lang"] == "ru-RU"
+            assert data["folderId"] == "f"
+            assert os.path.exists("/tmp/_t.ogg")
+    os.remove("/tmp/_t.ogg")

@@ -1,86 +1,64 @@
 #!/usr/bin/env python3
-"""ElevenLabs TTS → Telegram voice (opus ogg).
+"""Yandex SpeechKit TTS → Telegram voice (oggopus напрямую, без ffmpeg).
 
+Нативно-русский движок: правильные ударения и интонация из коробки.
 Usage: python3 tts.py "текст ответа" [output.ogg]
 
-Две функции:
-  fetch_audio(text) -> mp3-байты   (ElevenLabs API)
-  to_voice(mp3, out) -> путь .ogg  (ffmpeg mp3→opus, формат Telegram voice)
+Env: YANDEX_API_KEY, YANDEX_FOLDER_ID, YANDEX_VOICE (по умолч. filipp), YANDEX_SPEED.
 """
 import os
 import re
-import subprocess
 import sys
-import tempfile
 import time
 
 import requests
 
-MODEL = "eleven_multilingual_v2"
+API_URL = "https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize"
+DEFAULT_VOICE = "filipp"  # мужской русский; альтернативы: ermil, zahar, alena, jane
 
 
 def normalize_for_tts(text: str) -> str:
-    """Очистить текст для озвучки: убрать разметку/эмодзи, склеить переносы,
-    тире → запятая (мягкая пауза). Это чинит «рваные» паузы ElevenLabs."""
-    text = re.sub(r"[*_#`>]", "", text)            # markdown
-    text = text.replace("\n", " ")                  # переносы строк → пробел
-    text = re.sub(r"\s*[—–]\s*", ", ", text)        # длинное тире → запятая
-    text = re.sub(r"[^\w\s.,!?;:()«»\"'\-́]", "", text, flags=re.UNICODE)  # убрать эмодзи/символы (СОХРАНИТЬ ударение ´ U+0301)
-    text = re.sub(r"\s+", " ", text)                # схлопнуть пробелы
+    """Очистить текст для озвучки: убрать markdown/эмодзи, склеить переносы,
+    тире → запятая. Знак «+» сохраняем — это разметка ударения Yandex (опционально)."""
+    text = re.sub(r"[*_#`>]", "", text)
+    text = text.replace("\n", " ")
+    text = re.sub(r"\s*[—–]\s*", ", ", text)
+    text = re.sub(r"[^\w\s.,!?;:()«»\"'\-+]", "", text, flags=re.UNICODE)
+    text = re.sub(r"\s+", " ", text)
     return text.strip()
 
 
-def fetch_audio(text: str, retries: int = 3) -> bytes:
-    """Запросить озвучку у ElevenLabs, вернуть mp3-байты. С повторами при сбое."""
-    voice_id = os.environ["ELEVENLABS_VOICE_ID"]
-    api_key = os.environ["ELEVENLABS_API_KEY"]
-    url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
-    payload = {
-        "text": text,
-        "model_id": MODEL,
-        "voice_settings": {
-            "stability": 0.5,
-            "similarity_boost": 0.75,
-            "style": 0.0,
-            "use_speaker_boost": True,
-        },
+def synthesize(text: str, out_path: str = "/tmp/answer.ogg", retries: int = 3) -> str:
+    """Озвучить текст через Yandex SpeechKit, сохранить oggopus (формат Telegram voice)."""
+    api_key = os.environ["YANDEX_API_KEY"]
+    folder = os.environ["YANDEX_FOLDER_ID"]
+    data = {
+        "text": normalize_for_tts(text),
+        "voice": os.environ.get("YANDEX_VOICE", DEFAULT_VOICE),
+        "folderId": folder,
+        "lang": "ru-RU",
+        "format": "oggopus",
+        "sampleRateHertz": "48000",
+        "speed": os.environ.get("YANDEX_SPEED", "1.0"),
     }
     last_err = None
     for attempt in range(retries):
         try:
-            resp = requests.post(
-                url,
-                headers={"xi-api-key": api_key, "Content-Type": "application/json"},
-                json=payload,
+            r = requests.post(
+                API_URL,
+                headers={"Authorization": f"Api-Key {api_key}"},
+                data=data,
                 timeout=30,
             )
-            resp.raise_for_status()
-            return resp.content
+            r.raise_for_status()
+            with open(out_path, "wb") as f:
+                f.write(r.content)
+            return out_path
         except Exception as e:
             last_err = e
             if attempt < retries - 1:
-                time.sleep(1.5 * (attempt + 1))  # backoff: 1.5s, 3s
+                time.sleep(1.5 * (attempt + 1))
     raise last_err
-
-
-def to_voice(mp3_bytes: bytes, out_path: str) -> str:
-    """Конвертировать mp3-байты в opus ogg (формат Telegram voice)."""
-    with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as f:
-        f.write(mp3_bytes)
-        mp3_path = f.name
-    try:
-        subprocess.run(
-            ["ffmpeg", "-i", mp3_path, "-c:a", "libopus", "-b:a", "32k",
-             "-ar", "48000", out_path, "-y"],
-            check=True, capture_output=True,
-        )
-    finally:
-        os.unlink(mp3_path)
-    return out_path
-
-
-def synthesize(text: str, out_path: str = "/tmp/answer.ogg") -> str:
-    return to_voice(fetch_audio(normalize_for_tts(text)), out_path)
 
 
 if __name__ == "__main__":
