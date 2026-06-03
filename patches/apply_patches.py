@@ -125,6 +125,8 @@ def patch_config(base):
 def patch_bot_multiaccount(base):
     p = os.path.join(base, "bot.py")
     b = open(p).read()
+    if "import json" not in b[:1500]:  # allowlist использует json — в PyPI-версии импорта нет
+        b = b.replace("import os\n", "import os\nimport json\n", 1)
     if "def cmd_start" not in b:
         old_auth = '''    def _is_authorized(self, update: Update) -> bool:
         return update.effective_chat and update.effective_chat.id == self.config.chat_id'''
