@@ -217,6 +217,38 @@ def _current_chat_id():
         return os.environ.get("TELEGRAM_CHAT_ID")'''
     m = m.replace('mcp = FastMCP("claude-tg")', helper, 1)
     m = m.replace('    chat_id = os.environ.get("TELEGRAM_CHAT_ID")', '    chat_id = _current_chat_id()', 1)
+    # voice-маршрутизация: PyPI-версия шлёт всё документом → .ogg должен идти как send_voice
+    if "send_voice" not in m:
+        old_send = '''    bot = Bot(token=token)
+    async with bot:
+        with path.open("rb") as f:
+            await bot.send_document(
+                chat_id=int(chat_id),
+                document=f,
+                filename=path.name,
+                caption=caption or None,
+            )'''
+        new_send = '''    ext = path.suffix.lower()
+    bot = Bot(token=token)
+    async with bot:
+        with path.open("rb") as f:
+            if ext in {".ogg", ".oga", ".opus"}:
+                try:
+                    await bot.send_voice(chat_id=int(chat_id), voice=f, caption=caption or None)
+                except Exception:
+                    f.seek(0)
+                    await bot.send_audio(chat_id=int(chat_id), audio=f, caption=caption or None)
+            elif ext in {".mp3", ".m4a", ".aac", ".flac", ".wav"}:
+                await bot.send_audio(chat_id=int(chat_id), audio=f, caption=caption or None)
+            else:
+                await bot.send_document(
+                    chat_id=int(chat_id),
+                    document=f,
+                    filename=path.name,
+                    caption=caption or None,
+                )'''
+        if old_send in m:
+            m = m.replace(old_send, new_send)
     open(p, "w").write(m)
 
 
