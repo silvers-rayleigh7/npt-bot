@@ -11,7 +11,7 @@ Code OAuth + голос-ввод Groq + память). Наш слой: личн
 
 ```
 Telegram → claude-tg → Groq Whisper (STT) → claude -p (OAuth, читает CLAUDE.md + content/)
-        → tts.py (ElevenLabs → opus) → send_telegram_file → 🔊 голосовое
+        → tts.py (Yandex SpeechKit v1 → oggopus) → send_telegram_file → 🔊 голосовое
 ```
 
 ## Развёртывание на новом сервере (в т.ч. перенос Max → Pro)
@@ -52,7 +52,7 @@ WantedBy=multi-user.target
 | Путь | Назначение |
 |------|-----------|
 | `CLAUDE.md` | личность бота (системный промпт: канон, уровни А/Б, анти-галлюцинации) |
-| `tts.py` | озвучка ElevenLabs → opus ogg (Telegram voice) |
+| `tts.py` | озвучка Yandex SpeechKit v1 → oggopus (Telegram voice), голос filipp |
 | `content/storylines/` | 16 сюжетов-эталонов (из проекта tropa) |
 | `content/storylines.yaml` | банк 139 «поперечных сечений» |
 | `content/topics/` | curated demo-темы (выверенный текст уровня А) |
