@@ -1,7 +1,5 @@
-"""Тесты tts.py (Yandex SpeechKit v3): нормализация + парсинг потока чанков.
+"""Тесты tts.py (Yandex SpeechKit v1): нормализация + формирование запроса.
 Сеть мокается — токены Yandex не расходуются."""
-import base64
-import json
 import os
 import sys
 from unittest.mock import patch, MagicMock
@@ -16,20 +14,19 @@ def test_normalize_убирает_разметку_и_эмодзи():
     assert "парадокс" in r and "голубое" in r
 
 
-def test_synthesize_собирает_чанки_и_шлёт_voice():
-    # v3 отдаёт поток JSON-строк с base64-аудио
-    chunk = base64.b64encode(b"OGGfakeaudio").decode()
-    body = json.dumps({"result": {"audioChunk": {"data": chunk}}})
-    with patch.dict(os.environ, {"YANDEX_API_KEY": "k", "YANDEX_VOICE": "anton"}):
+def test_synthesize_шлёт_oggopus_voice_folder():
+    with patch.dict(os.environ, {"YANDEX_API_KEY": "k", "YANDEX_FOLDER_ID": "f", "YANDEX_VOICE": "filipp"}):
         with patch("tts.requests.post") as post:
             resp = MagicMock()
-            resp.text = body + "\n" + body  # два чанка
+            resp.content = b"OGGfake"
             resp.raise_for_status = MagicMock()
             post.return_value = resp
             out = tts.synthesize("Привет, наука.", "/tmp/_t.ogg")
             assert out == "/tmp/_t.ogg"
-            sent = post.call_args.kwargs["json"]
-            assert sent["hints"][0]["voice"] == "anton"
-            assert sent["outputAudioSpec"]["containerAudio"]["containerAudioType"] == "OGG_OPUS"
-            assert os.path.getsize("/tmp/_t.ogg") == len(b"OGGfakeaudio") * 2
+            data = post.call_args.kwargs["data"]
+            assert data["format"] == "oggopus"
+            assert data["voice"] == "filipp"
+            assert data["lang"] == "ru-RU"
+            assert data["folderId"] == "f"
+            assert os.path.exists("/tmp/_t.ogg")
     os.remove("/tmp/_t.ogg")
