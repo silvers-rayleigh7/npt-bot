@@ -1,5 +1,7 @@
-"""Тесты tts.py (Yandex SpeechKit): нормализация текста + формирование запроса.
+"""Тесты tts.py (Yandex SpeechKit v3): нормализация + парсинг потока чанков.
 Сеть мокается — токены Yandex не расходуются."""
+import base64
+import json
 import os
 import sys
 from unittest.mock import patch, MagicMock
@@ -10,23 +12,24 @@ import tts
 
 def test_normalize_убирает_разметку_и_эмодзи():
     r = tts.normalize_for_tts("Вот **парадокс** — свет белый.\n\nНебо голубое! 🌌")
-    assert "*" not in r and "🌌" not in r and "\n" not in r
-    assert "—" not in r  # тире → запятая
+    assert "*" not in r and "🌌" not in r and "\n" not in r and "—" not in r
     assert "парадокс" in r and "голубое" in r
 
 
-def test_synthesize_запрашивает_oggopus_ru():
-    with patch.dict(os.environ, {"YANDEX_API_KEY": "k", "YANDEX_FOLDER_ID": "f"}):
+def test_synthesize_собирает_чанки_и_шлёт_voice():
+    # v3 отдаёт поток JSON-строк с base64-аудио
+    chunk = base64.b64encode(b"OGGfakeaudio").decode()
+    body = json.dumps({"result": {"audioChunk": {"data": chunk}}})
+    with patch.dict(os.environ, {"YANDEX_API_KEY": "k", "YANDEX_VOICE": "anton"}):
         with patch("tts.requests.post") as post:
             resp = MagicMock()
-            resp.content = b"OGGfake"
+            resp.text = body + "\n" + body  # два чанка
             resp.raise_for_status = MagicMock()
             post.return_value = resp
             out = tts.synthesize("Привет, наука.", "/tmp/_t.ogg")
             assert out == "/tmp/_t.ogg"
-            data = post.call_args.kwargs["data"]
-            assert data["format"] == "oggopus"
-            assert data["lang"] == "ru-RU"
-            assert data["folderId"] == "f"
-            assert os.path.exists("/tmp/_t.ogg")
+            sent = post.call_args.kwargs["json"]
+            assert sent["hints"][0]["voice"] == "anton"
+            assert sent["outputAudioSpec"]["containerAudio"]["containerAudioType"] == "OGG_OPUS"
+            assert os.path.getsize("/tmp/_t.ogg") == len(b"OGGfakeaudio") * 2
     os.remove("/tmp/_t.ogg")
