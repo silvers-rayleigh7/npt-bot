@@ -12,6 +12,8 @@
   4. bot.py: allowlist + авто-регистрация по /start + динамическая маршрутизация ответа
      в активный chat_id (несколько аккаунтов одного владельца).
   5. mcp_server.py: send_telegram_file шлёт в активный chat (data/current_chat.txt).
+  6. mcp_server.py: новый инструмент send_telegram_message — текст (формула) вдогонку к голосу.
+  7. media.py: Groq STT language=ru + научный prompt.
 """
 import ast
 import glob
@@ -252,6 +254,42 @@ def _current_chat_id():
     open(p, "w").write(m)
 
 
+def patch_mcp_sendmsg(base):
+    """Добавляет MCP-инструмент send_telegram_message — текст (формула) вдогонку к голосу.
+
+    Вставляется сразу после `mcp = FastMCP("claude-tg")` (эта строка — первая строка
+    helper-блока из patch_mcp, поэтому существует и после него). Тело вызывает
+    _current_chat_id() в рантайме, поэтому не зависит от порядка определения функций.
+    Идемпотентно по наличию `async def send_telegram_message`."""
+    p = os.path.join(base, "mcp_server.py")
+    m = open(p).read()
+    if "async def send_telegram_message" in m:
+        return
+    anchor = 'mcp = FastMCP("claude-tg")'
+    if anchor not in m:
+        sys.exit("mcp_server.py: anchor `mcp = FastMCP` не найден (запусти patch_mcp раньше)")
+    tool = anchor + '''
+
+
+@mcp.tool()
+async def send_telegram_message(text: str) -> str:
+    """Отправить текстовое сообщение (например, формулу) в активный чат Telegram.
+
+    Дополнение к голосовому ответу: голос идёт без формул, а формула — этим текстом.
+    """
+    import os as _os
+    from telegram import Bot as _Bot
+    token = _os.environ.get("TELEGRAM_BOT_TOKEN")
+    chat_id = _current_chat_id()
+    if not token or not chat_id:
+        return "error: no token or chat_id"
+    bot = _Bot(token=token)
+    async with bot:
+        await bot.send_message(chat_id=int(chat_id), text=text)
+    return "sent"'''
+    open(p, "w").write(m.replace(anchor, tool, 1))
+
+
 def patch_media(base):
     """Groq STT: явный русский язык + научный prompt → точнее распознаёт термины."""
     p = os.path.join(base, "media.py")
@@ -276,6 +314,7 @@ def main():
     patch_config(base)
     patch_bot_multiaccount(base)
     patch_mcp(base)
+    patch_mcp_sendmsg(base)
     patch_media(base)
     for f in ("bot.py", "stream.py", "config.py", "mcp_server.py", "media.py"):
         ast.parse(open(os.path.join(base, f)).read())

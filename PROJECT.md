@@ -119,8 +119,11 @@ claude-tg ставится с PyPI; наши правки накладывают
 3. **Multi-account:** allowlist + `/start` авто-регистрация (лимит `CLAUDE_TG_MAX_USERS`)
    + динамический роутинг ответа в активный chat_id (`data/current_chat.txt`).
 4. **send_voice:** `.ogg` → голосовое (PyPI-версия слала всё документом — фикс).
-5. **STT:** Groq `language=ru` + научный prompt (media.py).
-6. **import json** в bot.py (allowlist) + **IS_SANDBOX** для skip-permissions на root.
+5. **send_telegram_message:** новый MCP-инструмент — текстовое сообщение (формула) вдогонку
+   к голосу. Голос всегда без формул; если в ответе есть формула — она уходит вторым,
+   текстовым сообщением (Юникод, моноширинный блок). Логика — в `CLAUDE.md`.
+6. **STT:** Groq `language=ru` + научный prompt (media.py).
+7. **import json** в bot.py (allowlist) + **IS_SANDBOX** для skip-permissions на root.
 
 ---
 
