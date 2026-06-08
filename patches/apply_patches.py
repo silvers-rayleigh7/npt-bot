@@ -255,23 +255,44 @@ def _current_chat_id():
 
 
 def patch_mcp_sendmsg(base):
-    """Добавляет MCP-инструмент send_telegram_message — текст (формула) вдогонку к голосу.
+    """MCP-инструмент send_telegram_message — текст (два уровня + формулы) вдогонку к голосу.
 
-    Вставляется сразу после `mcp = FastMCP("claude-tg")` (эта строка — первая строка
-    helper-блока из patch_mcp, поэтому существует и после него). Тело вызывает
-    _current_chat_id() в рантайме, поэтому не зависит от порядка определения функций.
-    Идемпотентно по наличию `async def send_telegram_message`."""
+    Версия с чисткой markdown: убирает * ` # и длинные тире — / –, чтобы пользователь
+    видел чистый текст (Telegram без parse_mode разметку не рендерит).
+
+    Идемпотентно по маркеру `_clean_tg_text`. Если на сервере осталась старая версия
+    инструмента (без чистки) — заменяет её на новую; если инструмента не было — вставляет
+    после `mcp = FastMCP("claude-tg")` (первая строка helper-блока из patch_mcp)."""
     p = os.path.join(base, "mcp_server.py")
     m = open(p).read()
-    if "async def send_telegram_message" in m:
-        return
-    anchor = 'mcp = FastMCP("claude-tg")'
-    if anchor not in m:
-        sys.exit("mcp_server.py: anchor `mcp = FastMCP` не найден (запусти patch_mcp раньше)")
-    tool = anchor + '''
+    if "_clean_tg_text" in m:
+        return  # уже новая версия с чисткой
 
+    new_tool = '''@mcp.tool()
+async def send_telegram_message(text: str) -> str:
+    """Отправить текстовое сообщение (два уровня + формулы) в активный чат Telegram.
 
-@mcp.tool()
+    Голос идёт без формул; текст и формулы уходят сюда. Чистит markdown и длинные тире,
+    чтобы пользователь не видел символы * ` # и — / –.
+    """
+    import os as _os
+    from telegram import Bot as _Bot
+
+    def _clean_tg_text(t):
+        for a, b in (("\\u2014", "-"), ("\\u2013", "-"), ("*", ""), ("`", ""), ("#", "")):
+            t = t.replace(a, b)
+        return t.strip()
+
+    token = _os.environ.get("TELEGRAM_BOT_TOKEN")
+    chat_id = _current_chat_id()
+    if not token or not chat_id:
+        return "error: no token or chat_id"
+    bot = _Bot(token=token)
+    async with bot:
+        await bot.send_message(chat_id=int(chat_id), text=_clean_tg_text(text))
+    return "sent"'''
+
+    old_tool = '''@mcp.tool()
 async def send_telegram_message(text: str) -> str:
     """Отправить текстовое сообщение (например, формулу) в активный чат Telegram.
 
@@ -287,7 +308,15 @@ async def send_telegram_message(text: str) -> str:
     async with bot:
         await bot.send_message(chat_id=int(chat_id), text=text)
     return "sent"'''
-    open(p, "w").write(m.replace(anchor, tool, 1))
+
+    if old_tool in m:
+        open(p, "w").write(m.replace(old_tool, new_tool, 1))
+        return
+
+    anchor = 'mcp = FastMCP("claude-tg")'
+    if anchor not in m:
+        sys.exit("mcp_server.py: anchor `mcp = FastMCP` не найден (запусти patch_mcp раньше)")
+    open(p, "w").write(m.replace(anchor, anchor + "\n\n\n" + new_tool, 1))
 
 
 def patch_media(base):
