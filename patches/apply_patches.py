@@ -9,7 +9,7 @@
   2. bot.py _stream_turn: не стримить текст ответа; tool calls только при verbose;
      отслеживать отправку голоса (voice_sent); при неудаче — короткий сигнал, не текст-простыня.
   3. config.py: CLAUDE_TG_MAX_USERS (лимит авто-регистрации).
-  4. bot.py: allowlist + авто-регистрация по /start + динамическая маршрутизация ответа
+  4. bot.py: allowlist + авто-регистрация любым сообщением (пока лимит не исчерпан) + динамическая маршрутизация
      в активный chat_id (несколько аккаунтов одного владельца).
   5. mcp_server.py: send_telegram_file шлёт в активный chat (data/current_chat.txt).
   6. mcp_server.py: новый инструмент send_telegram_message — текст (формула) вдогонку к голосу.
@@ -120,7 +120,7 @@ def patch_config(base):
     line = '        self.chat_id: int = int(os.environ.get("TELEGRAM_CHAT_ID", "0"))'
     if line not in c:
         sys.exit("config.py: chat_id строка не найдена")
-    c = c.replace(line, line + '\n        self.max_users: int = int(os.environ.get("CLAUDE_TG_MAX_USERS", "8"))')
+    c = c.replace(line, line + '\n        self.max_users: int = int(os.environ.get("CLAUDE_TG_MAX_USERS", "30"))')
     open(p, "w").write(c)
 
 
@@ -136,7 +136,14 @@ def patch_bot_multiaccount(base):
         chat = update.effective_chat
         if not chat:
             return False
-        if chat.id in self._allowed_chats():
+        allowed = self._load_allowed()
+        if chat.id in allowed:
+            self._set_active(chat.id)
+            return True
+        limit = self.config.max_users
+        if limit == 0 or len(allowed) < limit:
+            allowed.add(chat.id)
+            self._save_allowed(allowed)
             self._set_active(chat.id)
             return True
         return False
