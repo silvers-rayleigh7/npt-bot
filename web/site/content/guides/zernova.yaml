@@ -1,0 +1,56 @@
+slug: zernova
+name: Елена Зернова
+name_gen: Елены           # родительный падеж для заголовка «Маршрут Елены»
+region: Калининградская область
+attested: true
+portrait: assets/guides/zernova/portrait.jpg
+
+# 3-4 факта доверия (вытянуты из CV, не сырое CV)
+credentials:
+  - Коренная калининградка в третьем поколении
+  - Аттестована при Правительстве Калининградской области
+  - Переводчик с немецкого — письменный и устный
+  - "6 лет практики: индивидуальные, групповые и детские экскурсии"
+
+# продающий абзац — голос гида
+bio_md: |
+  Уже 6 лет показываю этот край так, что его не просто смотрят — его проживают.
+  Без шаблонов, зато с атмосферой, деталями и историями, которые остаются с вами.
+
+  Пешком и на своём авто — для тех, кто любит камерность. Автобусные группы —
+  моя маленькая сцена, где оживает прошлое. Легко вовлекаю детей и удерживаю
+  внимание взрослых, даже тех, кто «не любит экскурсии».
+
+  Помимо Светлогорска провожу обзорную по Калининграду (3,5–4 часа) — остров Канта,
+  Рыбная деревня, Музей янтаря — и составляю индивидуальные туры по вашим пожеланиям.
+
+contacts:
+  phone: "+7 906 210-60-28"
+  # email и соцсети появятся, когда гид их пришлёт — блок скрыт
+
+# авторский маршрут → интерактивная рисованная карта
+route:
+  title: Пешеходный Светлогорск
+  duration: 2,5–3 часа
+  map_image: assets/guides/zernova/map-nano.jpg
+  points:
+    - {n: 1,  x: 48, y: 88, title: "Ж/д вокзал Светлогорск-2 (старт)",            image: assets/guides/zernova/points/01.png}
+    - {n: 2,  x: 42, y: 84, title: "Скульптура «Царевна-лягушка»",                image: assets/guides/zernova/points/02.png}
+    - {n: 3,  x: 36, y: 79, title: "«Дюнный дом» на улице Пушкина",               image: assets/guides/zernova/points/03.png}
+    - {n: 4,  x: 31, y: 74, title: "Дом казначея Карла Кюна",                     image: assets/guides/zernova/points/04.png}
+    - {n: 5,  x: 27, y: 68, title: "Макет средневекового Кёнигсберга",            image: assets/guides/zernova/points/05.png}
+    - {n: 6,  x: 26, y: 61, title: "Улица Ленина (бывшая пляжная Раушена)",       image: assets/guides/zernova/points/06.png}
+    - {n: 7,  x: 31, y: 56, title: "Дом бургомистра Раушена",                     image: assets/guides/zernova/points/07.png}
+    - {n: 8,  x: 37, y: 53, title: "Курхаус и знак Томасу Манну",                 image: assets/guides/zernova/points/08.png}
+    - {n: 9,  x: 43, y: 49, title: "Серпантинный спуск",                         image: assets/guides/zernova/points/09.png}
+    - {n: 10, x: 45, y: 43, title: "Вилла «Хильдегардт»",                         image: assets/guides/zernova/points/10.png}
+    - {n: 11, x: 40, y: 39, title: "Водонапорная башня с солнечными часами",      image: assets/guides/zernova/points/11.png}
+    - {n: 12, x: 35, y: 35, title: "Скульптура «Улитка»",                         image: assets/guides/zernova/points/12.png}
+    - {n: 13, x: 38, y: 30, title: "Лиственничный парк",                         image: assets/guides/zernova/points/13.png}
+    - {n: 14, x: 44, y: 27, title: "«Несущая воду» Германа Брахерта",             image: assets/guides/zernova/points/14.png}
+    - {n: 15, x: 49, y: 23, title: "Центральная площадь, янтарное сердце Варвары", image: assets/guides/zernova/points/15.png}
+    - {n: 16, x: 56, y: 27, title: "Органный зал А. Макарова",                    image: assets/guides/zernova/points/16.png}
+    - {n: 17, x: 63, y: 31, title: "«Домик гномика»",                            image: assets/guides/zernova/points/17.png}
+    - {n: 18, x: 69, y: 27, title: "Театр эстрады «Янтарь-холл»",                 image: assets/guides/zernova/points/18.png}
+    - {n: 19, x: 75, y: 23, title: "Парк «Времена года»",                         image: assets/guides/zernova/points/19.png}
+    - {n: 20, x: 81, y: 20, title: "Лифтовая группа и клифы с видом на Балтику",  image: assets/guides/zernova/points/20.png}

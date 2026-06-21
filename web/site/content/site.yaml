@@ -1,0 +1,60 @@
+title: "Тропа"
+subtitle: "Научный аудиогид, который сам знает, когда рассказывать"
+description: >
+  Telegram-бот отслеживает Live Location и запускает голосовой рассказ,
+  когда вы подходите к научной точке маршрута.
+
+links:
+  github: "https://github.com/MerkulovDaniil/tropa"
+  brief: "https://github.com/MerkulovDaniil/tropa/blob/main/BRIEF.md"
+  bot_code: "https://github.com/MerkulovDaniil/tropa/tree/main/bot"
+  telegram: "https://t.me/zoobr_bot"
+
+skills:
+  - id: salute-tts
+    name: "Salute Speech TTS"
+    desc: "Генерация озвучки через Sber Salute Speech с SSML-разметкой"
+    file: "skills/salute-tts/SKILL.md"
+
+  - id: anti-ai-text
+    name: "Anti-AI Text"
+    desc: "Детекция и переписывание ИИ-звучащего текста (RU + EN). Wikipedia catalogs + канцелярит + rewrite rules"
+    file: "skills/anti-ai-text/SKILL.md"
+
+  - id: poi-gen
+    name: "Генерация POI"
+    desc: "Создание новых точек маршрута из реестра 89 сюжетов Гасникова"
+    file: "skills/poi-gen/SKILL.md"
+    status: planned
+
+  - id: outdoor-scipop-architect
+    name: "Outdoor Scipop Architect"
+    desc: "Рабочий скилл команды Иннополиса: проектирование и верификация научпоп-экспонатов по манифесту — 8 фильтров, метод сечения, уровни А/Б/В, канон Перельмана/Ливанова"
+    file: "skills/outdoor-scipop-architect/SKILL.md"
+
+  - id: storyline-proofread
+    name: "Storyline Proofread"
+    desc: "Quality-gate вычитки сюжета до издательского качества: панель адверсариальных критиков (текст + визуал по HTML и PDF) + цикл правок до чистоты, включая добавление научных схем нужного стиля"
+    file: "skills/storyline-proofread/SKILL.md"
+
+  - id: narration-gen
+    name: "Narration Generation"
+    desc: "Пайплайн storyline → тексты L1/L2/L3 → anti-AI → SSML → готовое аудио для точки маршрута"
+    file: "skills/narration-gen/SKILL.md"
+
+stack:
+  - label: Бот
+    name: python-telegram-bot
+    detail: async
+  - label: LLM
+    name: OpenRouter
+    detail: $0 free tier
+  - label: TTS
+    name: Salute Speech
+    detail: Борис, SSML
+  - label: STT
+    name: Groq Whisper
+    detail: $0 free tier
+  - label: Геоматчинг
+    name: Haversine
+    detail: per-user state

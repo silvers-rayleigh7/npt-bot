@@ -1,0 +1,66 @@
+# Физические экспонаты реальной тропы Иннополиса (правый берег Волги, петли 4 + 12 км).
+# Источник: команда ЦНПТ УИ (Тимур Циунчук), идеолог А.В. Гасников. Передано 2026-06-01.
+# Тексты стендов (уровни A/B + QR-уровень C) — verbatim в content/exhibits/<code>.md.
+#
+# status: verified — эталон, передан архитектурной команде в производство (зелёная ✅ в доке)
+#         draft     — черновик / в работе, не утверждён
+#         addition  — детальная Солнечная система (столбики-планеты), нестандартная станция
+# kind:   stand | interactive | planet | marker | observation
+# related_st — код сюжета в storylines.vetted.yaml, реализуемый этим стендом (или null)
+meta:
+  source: innopolis_team
+  curator: "Тимур Циунчук (ЦНПТ УИ)"
+  text_dir: content/exhibits
+  verified_count: 14
+  note: >
+    Крупные нестандартные станции (Мост Леонардо WP014, развёрнутая Солнечная
+    система WP008-*, маятники) ждут спонсорского финансирования. Точные lat/lon —
+    после выгрузки геослоёв тропы (запланировано). См. docs/innopolis-real-status.md.
+
+exhibits:
+  # ───────────── Утверждены и в производстве (14) ─────────────
+  - {code: WP001, title: "Входные стенды (навигация + методологическая настройка)", status: verified, kind: stand, text: content/exhibits/WP001-1.md, related_st: null}
+  - {code: WP001-3, title: "Валун-термометр", status: verified, kind: interactive, text: content/exhibits/WP001-3.md, related_st: null}
+  - {code: WP003, title: "Услышь расстояние", status: verified, kind: interactive, text: content/exhibits/WP003.md, related_st: null}
+  - {code: WP004, title: "Маятниковая роща", status: verified, kind: interactive, text: content/exhibits/WP004.md, related_st: null}
+  - {code: WP008, title: "Солнечная система (обзорный стенд)", status: verified, kind: stand, text: content/exhibits/WP008.md, related_st: null}
+  - {code: WP010, title: "Квадрат жизни", status: verified, kind: interactive, text: content/exhibits/WP010.md, related_st: ST-07}
+  - {code: WP011, title: "Обсерватория", status: verified, kind: observation, text: content/exhibits/WP011.md, related_st: null}
+  - {code: WP012, title: "Террасы времени", status: verified, kind: stand, text: content/exhibits/WP012.md, related_st: null}
+  - {code: WP013, title: "Краеведческий стенд", status: verified, kind: stand, text: content/exhibits/WP013.md, related_st: null}
+  - {code: WP014, title: "Мост Леонардо", status: verified, kind: interactive, text: content/exhibits/WP014.md, related_st: null}
+  - {code: WP016, title: "Водораздел", status: verified, kind: stand, text: content/exhibits/WP016.md, related_st: null}
+  - {code: WP017, title: "Белая берёза", status: verified, kind: stand, text: content/exhibits/WP017.md, related_st: null}
+  - {code: WP020, title: "Солнечные часы", status: verified, kind: interactive, text: content/exhibits/WP020.md, related_st: null}
+  - {code: WP026, title: "Спутниковая навигация", status: verified, kind: stand, text: content/exhibits/WP026.md, related_st: null}
+
+  # ───────────── Солнечная система: столбики-планеты (addition) ─────────────
+  - {code: WP008-а, title: "Меркурий", status: addition, kind: planet, text: content/exhibits/WP008-а.md, related_st: null}
+  - {code: WP008-б, title: "Венера", status: addition, kind: planet, text: content/exhibits/WP008-б.md, related_st: null}
+  - {code: ЭК-008, title: "Земля", status: addition, kind: planet, text: content/exhibits/ЭК-008.md, related_st: null}
+  - {code: WP008-г, title: "Марс", status: addition, kind: planet, text: content/exhibits/WP008-г.md, related_st: null}
+  - {code: WP008-д, title: "Пояс астероидов", status: addition, kind: marker, text: content/exhibits/WP008-д.md, related_st: null}
+  - {code: WP008-е, title: "Юпитер", status: addition, kind: planet, text: content/exhibits/WP008-е.md, related_st: null}
+  - {code: WP008-ж, title: "Сатурн", status: addition, kind: planet, text: content/exhibits/WP008-ж.md, related_st: null}
+  - {code: WP008-з, title: "Уран", status: addition, kind: planet, text: content/exhibits/WP008-з.md, related_st: null}
+  - {code: WP008-и, title: "Нептун", status: addition, kind: planet, text: content/exhibits/WP008-и.md, related_st: null}
+  - {code: WP009-к, title: "Плутон (столбик-сюрприз)", status: addition, kind: planet, text: content/exhibits/WP009-к.md, related_st: null}
+
+  # ───────────── Черновики / в работе ─────────────
+  - {code: WP002, title: "Компания птиц", status: draft, kind: stand, text: content/exhibits/WP002.md, related_st: ST-35}
+  - {code: WP007, title: "Геологический срез", status: draft, kind: stand, text: content/exhibits/WP007.md, related_st: null}
+  - {code: WP009, title: "Дерево помнит всё (берёза с наростами)", status: draft, kind: stand, text: content/exhibits/WP009.md, related_st: ST-11}
+  - {code: WP018, title: "Фрактальная рамка", status: draft, kind: interactive, text: content/exhibits/WP018.md, related_st: null}
+  - {code: WP021, title: "Свияжские холмы: дно древнего ледника", status: draft, kind: stand, text: content/exhibits/WP021.md, related_st: null}
+  - {code: WP022, title: "Почему правый берег обрывистый", status: draft, kind: stand, text: content/exhibits/WP022.md, related_st: ST-01}
+  - {code: WP023, title: "Откуда текут реки и как они меняют русло", status: draft, kind: stand, text: content/exhibits/WP023.md, related_st: ST-02}
+  - {code: WP024, title: "Родники и грунтовые воды", status: draft, kind: stand, text: content/exhibits/WP024.md, related_st: ST-36}
+  - {code: WP027, title: "Почему сложно идти прямо", status: draft, kind: interactive, text: content/exhibits/WP027.md, related_st: ST-37}
+  - {code: WP028, title: "Как измерить высоту дерева по тени", status: draft, kind: interactive, text: content/exhibits/WP028.md, related_st: ST-38}
+  - {code: WP031, title: "Сфера и форма миров", status: draft, kind: stand, text: content/exhibits/WP031.md, related_st: null}
+  - {code: WP036, title: "Потолок у неба: солнце и ветер", status: draft, kind: stand, text: content/exhibits/WP036.md, related_st: null}
+  - {code: WP045, title: "Под парусом и против ветра", status: draft, kind: stand, text: content/exhibits/WP045.md, related_st: null}
+  - {code: WP046, title: "Погода, климат и вечерний туман", status: draft, kind: stand, text: content/exhibits/WP046.md, related_st: ST-30}
+  - {code: WP047, title: "Грозы, молнии и прогноз на неделю", status: draft, kind: stand, text: content/exhibits/WP047.md, related_st: null}
+  - {code: N33, title: "Фрактальная геометрия природы", status: draft, kind: stand, text: content/exhibits/N33.md, related_st: null}
+  - {code: N37, title: "Уникальные свойства воды", status: draft, kind: stand, text: content/exhibits/N37.md, related_st: ST-39}

@@ -1,0 +1,6 @@
+# Advent Calendar - Numberphile
+
+Источник: https://www.youtube.com/watch?v=VpBmt11czaI
+Канал: Numberphile
+
+yes it's that time of year again and for number files that means one thing Advent calendars for each day of December I'm going to be adding a new video link to each number in the calendar on December 1 number one December 2 number two and so on it could be a number file video old or new it could be one of my other videos from another Channel or from another YouTuber Al together but the one thing they'll have in common either in an obvious or non-obvious way is an association with the number one of the videos is also going to be an UNL listed one that you'll only be able to watch through the Advent calendar cuz I'm a bit sneaky like that I know that annotations don't work for some people so there are also links under the video so please come back each day of December or whenever you choose and find out what videos have been added and also it's not too late to suggest one if there's one you think I should be linking to well if you're still here I'm going to tell you you should also be following number file on Twitter or Facebook links below all right Вам уже достаточно времени, если вы до сих пор ничего не кликнули, то никогда и не кликнете, поэтому я останавливаю видео.

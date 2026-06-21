@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Валун-термометр — Тропа</title>
+<link rel="icon" href="/assets/trees.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site-bar/bot.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
+<script>
+// Рендер математики ТОЛЬКО после загрузки шрифтов KaTeX. Иначе KaTeX считает
+// позицию черты корня/дроби по метрикам фолбэк-шрифта → линия ложится поперёк
+// подкоренного (видимое «зачёркивание»), и без ре-рендера не лечится.
+// ignoredClasses:['katex'] — повторный проход не трогает уже отрендеренное.
+(function(){
+  var KX={delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false,ignoredClasses:['katex']};
+  function whenFontsReady(cb){
+    var fams=['KaTeX_Main','KaTeX_Math','KaTeX_Size1','KaTeX_Size2','KaTeX_Size3','KaTeX_Size4','KaTeX_AMS'];
+    if(document.fonts&&document.fonts.load){
+      Promise.all(fams.map(function(f){return document.fonts.load('1em '+f).catch(function(){});}))
+        .then(function(){return document.fonts.ready;}).then(cb,cb);
+    } else { cb(); }
+  }
+  window.tropaMath=function(el){ if(typeof renderMathInElement==='function'){ whenFontsReady(function(){ renderMathInElement(el,KX); }); } };
+  window.addEventListener('load',function(){ window.tropaMath(document.body); });
+})();
+</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip}
+body{max-width:100%;overflow-x:clip}
+/* TROPA design system — палитра дизайн-пака */
+:root{
+  --sand:#DBD4C7;--sage:#B8B5A6;--olive:#7C7F6A;--char:#3E4038;--ink:#1A1A18;
+  --g:#7C7F6A;--gd:#3E4038;--gl:#F4F2EE;--bg:#FFFFFF;--card:#FFFFFF;
+  --tx:#1A1A18;--tm:#6E7163;--bd:#EAE7E0;--r:10px;
+  --serif:"Cormorant Garamond",Georgia,serif;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:-0.01em}
+a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
+.w{max-width:760px;margin:0 auto;padding:0 24px}
+.nav{padding:14px 0;border-bottom:1px solid var(--bd);background:#fff}
+.nav-inner{display:flex;align-items:center;gap:22px}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.3rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);line-height:1;display:flex;align-items:center;gap:9px}
+.nav-logo img{width:22px;height:22px}
+.nav-spacer{flex:1}
+.nav-link{font-size:0.82rem;color:var(--tm);display:flex;align-items:center;line-height:1;letter-spacing:0.01em}
+.nav-link:hover{color:var(--ink);text-decoration:none}
+.nav-icon{display:flex;align-items:center;justify-content:center;color:var(--tm);transition:color 0.15s}
+.nav-icon:hover{color:var(--olive);text-decoration:none}
+.nav-icon i{width:16px;height:16px}
+
+.sg-hero{padding:48px 0 8px;text-align:center}
+.sg-hero img{height:auto;max-height:46px;width:auto;opacity:.8;display:block;margin:0 auto 16px}
+.sg-hero img.sg-icon{max-height:200px;max-width:440px;width:80%;opacity:1;margin:0 auto 4px}
+.sg-kicker{font-size:0.76rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--olive);margin-bottom:10px}
+.sg-hero h1{font-size:2.3rem;font-weight:700;line-height:1.12;margin-bottom:8px}
+.sg-deck{font-family:var(--serif);font-style:italic;font-size:1.3rem;color:var(--tm);line-height:1.3;margin:0 auto 12px;max-width:560px}
+.sg-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:0.8rem}
+.sg-tag{padding:2px 9px;border-radius:20px;background:var(--gl);color:var(--tm)}
+.sg-geo{color:var(--olive);font-weight:600}
+.tabs{display:flex;align-items:center;gap:4px;border-bottom:1px solid var(--bd);margin:26px 0 0;flex-wrap:wrap}
+.tab{font-family:var(--serif);font-size:1.05rem;font-weight:600;padding:9px 16px;color:var(--tm);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);border-bottom-color:var(--olive)}
+.tab-pdf{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--tm);transition:color .15s}
+.tab-pdf:hover{color:var(--olive);text-decoration:none}
+.tab-pdf i{width:15px;height:15px;stroke-width:1.4}
+/* читается как книжная статья */
+.body{padding:26px 0 8px;font-family:Georgia,"PT Serif","Times New Roman",serif;font-size:1.16rem;line-height:1.84;max-width:660px;color:#262521}
+.body p{margin:0 0 1.05em}.body p:first-of-type{font-size:1.22rem;color:#1c1b17}
+.body strong{color:var(--ink);font-weight:600}
+.body h2,.body h3,.body h4{font-family:var(--serif);font-weight:600;color:var(--char);margin:1.6em 0 .5em;font-size:1.4rem;line-height:1.25;text-align:center}
+.body ul,.body ol{margin:1em 0 1em 22px}.body li{margin:.4em 0}
+.body table{border-collapse:collapse;font-size:0.96rem;margin:1.2em 0;display:block;max-width:100%;overflow-x:auto}
+.body img{max-width:100%;height:auto;display:block;margin:0 auto}
+.body figure.fig{margin:2em auto;text-align:center;max-width:560px}
+.body figure.fig img{max-width:88%;max-height:340px;width:auto;height:auto}
+.body figure.fig figcaption{font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--tm);line-height:1.4;margin-top:.7em;max-width:480px;margin-left:auto;margin-right:auto}
+.body th,.body td{border:1px solid var(--bd);padding:7px 14px;text-align:left}
+.body .formula{text-align:center;font-size:1.2rem;margin:1.4em auto;color:var(--char);letter-spacing:.02em}
+.body .katex-display{margin:1.4em 0}
+.divider{margin:48px 0 12px;text-align:center}.divider img{width:170px;opacity:.85}
+.site-url{text-align:center;font-size:0.78rem;letter-spacing:0.16em;color:var(--tm);margin-bottom:28px}
+.back{font-size:0.85rem}
+
+@media(max-width:640px){
+  .w{padding:0 16px}
+  .nav-inner{gap:14px}
+  .nav-logo{font-size:1.12rem;letter-spacing:0.08em;gap:7px}
+  .nav-logo img{width:19px;height:19px}
+  .nav-link{font-size:0.8rem}
+  .nav-icon{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="w nav-inner">
+  <a href="/" class="nav-logo"><img src="/assets/trees.svg" alt="">Тропа</a>
+  <a href="/storylines/" class="nav-link">Сюжеты</a>
+  <a href="/innopolis/" class="nav-link">Маршрут</a>
+  <a href="/skills/" class="nav-link">Скиллы</a>
+  <a href="/bot/" class="nav-link">Бот</a>
+  <a href="/guides/" class="nav-link">Гиды</a>
+  <div class="nav-spacer"></div>
+  <a href="https://github.com/MerkulovDaniil/tropa" class="nav-icon"><i data-lucide="github"></i></a>
+  <a href="https://t.me/zoobr_bot" class="nav-icon"><i data-lucide="send"></i></a>
+</div></nav>
+
+<div class="w">
+  <div class="sg-hero">
+    <img class="sg-icon" src="/assets/icons/valun-termometr.svg" alt="">
+    
+    <div class="sg-kicker">Научная тропа Иннополиса</div>
+    <h1>Валун-термометр</h1>
+    <div class="sg-deck" id="sg-deck">Почему одна сторона валуна теплее другой?</div>
+    <div class="sg-meta">
+      <a class="sg-geo" href="https://yandex.ru/maps/?pt=48.73783,55.74755&z=17&l=map" target="_blank" rel="noopener">📍 на карте</a>
+      <span class="sg-tag">физика</span><span class="sg-tag">тепло</span>
+    </div>
+  </div>
+
+  
+  <div class="tabs">
+    <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
+  </div>
+  
+  <div class="body lvl" data-i="0" style=""><p>Потрогай валун с разных сторон. В солнечный день ты заметишь, что одна сторона ощутимо теплее остальных. Эта сторона — южная. Откуда берётся разница?</p>
+<figure class="fig"><img src="/assets/figures/valun-termometr-2.svg" alt="Полуденное солнце стоит на юге: южная грань валуна встречает лучи круто и нагревается, северной они касаются вскользь — она остаётся холодной."><figcaption>Полуденное солнце стоит на юге: южная грань валуна встречает лучи круто и нагревается, северной они касаются вскользь — она остаётся холодной.</figcaption></figure>
+<p>Если фонарик светит на стол прямо сверху, получается маленькое яркое пятно. Если его наклонить, пятно становится крупнее и тусклее: тот же свет растекается по большей площади. С солнечным светом происходит то же самое.</p>
+<p>В среднем за день, и особенно в полдень, больше всего света достаётся южной стороне. К северной стороне полуденное солнце вообще не поворачивается: на наших широтах оно в полдень стоит над южной частью горизонта. На широте Иннополиса летом полуденный луч встречает вертикальную южную грань под углом около $33°$, а северной касается вскользь. Эти несколько градусов разницы температуры и чувствует ладонь.</p>
+<h3>Где работает этот же принцип</h3>
+<p>Снег весной дольше лежит на северных склонах оврагов и холмов. Мох на стволах деревьев чаще гуще с северной стороны. Виноградники разбивают на южных склонах: они теплее, потому что подставляют лозу солнцу под бо́льшим углом.</p>
+<p>По разнице температур на валуне можно приблизительно найти юг — достаточно повернуться лицом к самой тёплой стороне. Способ работает в ясную погоду, на открытом месте, около полудня. Почему именно в этих условиях — на обороте.</p></div>
+  
+  <div class="body lvl" data-i="1" style="display:none"><figure class="fig"><img src="/assets/figures/valun-termometr-1.svg" alt="Тот же поток под косым углом растекается по большей площади — и греет слабее."><figcaption>Тот же поток под косым углом растекается по большей площади — и греет слабее.</figcaption></figure>
+<p>Нет, не заменяет. Разница температур возникает только из-за угла, под которым солнце светит на грани камня, и легко стирается погодой и окружением. Компас показывает север всегда; валун — лишь когда сложились нужные условия.</p>
+<p>Откуда вообще берётся эта разница, видно из простой геометрии. Параллельный пучок солнечных лучей, падая на грань под углом $\alpha$ к её поверхности, растекается тем шире, чем меньше угол. Поток тепла на единицу площади падает вместе с синусом этого угла:</p>
+<p>$$ E = E_0 \cdot \sin\alpha $$</p>
+<p>где $E_0$ — поток при отвесном падении. Под углом $30°$ грань получает $\sin 30° = 0{,}5$ — ровно вдвое меньше тепла, чем под прямым. Летним полднем южная вертикальная грань валуна ловит свет под углом около $33°$ ($E \approx 0{,}54\,E_0$), а северная — под почти нулевым, и тепла ей достаётся в разы меньше. Эти несколько градусов на ощупь и есть та самая разница.</p>
+<h3>Что мешает наблюдать эффект</h3>
+<p>В пасмурный день облака рассеивают свет, и он приходит со всего небосвода почти равномерно: южная сторона перестаёт отличаться от северной. Тень от соседнего дерева выравнивает температуру сторон за несколько минут. Ветер охлаждает наветренную сторону сильнее остальных и может либо усилить разницу, либо перевернуть её: при северном ветре сильнее всего остывает северная сторона, при южном — как раз южная. Дождь оставляет камень мокрым, и вода, испаряясь, забирает тепло со всех сторон.</p>
+<p>Поэтому у способа три обязательных условия: ясное небо, открытое место, полуденные часы. Если хотя бы одно нарушено, по разнице температур нельзя определить стороны света — она расскажет лишь о случайной истории конкретного камня: где он стоял на солнце в последний час, не было ли над ним тени, не намочил ли его дождь, с какой стороны дует ветер.</p>
+<h3>Где тот же угол ломает вещи</h3>
+<p>Если повернуть мысль, тот же перекос нагрева не греет, а разрушает. Зимой южная сторона ствола за день прогревается солнцем, ночью резко остывает — от этих качелей кора трескается вдоль, и садоводы белят стволы или обвязывают их с юга, спасая от морозобоин. По той же причине на южных фасадах штукатурка и бетон стареют быстрее: каждый день они нагреваются сильнее северных и сильнее «дышат». Один и тот же угол падения, что подсказывает путнику юг, исподволь изнашивает то, что стоит к солнцу лицом.</p></div>
+  
+  <div class="body lvl" data-i="2" style="display:none"><p>В масштабе одного камня угол падения играет несколькими градусами. В масштабе Земли тот же закон $E = E_0 \cdot \sin\alpha$ задаёт целые климатические пояса — и счёт идёт уже в разы.</p>
+<h3>Инсоляция: сколько энергии приходит от Солнца</h3>
+<p>Количество солнечной энергии, падающей на единицу горизонтальной поверхности за единицу времени, называется инсоляцией и измеряется в ваттах на квадратный метр<sup id="fnref:insol"><a class="footnote-ref" href="#fn:insol">1</a></sup>. Эта величина зависит от того, под каким углом луч встречает поверхность: чем ближе угол к прямому, тем меньшую площадь занимает световое пятно и тем больше энергии достаётся каждому её квадратному сантиметру. Та же зависимость $E = E_0 \cdot \sin\alpha$, что и на гранях валуна<sup id="fnref:cosine"><a class="footnote-ref" href="#fn:cosine">2</a></sup>: при угле падения $30°$ свет распределяется по вдвое большей площади, чем при $90°$, и поверхность получает вдвое меньше тепла.</p>
+<h3>Иннополис: лето и зима</h3>
+<p>Иннополис лежит на широте около $56°$. В полдень в день летнего солнцестояния угол падения лучей на горизонтальную землю составляет здесь около $57°$, а в день зимнего — всего $11°$<sup id="fnref:solpos"><a class="footnote-ref" href="#fn:solpos">3</a></sup>. Поэтому зимой даже в безоблачный день поверхность получает в несколько раз меньше тепла, чем летом. Для вертикальной южной стороны валуна летом угол падения лучей около $33°$, и она заметно нагревается. Северная сторона в этот же момент прямого солнечного света практически не получает.</p>
+<table>
+<thead>
+<tr>
+<th>Поверхность</th>
+<th>Когда</th>
+<th>Угол луча к поверхности</th>
+<th>Нагрев</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Горизонтальная земля</td>
+<td>Иннополис, лето</td>
+<td>≈ 57°</td>
+<td>сильный</td>
+</tr>
+<tr>
+<td>Горизонтальная земля</td>
+<td>Иннополис, зима</td>
+<td>≈ 11°</td>
+<td>в разы слабее</td>
+</tr>
+<tr>
+<td>Вертикальная южная грань</td>
+<td>лето, полдень</td>
+<td>≈ 33°</td>
+<td>заметный</td>
+</tr>
+<tr>
+<td>Вертикальная северная грань</td>
+<td>лето, полдень</td>
+<td>почти вскользь</td>
+<td>почти нет</td>
+</tr>
+</tbody>
+</table>
+<h3>Климатические зоны Земли</h3>
+<p>В масштабе планеты тот же закон формирует климатические пояса. Тропики жарче полярных широт, потому что лучи там падают под бо́льшим углом к поверхности. Среднегодовая инсоляция на экваторе примерно вдвое выше, чем на Северном полярном круге<sup id="fnref:lat"><a class="footnote-ref" href="#fn:lat">4</a></sup>.</p>
+<h3>Что с этим делать</h3>
+<p>Тот же синус подсказывает практический приём. Чтобы панель ловила максимум за год, её наклоняют к горизонту примерно на широту места — для Иннополиса это около $45$–$55°$: тогда полуденный луч приходит ближе всего к отвесному, и $\sin\alpha$ держится у максимума. Саму инсоляцию измеряют пиранометром<sup id="fnref:pyr"><a class="footnote-ref" href="#fn:pyr">5</a></sup> — он и проверяет, насколько удачно выбран угол. Так разница на гранях валуна оказывается тем же расчётом, что ориентирует солнечную панель.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:insol">
+<p>Инсоляция — поток солнечной энергии, приходящий на единицу площади поверхности; измеряется в Вт/м² (<a href="https://ru.wikipedia.org/wiki/Инсоляция">Википедия, «Инсоляция»</a>).&#160;<a class="footnote-backref" href="#fnref:insol" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:cosine">
+<p>Облучённость поверхности пропорциональна косинусу угла между лучом и нормалью (закон косинуса Ламберта) — то есть синусу угла между лучом и самой поверхностью (<a href="https://en.wikipedia.org/wiki/Lambert%27s_cosine_law">Wikipedia, «Lambert's cosine law»</a>).&#160;<a class="footnote-backref" href="#fnref:cosine" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:solpos">
+<p>Полуденная высота Солнца считается по формуле $h = 90° - \varphi \pm \delta$ (склонение $\delta \approx 23{,}4°$): для широты $\varphi \approx 56°$ это $\approx 57°$ летом и $\approx 11°$ зимой (<a href="https://en.wikipedia.org/wiki/Position_of_the_Sun">Wikipedia, «Position of the Sun»</a>).&#160;<a class="footnote-backref" href="#fnref:solpos" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:lat">
+<p>Среднегодовая инсоляция убывает от экватора к полюсам вместе с углом падения лучей (<a href="https://ru.wikipedia.org/wiki/Инсоляция">Википедия, «Инсоляция»</a>).&#160;<a class="footnote-backref" href="#fnref:lat" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:pyr">
+<p>Пиранометр — прибор для измерения суммарной солнечной радиации, приходящей на поверхность (<a href="https://ru.wikipedia.org/wiki/Пиранометр">Википедия, «Пиранометр»</a>).&#160;<a class="footnote-backref" href="#fnref:pyr" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  
+</div>
+
+<script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
+<script defer src="/assets/site-bar/bot.js"></script>
+
+<script>
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
+var TROPA_DECKS = ["Почему одна сторона валуна теплее другой?", "Заменяет ли камень компас?", "Несколько градусов на камне — а насколько много в масштабе планеты?"];
+
+(function(){
+  var tabs=document.querySelectorAll('.tab'), bodies=document.querySelectorAll('.lvl');
+  var pdfs=TROPA_PDFS, decks=TROPA_DECKS, deckEl=document.getElementById('sg-deck');
+  document.querySelector('.tabs')&&document.querySelector('.tabs').addEventListener('click',function(e){
+    var t=e.target.closest('.tab'); if(!t)return;
+    tabs.forEach(function(x){x.classList.remove('active')}); t.classList.add('active');
+    var i=+t.dataset.i;
+    bodies.forEach(function(b){b.style.display=(+b.dataset.i===i)?'':'none'});
+    if(deckEl){ if(decks[i]){deckEl.textContent=decks[i];deckEl.style.display='';if(window.tropaMath)window.tropaMath(deckEl);} else {deckEl.style.display='none'} }
+    var link=document.getElementById('pdf-link'); if(link&&pdfs[i])link.href=pdfs[i];
+    if(window.tropaMath)window.tropaMath(bodies[i]);
+  });
+})();
+
+</script>
+
+</body>
+</html>

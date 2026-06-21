@@ -1,0 +1,6 @@
+Зеркало-бэкап репозитория MerkulovDaniil/tropa (сайт tropa.fmin.xyz).
+Источник правды — репо Даниила; здесь read-only копия, руками не редактировать.
+Обновляется скриптом tools/sync-site-mirror.sh после каждого push к Даниилу.
+
+source_repo: https://github.com/MerkulovDaniil/tropa
+mirror_commit: 28b4a7d00786c67371761b3b20687688a365fd2c

@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Скиллы — Тропа</title>
+<link rel="icon" href="/assets/trees.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site-bar/bot.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
+<script>
+// Рендер математики ТОЛЬКО после загрузки шрифтов KaTeX. Иначе KaTeX считает
+// позицию черты корня/дроби по метрикам фолбэк-шрифта → линия ложится поперёк
+// подкоренного (видимое «зачёркивание»), и без ре-рендера не лечится.
+// ignoredClasses:['katex'] — повторный проход не трогает уже отрендеренное.
+(function(){
+  var KX={delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false,ignoredClasses:['katex']};
+  function whenFontsReady(cb){
+    var fams=['KaTeX_Main','KaTeX_Math','KaTeX_Size1','KaTeX_Size2','KaTeX_Size3','KaTeX_Size4','KaTeX_AMS'];
+    if(document.fonts&&document.fonts.load){
+      Promise.all(fams.map(function(f){return document.fonts.load('1em '+f).catch(function(){});}))
+        .then(function(){return document.fonts.ready;}).then(cb,cb);
+    } else { cb(); }
+  }
+  window.tropaMath=function(el){ if(typeof renderMathInElement==='function'){ whenFontsReady(function(){ renderMathInElement(el,KX); }); } };
+  window.addEventListener('load',function(){ window.tropaMath(document.body); });
+})();
+</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip}
+body{max-width:100%;overflow-x:clip}
+/* TROPA design system — палитра дизайн-пака */
+:root{
+  --sand:#DBD4C7;--sage:#B8B5A6;--olive:#7C7F6A;--char:#3E4038;--ink:#1A1A18;
+  --g:#7C7F6A;--gd:#3E4038;--gl:#F4F2EE;--bg:#FFFFFF;--card:#FFFFFF;
+  --tx:#1A1A18;--tm:#6E7163;--bd:#EAE7E0;--r:10px;
+  --serif:"Cormorant Garamond",Georgia,serif;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:-0.01em}
+a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
+.w{max-width:760px;margin:0 auto;padding:0 24px}
+.nav{padding:14px 0;border-bottom:1px solid var(--bd);background:#fff}
+.nav-inner{display:flex;align-items:center;gap:22px}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.3rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);line-height:1;display:flex;align-items:center;gap:9px}
+.nav-logo img{width:22px;height:22px}
+.nav-spacer{flex:1}
+.nav-link{font-size:0.82rem;color:var(--tm);display:flex;align-items:center;line-height:1;letter-spacing:0.01em}
+.nav-link:hover{color:var(--ink);text-decoration:none}
+.nav-icon{display:flex;align-items:center;justify-content:center;color:var(--tm);transition:color 0.15s}
+.nav-icon:hover{color:var(--olive);text-decoration:none}
+.nav-icon i{width:16px;height:16px}
+
+.page-hero{padding:48px 0 32px}
+.page-hero h1{font-size:1.8rem;font-weight:700;margin-bottom:4px}
+.page-hero p{color:var(--tm);font-size:0.92rem}
+.skill-grid{display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
+.skill-row{display:flex;align-items:center;gap:14px;padding:16px 20px;border:1px solid var(--bd);border-radius:var(--r);cursor:pointer;transition:all 0.15s;background:#fff}
+.skill-row:hover{border-color:var(--g);box-shadow:0 2px 8px rgba(47,111,99,0.06)}
+.skill-row.active{border-color:var(--g);background:var(--gl)}
+.skill-row .sr-icon{flex-shrink:0;width:36px;height:36px;border-radius:8px;background:var(--gl);display:flex;align-items:center;justify-content:center;color:var(--g)}
+.skill-row .sr-info{flex:1;min-width:0}
+.skill-row .sr-name{font-weight:600;font-size:0.95rem}
+.skill-row .sr-desc{font-size:0.8rem;color:var(--tm);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.skill-row .sr-badge{font-size:0.68rem;padding:2px 7px;border-radius:5px;font-weight:500;flex-shrink:0}
+.sr-badge.ready{background:var(--gl);color:var(--g)}
+.sr-badge.planned{background:#fef3c7;color:#92400e}
+.skill-row .sr-actions{display:flex;gap:6px;flex-shrink:0}
+.sr-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:6px;border:1px solid var(--bd);background:#fff;color:var(--tm);cursor:pointer;transition:all 0.15s;text-decoration:none}
+.sr-btn:hover{border-color:var(--g);color:var(--g);background:var(--gl);text-decoration:none}
+.sr-btn.copied{border-color:var(--g);color:var(--g);background:var(--gl)}
+.skill-detail{display:none;border:1px solid var(--bd);border-radius:var(--r);margin-top:-6px;padding:24px;background:#fff}
+.skill-detail.visible{display:block}
+.skill-detail .sd-content{font-size:0.85rem;line-height:1.7;color:var(--tx);max-width:720px}
+.sd-content h2{font-size:1rem;font-weight:600;margin:20px 0 8px;color:var(--gd)}
+.sd-content h3{font-size:0.9rem;font-weight:600;margin:14px 0 6px}
+.sd-content table{width:100%;border-collapse:collapse;font-size:0.82rem;margin:8px 0}
+.sd-content th{text-align:left;padding:6px 10px;border-bottom:1px solid var(--bd);font-weight:600;font-size:0.78rem;color:var(--tm)}
+.sd-content td{padding:6px 10px;border-bottom:1px solid var(--bd)}
+.sd-content code{background:var(--gl);padding:1px 5px;border-radius:4px;font-size:0.82rem}
+.sd-content pre{background:#1a2320;color:#a8d5c8;padding:14px 18px;border-radius:8px;font-size:0.8rem;overflow-x:auto;margin:8px 0;line-height:1.5}
+.sd-content pre code{background:none;padding:0;color:inherit}
+.sd-content ul,.sd-content ol{padding-left:20px;margin:6px 0}
+.sd-content li{margin:3px 0}
+.sd-content blockquote{border-left:3px solid var(--g);padding:4px 14px;margin:8px 0;color:var(--tm);font-style:italic}
+@media(max-width:640px){.skill-row .sr-desc{display:none}.skill-row{padding:12px 14px}}
+
+@media(max-width:640px){
+  .w{padding:0 16px}
+  .nav-inner{gap:14px}
+  .nav-logo{font-size:1.12rem;letter-spacing:0.08em;gap:7px}
+  .nav-logo img{width:19px;height:19px}
+  .nav-link{font-size:0.8rem}
+  .nav-icon{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="w nav-inner">
+  <a href="/" class="nav-logo"><img src="/assets/trees.svg" alt="">Тропа</a>
+  <a href="/storylines/" class="nav-link">Сюжеты</a>
+  <a href="/innopolis/" class="nav-link">Маршрут</a>
+  <a href="/skills/" class="nav-link">Скиллы</a>
+  <a href="/bot/" class="nav-link">Бот</a>
+  <a href="/guides/" class="nav-link">Гиды</a>
+  <div class="nav-spacer"></div>
+  <a href="https://github.com/MerkulovDaniil/tropa" class="nav-icon"><i data-lucide="github"></i></a>
+  <a href="https://t.me/zoobr_bot" class="nav-icon"><i data-lucide="send"></i></a>
+</div></nav>
+
+<div class="w">
+  <div class="page-hero">
+    <h1>Скиллы</h1>
+    <p>Навыки для Claude Code. Клик — раскрыть документацию. Копировать — добавить себе.</p>
+  </div>
+  <div class="skill-grid">
+  
+    <div class="skill-row" data-idx="0">
+      <div class="sr-icon"><i data-lucide="wand-2" style="width:18px;height:18px"></i></div>
+      <div class="sr-info">
+        <div class="sr-name">Salute Speech TTS</div>
+        <div class="sr-desc">Генерация озвучки через Sber Salute Speech с SSML-разметкой</div>
+      </div>
+      <span class="sr-badge ready">ready</span>
+      <div class="sr-actions">
+        <a class="sr-btn" href="https://github.com/MerkulovDaniil/tropa/blob/main/skills/salute-tts/SKILL.md" target="_blank" title="Raw файл"><i data-lucide="file-text" style="width:14px;height:14px"></i></a>
+        <button class="sr-btn" onclick="event.stopPropagation();navigator.clipboard.writeText('https://github.com/MerkulovDaniil/tropa/blob/main/skills/salute-tts/SKILL.md');this.classList.add('copied');setTimeout(()=>this.classList.remove('copied'),1500)" title="Копировать ссылку"><i data-lucide="copy" style="width:14px;height:14px"></i></button>
+      </div>
+    </div>
+    
+    <div class="skill-detail" data-idx="0">
+      <div class="sd-content"><h1>Salute Speech TTS Generation</h1>
+<h2>Overview</h2>
+<p>Generate natural-sounding Russian narration audio for scientific trail POIs using Sber Salute Speech API with SSML markup for pauses, emphasis, and prosody control.</p>
+<h2>Engine Selection (auto)</h2>
+<p>Before generating audio, the build script checks Salute Speech credentials:</p>
+<ol>
+<li><strong>Salute Speech available</strong> (<code>SALUTE_AUTH_DATA</code> in env → token request succeeds): use Salute Speech API (Bys_24000 voice, best quality, SSML support)</li>
+<li><strong>Salute Speech unavailable</strong> (no creds or auth fails): fallback to <strong>Microsoft Edge TTS</strong> (<code>edge-tts</code> CLI, voice <code>ru-RU-DmitryNeural</code>, free, no API key)</li>
+</ol>
+<p>The script prints which engine is active at startup. Both engines produce MP3 output.</p>
+<h2>Quick Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Auth endpoint</td>
+<td><code>https://ngw.devices.sberbank.ru:9443/api/v2/oauth</code></td>
+</tr>
+<tr>
+<td>Synth endpoint</td>
+<td><code>https://smartspeech.sber.ru/rest/v1/text:synthesize</code></td>
+</tr>
+<tr>
+<td>Default voice</td>
+<td><code>Bys_24000</code> (Борис, мужской)</td>
+</tr>
+<tr>
+<td>Credentials</td>
+<td><code>SALUTE_AUTH_DATA</code> in <code>/root/config/.env</code> (base64 of client_id:client_secret)</td>
+</tr>
+<tr>
+<td>Free tier</td>
+<td>200 000 символов/мес</td>
+</tr>
+<tr>
+<td>Max per request</td>
+<td>4000 символов including SSML tags</td>
+</tr>
+<tr>
+<td>Output</td>
+<td>WAV 24kHz → convert to MP3 128kbps via ffmpeg</td>
+</tr>
+<tr>
+<td>Output dir</td>
+<td><code>/root/tropa/site/audio/</code></td>
+</tr>
+</tbody>
+</table>
+<h2>Available Voices</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Gender</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Nec_24000</code></td>
+<td>Наталья</td>
+<td>Ж</td>
+</tr>
+<tr>
+<td><code>Bys_24000</code></td>
+<td>Борис</td>
+<td>М</td>
+</tr>
+<tr>
+<td><code>May_24000</code></td>
+<td>Марфа</td>
+<td>Ж</td>
+</tr>
+<tr>
+<td><code>Tur_24000</code></td>
+<td>Тарас</td>
+<td>М</td>
+</tr>
+<tr>
+<td><code>Ost_24000</code></td>
+<td>Александра</td>
+<td>Ж</td>
+</tr>
+<tr>
+<td><code>Pon_24000</code></td>
+<td>Сергей</td>
+<td>М</td>
+</tr>
+</tbody>
+</table>
+<h2>Authentication</h2>
+<p>Token lives 30 min. Always get fresh before batch.</p>
+<pre><code class="language-python">import requests, uuid, os
+
+AUTH_DATA = os.environ.get('SALUTE_AUTH_DATA')  # from /root/config/.env
+resp = requests.post(
+    'https://ngw.devices.sberbank.ru:9443/api/v2/oauth',
+    headers={
+        'Authorization': f'Basic {AUTH_DATA}',
+        'RqUID': str(uuid.uuid4()),
+        'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    data='scope=SALUTE_SPEECH_PERS',
+    verify=False, timeout=10
+)
+token = resp.json()['access_token']
+</code></pre>
+<h2>Synthesis</h2>
+<pre><code class="language-python">resp = requests.post(
+    'https://smartspeech.sber.ru/rest/v1/text:synthesize',
+    headers={
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/ssml'  # or 'application/text' for plain
+    },
+    params={'voice': 'Bys_24000'},
+    data=ssml_text.encode('utf-8'),
+    verify=False, timeout=20
+)
+# resp.content = WAV audio bytes
+</code></pre>
+<h2>SSML Best Practices for Scientific Narration</h2>
+<h3>Structure</h3>
+<p>Always wrap in <code>&lt;speak&gt;</code> root tag:</p>
+<pre><code class="language-xml">&lt;speak&gt;
+First paragraph text.
+&lt;break time=&quot;400ms&quot;/&gt;
+Second paragraph text.
+&lt;/speak&gt;
+</code></pre>
+<h3>Pauses</h3>
+<table>
+<thead>
+<tr>
+<th>Context</th>
+<th>Tag</th>
+<th>Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Between paragraphs</td>
+<td><code>&lt;break time="400ms"/&gt;</code></td>
+<td>300-500ms</td>
+</tr>
+<tr>
+<td>After question</td>
+<td><code>&lt;break time="300ms"/&gt;</code></td>
+<td>200-400ms</td>
+</tr>
+<tr>
+<td>Dramatic pause</td>
+<td><code>&lt;break time="500ms"/&gt;</code></td>
+<td>500-700ms</td>
+</tr>
+<tr>
+<td>Comma-level</td>
+<td><code>&lt;break time="200ms"/&gt;</code></td>
+<td>100-200ms</td>
+</tr>
+<tr>
+<td>Between sentences</td>
+<td>natural, no tag needed</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3>Emphasis</h3>
+<p>Asterisk directly before word (no space):</p>
+<pre><code class="language-xml">&lt;speak&gt;Ошибка в *одну миллионную долю секунды&lt;/speak&gt;
+</code></pre>
+<h3>Stress Marks (Russian) — CRITICAL</h3>
+<p>TTS часто ошибается в ударениях научных и редких слов. Апостроф после ударной гласной:</p>
+<pre><code class="language-xml">&lt;speak&gt;Закон Фараде'я. Ковариа'нция. Трилатера'ция.&lt;/speak&gt;
+</code></pre>
+<p><strong>Обязательно проверять и размечать:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Разметка</th>
+<th>Почему</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Фарадей</td>
+<td><code>Фараде'я</code></td>
+<td>TTS ставит на первый слог</td>
+</tr>
+<tr>
+<td>трилатерация</td>
+<td><code>трилатера'ция</code></td>
+<td>Редкое слово</td>
+</tr>
+<tr>
+<td>ковариация</td>
+<td><code>ковариа'ция</code></td>
+<td>Мат. термин</td>
+</tr>
+<tr>
+<td>когезия</td>
+<td><code>коге'зия</code></td>
+<td>Физ. термин</td>
+</tr>
+<tr>
+<td>кавитация</td>
+<td><code>кавита'ция</code></td>
+<td>Физ. термин</td>
+</tr>
+<tr>
+<td>ксилема</td>
+<td><code>ксиле'ма</code></td>
+<td>Биол. термин</td>
+</tr>
+<tr>
+<td>одометрия</td>
+<td><code>одоме'трия</code></td>
+<td>Техн. термин</td>
+</tr>
+<tr>
+<td>реверберация</td>
+<td><code>ревербера'ция</code></td>
+<td>Акустический термин</td>
+</tr>
+<tr>
+<td>изопериметрический</td>
+<td><code>изопериметри'ческий</code></td>
+<td>Мат. термин</td>
+</tr>
+<tr>
+<td>Вардроп</td>
+<td><code>Вардро'п</code></td>
+<td>Фамилия</td>
+</tr>
+<tr>
+<td>Браесс</td>
+<td><code>Бра'есс</code></td>
+<td>Фамилия</td>
+</tr>
+<tr>
+<td>Хаген-Пуазёйль</td>
+<td><code>Хаге'н-Пуазёйль</code></td>
+<td>Двойная фамилия</td>
+</tr>
+<tr>
+<td>Торричелли</td>
+<td><code>Торриче'лли</code></td>
+<td>Фамилия</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Правило:</strong> перед генерацией прослушать тестовый фрагмент с каждым непростым словом. Если ударение неправильное — добавить апостроф. Лучше поставить лишний апостроф, чем пропустить ошибку.</p>
+<h3>Prosody Control</h3>
+<pre><code class="language-xml">&lt;paint pitch=&quot;4&quot; speed=&quot;3&quot; loudness=&quot;4&quot;&gt;важная фраза&lt;/paint&gt;
+</code></pre>
+<p>Attributes: <code>pitch</code> (1-5), <code>speed</code> (1-5), <code>loudness</code> (1-5).</p>
+<h3>Emotions</h3>
+<pre><code class="language-xml">&lt;voice mode=&quot;happy&quot;&gt;радостная фраза&lt;/voice&gt;
+</code></pre>
+<p>Modes: <code>sad</code>, <code>annoyed</code>, <code>happy</code>, <code>whisper</code>.</p>
+<h3>Numbers and Formulas — Always as Words</h3>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>SSML text</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>300 м</code></td>
+<td><code>триста метров</code></td>
+</tr>
+<tr>
+<td><code>7.5 км/ч</code></td>
+<td><code>семь с половиной километров в час</code></td>
+</tr>
+<tr>
+<td><code>10⁻³</code></td>
+<td><code>десять в минус третьей</code></td>
+</tr>
+<tr>
+<td><code>ρgh</code></td>
+<td><code>ро же аш</code></td>
+</tr>
+<tr>
+<td><code>T₆₀</code></td>
+<td><code>тэ шестьдесят</code></td>
+</tr>
+<tr>
+<td><code>≈</code></td>
+<td><code>примерно</code></td>
+</tr>
+<tr>
+<td><code>ω²</code></td>
+<td><code>омега в квадрате</code></td>
+</tr>
+<tr>
+<td><code>μ</code></td>
+<td><code>мю</code></td>
+</tr>
+<tr>
+<td><code>Δt</code></td>
+<td><code>дельта тэ</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Special Content</h3>
+<pre><code class="language-xml">&lt;say-as interpret-as=&quot;cardinal&quot;&gt;42&lt;/say-as&gt;
+&lt;say-as interpret-as=&quot;date&quot; detail=&quot;d.m.y&quot;&gt;25.01.2000&lt;/say-as&gt;
+&lt;sub alias=&quot;мартэновских&quot;&gt;мартеновских&lt;/sub&gt;
+</code></pre>
+<h2>Narration Writing Rules (Gasnikov Style)</h2>
+<h3>Cardinal Rule: Eyes-Free</h3>
+<p>All narrations MUST be fully comprehensible without looking at a screen, card, or stend. The listener is walking, looking around, not reading. This means:
+- Formulas are spoken as words: $\rho g h$ → "ро жэ аш", $T_{60} \approx 1.6$ → "тэ шестьдесят — примерно одна и шесть"
+- Visual references ("посмотри на график", "как показано на схеме") are FORBIDDEN
+- Spatial references are OK if they point to the physical world: "посмотри на деревья вокруг", "хлопни в ладоши здесь"
+- Structure conveyed by voice: pauses between sections, prosody changes for key points
+- Each level is a self-contained audio experience, not a supplement to a card</p>
+<h3>Three Levels of Audio</h3>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Duration</th>
+<th>Content</th>
+<th>Style</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L1 (базовый)</td>
+<td>40–90 sec</td>
+<td>Hook + action + one thought + anchor</td>
+<td>Энергичный, удивляющий</td>
+</tr>
+<tr>
+<td>L2 (с формулами)</td>
+<td>90–180 sec</td>
+<td>Mechanism + formula as words + cross-section</td>
+<td>Рассуждающий, как лекция</td>
+</tr>
+<tr>
+<td>L3 (доп. факты)</td>
+<td>180–300 sec</td>
+<td>5 micro-stories, history, open question</td>
+<td>Собеседник, как подкаст</td>
+</tr>
+</tbody>
+</table>
+<h3>Style Rules</h3>
+<ol>
+<li>Start with local binding: "Посмотри на...", "Ты только что..."</li>
+<li>One baffling opener per POI</li>
+<li>Numbers as words, formulas as speech</li>
+<li>Short sentences for audio (max 25 words)</li>
+<li>Pause after questions and before key reveals</li>
+<li>End with bridge to next concept</li>
+<li>L2: formula explained step by step BEFORE stating it — "расстояние равно скорости, умноженной на время задержки... записывается как ро равно цэ умножить на дельта тэ"</li>
+<li>L3: each micro-story has its own intro pause (500ms) and slightly different energy</li>
+</ol>
+<h2>Pipeline: Anti-AI → SSML → TTS</h2>
+<p>Audio production is a TWO-SKILL pipeline. Skipping the first skill produces robotic, AI-sounding narrations.</p>
+<h3>Step 1: Anti-AI Check (MANDATORY before TTS)</h3>
+<p>Before converting any text to SSML, run it through the <code>anti-ai-text</code> skill (<code>/root/tropa/skills/anti-ai-text/SKILL.md</code>). This catches:
+- Канцелярит: "является", "представляет собой", "обеспечивает"
+- AI patterns: "важно отметить", "в рамках данного", "таким образом"
+- Faux-academic filler: "демонстрирует", "содействует", "подчёркивает"
+- Structural tells: rule-of-three adjectives, trailing participles</p>
+<p><strong>Process:</strong> Take the l1/l2/l3 text from YAML → scan with anti-ai-text rules → rewrite flagged phrases → THEN convert to SSML.</p>
+<p>A narration that passes TTS but fails anti-ai is worse than no narration — the listener will hear "AI voice reading AI text" and tune out.</p>
+<h3>Step 2: SSML Conversion</h3>
+<p>Convert cleaned text to SSML with stress marks, breaks, emphasis, numbers-as-words per rules above.</p>
+<h3>Step 3: TTS Generation</h3>
+<p>See <code>build_audio.py</code> in this directory for the complete pipeline script.</p>
+<h3>Validation Checklist</h3>
+<p>Before committing audio:
+- [ ] Source text passed anti-ai scan (0 flags)
+- [ ] All formulas spoken as words (no symbols read as-is)
+- [ ] All scientific terms have stress marks
+- [ ] Narration makes sense without looking at screen
+- [ ] Duration within level range (L1: 40-90s, L2: 90-180s, L3: 180-300s)</p>
+<p>Usage:</p>
+<pre><code class="language-bash">cd /root/tropa
+python skills/salute-tts/build_audio.py                    # all POIs
+python skills/salute-tts/build_audio.py --poi 01 05        # specific POIs
+python skills/salute-tts/build_audio.py --voice Nec_24000  # different voice
+</code></pre>
+<h2>Common Mistakes</h2>
+<table>
+<thead>
+<tr>
+<th>Mistake</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sending LaTeX/unicode math</td>
+<td>Write as Russian words</td>
+</tr>
+<tr>
+<td>No <code>&lt;speak&gt;</code> wrapper</td>
+<td>SSML requires <code>&lt;speak&gt;</code> root</td>
+</tr>
+<tr>
+<td><code>Content-Type: application/text</code> with SSML</td>
+<td>Use <code>application/ssml</code></td>
+</tr>
+<tr>
+<td>Token expired (30 min)</td>
+<td>Fresh token before each batch</td>
+</tr>
+<tr>
+<td>Text &gt; 4000 chars</td>
+<td>Split into segments</td>
+</tr>
+<tr>
+<td><code>&amp;</code> in text</td>
+<td>Escape as <code>&amp;amp;</code></td>
+</tr>
+<tr>
+<td>Missing <code>verify=False</code></td>
+<td>Sber API requires it</td>
+</tr>
+</tbody>
+</table></div>
+    </div>
+    
+  
+    <div class="skill-row" data-idx="1">
+      <div class="sr-icon"><i data-lucide="wand-2" style="width:18px;height:18px"></i></div>
+      <div class="sr-info">
+        <div class="sr-name">Anti-AI Text</div>
+        <div class="sr-desc">Детекция и переписывание ИИ-звучащего текста (RU + EN). Wikipedia catalogs + канцелярит + rewrite rules</div>
+      </div>
+      <span class="sr-badge ready">ready</span>
+      <div class="sr-actions">
+        <a class="sr-btn" href="https://github.com/MerkulovDaniil/tropa/blob/main/skills/anti-ai-text/SKILL.md" target="_blank" title="Raw файл"><i data-lucide="file-text" style="width:14px;height:14px"></i></a>
+        <button class="sr-btn" onclick="event.stopPropagation();navigator.clipboard.writeText('https://github.com/MerkulovDaniil/tropa/blob/main/skills/anti-ai-text/SKILL.md');this.classList.add('copied');setTimeout(()=>this.classList.remove('copied'),1500)" title="Копировать ссылку"><i data-lucide="copy" style="width:14px;height:14px"></i></button>
+      </div>
+    </div>
+    
+    <div class="skill-detail" data-idx="1">
+      <div class="sd-content"><h1>Anti-AI Text Skill (EN + RU)</h1>
+<p>A detection-and-rewrite skill grounded in:
+- English: <a href="https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing">Wikipedia:Signs of AI writing</a>
+- Russian: <a href="https://ru.wikipedia.org/wiki/Википедия:Признаки_сгенерированности_текста">Википедия:Признаки сгенерированности текста</a>
+- Practical rules from the <code>crimeacs/ai-tells-validator</code> skill and Russian humanizer research</p>
+<hr />
+<h2>Workflow: Detect → Flag → Rewrite</h2>
+<h3>Step 1: DETECT — scan for markers</h3>
+<p>Read the text and check against all categories below. Count violations.</p>
+<h3>Step 2: FLAG — report findings</h3>
+<p>For each violation, output:</p>
+<pre><code>[CATEGORY] &quot;offending quote&quot; → explanation
+</code></pre>
+<h3>Step 3: REWRITE — eliminate tells</h3>
+<p>Apply rewrite rules (Section III) to produce clean text that:
+- Preserves meaning and factual content
+- Sounds like a competent human author
+- Passes re-scan with zero flags</p>
+<hr />
+<h2>I. English AI Tells</h2>
+<h3>A. Banned Words</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Why it flags</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>delve, delving</td>
+<td>#1 ChatGPT tell since 2023</td>
+</tr>
+<tr>
+<td>tapestry</td>
+<td>metaphor overuse</td>
+</tr>
+<tr>
+<td>intricate, intricacies</td>
+<td>false sophistication</td>
+</tr>
+<tr>
+<td>landscape</td>
+<td>vague buzzword</td>
+</tr>
+<tr>
+<td>meticulous, meticulously</td>
+<td>inflation</td>
+</tr>
+<tr>
+<td>pivotal</td>
+<td>drama inflation</td>
+</tr>
+<tr>
+<td>robust</td>
+<td>tech buzzword</td>
+</tr>
+<tr>
+<td>underscore, underscores</td>
+<td>faux-academic</td>
+</tr>
+<tr>
+<td>showcase, showcasing</td>
+<td>promotional</td>
+</tr>
+<tr>
+<td>testament</td>
+<td>dramatic framing</td>
+</tr>
+<tr>
+<td>enduring</td>
+<td>significance inflation</td>
+</tr>
+<tr>
+<td>fostering, foster</td>
+<td>vague causation</td>
+</tr>
+<tr>
+<td>garner</td>
+<td>archaic formality</td>
+</tr>
+<tr>
+<td>bolster, bolstered</td>
+<td>inflation</td>
+</tr>
+<tr>
+<td>interplay</td>
+<td>faux-intellectual</td>
+</tr>
+<tr>
+<td>leverage, leveraging</td>
+<td>SaaS-speak</td>
+</tr>
+<tr>
+<td>streamline, streamlined</td>
+<td>SaaS-speak</td>
+</tr>
+<tr>
+<td>transformative</td>
+<td>hype</td>
+</tr>
+<tr>
+<td>groundbreaking</td>
+<td>hype</td>
+</tr>
+<tr>
+<td>cutting-edge</td>
+<td>hype</td>
+</tr>
+<tr>
+<td>seamless, seamlessly</td>
+<td>SaaS-speak</td>
+</tr>
+<tr>
+<td>elevate, elevating</td>
+<td>SaaS-speak</td>
+</tr>
+<tr>
+<td>unlock, unlocking</td>
+<td>SaaS-speak</td>
+</tr>
+<tr>
+<td>empower, empowering</td>
+<td>SaaS-speak</td>
+</tr>
+<tr>
+<td>revolutionize</td>
+<td>hype</td>
+</tr>
+<tr>
+<td>paradigm</td>
+<td>buzzword</td>
+</tr>
+<tr>
+<td>synergy</td>
+<td>corporate-speak</td>
+</tr>
+<tr>
+<td>holistic</td>
+<td>buzzword</td>
+</tr>
+<tr>
+<td>vibrant</td>
+<td>promotional fluff</td>
+</tr>
+</tbody>
+</table>
+<h3>B. Banned Phrases</h3>
+<ul>
+<li>"I hope this email finds you well"</li>
+<li>"circling back" / "touching base" / "just checking in"</li>
+<li>"in conclusion" / "in summary" / "to summarize"</li>
+<li>"it is important to note" / "it's worth noting"</li>
+<li>"in today's fast-paced / rapidly evolving / digital age"</li>
+<li>"plays a vital/crucial/pivotal/key role"</li>
+<li>"navigate the complexities"</li>
+<li>"in the realm of" / "in the world of" / "when it comes to"</li>
+<li>"at its core" / "at its heart"</li>
+<li>"a powerful tool" / "best-in-class" / "world-class"</li>
+<li>"value proposition" / "thought leadership"</li>
+<li>"looking forward to hearing from you"</li>
+<li>"hope this helps"</li>
+<li>"let me know your thoughts"</li>
+<li>"a deep dive" / "a treasure trove" / "a wealth of"</li>
+</ul>
+<h3>C. Structural Patterns</h3>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Example</th>
+<th>Detection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Negative parallelism</td>
+<td>"Not just X, but Y"</td>
+<td>regex: <code>not (just\|merely\|only) .+ but</code></td>
+</tr>
+<tr>
+<td>Rule of Three</td>
+<td>"clear, sourced, and trustworthy"</td>
+<td>three comma-separated adjectives</td>
+</tr>
+<tr>
+<td>Trailing participle</td>
+<td>", ensuring X" / ", driving Y"</td>
+<td>comma + gerund at clause end</td>
+</tr>
+<tr>
+<td>Whether-you're</td>
+<td>"Whether you're X or Y..."</td>
+<td>opener pattern</td>
+</tr>
+<tr>
+<td>Excited-to</td>
+<td>"Excited to share/announce"</td>
+<td>opener pattern</td>
+</tr>
+</tbody>
+</table>
+<h3>D. Punctuation &amp; Formatting</h3>
+<ul>
+<li><strong>Em-dash overuse</strong>: more than 1 per paragraph = flag. Em-dash is the #1 punctuation tell in 2026.</li>
+<li><strong>Smart/curly quotes</strong>: <code>""''</code> instead of straight quotes</li>
+<li><strong>Thematic breaks</strong>: <code>---</code> inside body text</li>
+<li><strong>Excessive bold</strong>: bolding every key term</li>
+<li><strong>Emoji as structure</strong>: emoji bullets or separators in professional text</li>
+</ul>
+<hr />
+<h2>II. Russian AI Tells (Признаки ИИ-текста)</h2>
+<h3>A. Слова-маркеры (Banned Words)</h3>
+<table>
+<thead>
+<tr>
+<th>Слово/оборот</th>
+<th>Почему палит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>является</td>
+<td>LLM используют 2-3x чаще людей, русский часто обходится без связки</td>
+</tr>
+<tr>
+<td>данный</td>
+<td>канцелярит, уместен только в юр. документах</td>
+</tr>
+<tr>
+<td>указанный</td>
+<td>то же</td>
+</tr>
+<tr>
+<td>вышеупомянутый</td>
+<td>то же</td>
+</tr>
+<tr>
+<td>обеспечивает</td>
+<td>шаблонный глагол поверхностного анализа</td>
+</tr>
+<tr>
+<td>демонстрирует</td>
+<td>то же</td>
+</tr>
+<tr>
+<td>содействует</td>
+<td>то же</td>
+</tr>
+<tr>
+<td>соответствует</td>
+<td>то же</td>
+</tr>
+<tr>
+<td>подчёркивает</td>
+<td>faux-academic</td>
+</tr>
+<tr>
+<td>символизирует</td>
+<td>драматизация</td>
+</tr>
+<tr>
+<td>выступает (в роли)</td>
+<td>канцелярит вместо простого "это"</td>
+</tr>
+<tr>
+<td>осуществляет</td>
+<td>номинализация: "осуществить проверку" вместо "проверить"</td>
+</tr>
+<tr>
+<td>представляет собой</td>
+<td>канцелярит</td>
+</tr>
+<tr>
+<td>затрагивает</td>
+<td>вода</td>
+</tr>
+<tr>
+<td>способствует</td>
+<td>вода</td>
+</tr>
+<tr>
+<td>погружаться</td>
+<td>калька с "delve"</td>
+</tr>
+<tr>
+<td>гобелен</td>
+<td>калька с "tapestry"</td>
+</tr>
+<tr>
+<td>переплетение</td>
+<td>калька с "interplay"</td>
+</tr>
+<tr>
+<td>нюанс (мн.)</td>
+<td>калька с "nuance"</td>
+</tr>
+</tbody>
+</table>
+<h3>B. Фразы-маркеры (Banned Phrases)</h3>
+<p><strong>Канцелярит и наукообразие:</strong>
+- "В рамках" (данного исследования/проекта/статьи)
+- "Важно отметить" / "Стоит отметить" / "Стоит подчеркнуть"
+- "Необходимо учитывать"
+- "На основании вышеизложенного"
+- "В контексте" (чего-либо)
+- "Таким образом" (как вводное к выводу)
+- "В заключение следует отметить"
+- "Представляет собой"
+- "Играет важную/ключевую/значительную роль"
+- "Оказывает влияние на"
+- "Носит характер"</p>
+<p><strong>Рекламный язык:</strong>
+- "Может похвастаться"
+- "Расположенный в самом сердце"
+- "Потрясающая природная красота"
+- "Вековое наследие"
+- "Богатый, яркий, разнообразный"
+- "Уникальный" (без обоснования)</p>
+<p><strong>Ложная глубина:</strong>
+- "Это не просто X, это Y"
+- "Не только... но и..."
+- "Неизгладимый след"
+- "Поворотный момент"
+- "Служит напоминанием"
+- "Свидетельство мастерства/эпохи"</p>
+<p><strong>Диалоговые артефакты:</strong>
+- "Конечно!" / "Безусловно!"
+- "Я надеюсь, это помогло"
+- "Если хотите узнать больше, дайте знать"
+- "Сообщите мне"
+- "Давайте рассмотрим"</p>
+<p><strong>Ложные кальки с английского:</strong>
+- "В конце дня" (at the end of the day)
+- "Давайте нырнём" (let's dive in)
+- "За пределами коробки" (outside the box)
+- "На одной странице" (on the same page)</p>
+<h3>C. Структурные паттерны</h3>
+<table>
+<thead>
+<tr>
+<th>Паттерн</th>
+<th>Пример</th>
+<th>Обнаружение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Цепочки родительного падежа</td>
+<td>"улучшение качества обслуживания клиентов компании"</td>
+<td>3+ существительных в Р.п. подряд</td>
+</tr>
+<tr>
+<td>Номинализация</td>
+<td>"осуществить проверку" вместо "проверить"</td>
+<td>глагол + отглагольное сущ.</td>
+</tr>
+<tr>
+<td>Деепричастные нагромождения</td>
+<td>"являясь ключевым элементом, обеспечивая..."</td>
+<td>2+ деепричастных оборота в одном предложении</td>
+</tr>
+<tr>
+<td>Правило трёх</td>
+<td>"быстрый, удобный и надёжный"</td>
+<td>три однородных прилагательных</td>
+</tr>
+<tr>
+<td>Параллелизм с отрицанием</td>
+<td>"Не только X, но и Y"</td>
+<td>шаблонная конструкция</td>
+</tr>
+<tr>
+<td>Меризм (крайности)</td>
+<td>"от лёгкого до тяжёлого"</td>
+<td>"от X до Y" без конкретики</td>
+</tr>
+<tr>
+<td>Шаблонные секции</td>
+<td>"Проблемы и перспективы" → "Несмотря на... всё же..."</td>
+<td>структурный шаблон</td>
+</tr>
+<tr>
+<td>Принудительный оптимизм</td>
+<td>Статья о проблемах заканчивается позитивом</td>
+<td>структурный шаблон</td>
+</tr>
+<tr>
+<td>Однообразие длин</td>
+<td>все абзацы ~одинаковой длины</td>
+<td>burstiness &lt; порога</td>
+</tr>
+</tbody>
+</table>
+<h3>D. Пунктуация и оформление</h3>
+<ul>
+<li><strong>Тире вместо запятых</strong>: плотность &gt; 5 на 1000 символов = флаг (норма для человека ~2-3)</li>
+<li><strong>Списки вместо текста</strong>: если &gt;40% текста — маркированные списки</li>
+<li><strong>Жирный шрифт россыпью</strong>: выделение каждого термина <strong>жирным</strong></li>
+<li><strong>Эмодзи как структура</strong>: 🚀 📌 ✅ как маркеры списков в серьёзном тексте</li>
+<li><strong>Markdown-артефакты</strong>: <code>##</code>, <code>**</code>, <code>---</code> в тексте не предназначенном для рендеринга</li>
+<li><strong>Заголовки С Большой Буквы Каждого Слова</strong>: калька с Title Case</li>
+</ul>
+<hr />
+<h2>III. Правила перезаписи (Rewrite Rules)</h2>
+<h3>Универсальные (EN + RU)</h3>
+<ol>
+<li><strong>Убить em-dash</strong>: заменить на запятую, точку с запятой, двоеточие, или перестроить предложение</li>
+<li><strong>Разбить Rule of Three</strong>: оставить 2 элемента или переформулировать</li>
+<li><strong>Убить trailing participle</strong>: сделать отдельным предложением или убрать</li>
+<li><strong>Убить negative parallelism</strong>: прямое утверждение вместо "не X, а Y"</li>
+<li><strong>Разнообразить длину</strong>: чередовать короткие (5-8 слов) и длинные (15-25 слов) предложения</li>
+<li><strong>Убрать вводные-паразиты</strong>: "Важно отметить" → просто написать утверждение</li>
+</ol>
+<h3>Русскоязычные</h3>
+<table>
+<thead>
+<tr>
+<th>Что убить</th>
+<th>Чем заменить</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"является"</td>
+<td>убрать связку: "Москва — столица" вместо "Москва является столицей"</td>
+</tr>
+<tr>
+<td>"данный"</td>
+<td>"этот", "такой", или убрать</td>
+</tr>
+<tr>
+<td>"В рамках"</td>
+<td>"В", "При", "Для", или перестроить</td>
+</tr>
+<tr>
+<td>"осуществить X"</td>
+<td>прямой глагол: "проверить" вместо "осуществить проверку"</td>
+</tr>
+<tr>
+<td>"представляет собой"</td>
+<td>тире или ничего</td>
+</tr>
+<tr>
+<td>"оказывает влияние"</td>
+<td>"влияет"</td>
+</tr>
+<tr>
+<td>"играет роль"</td>
+<td>"важен для" или конкретизировать</td>
+</tr>
+<tr>
+<td>"Таким образом"</td>
+<td>убрать или "Итого:" / "Значит,"</td>
+</tr>
+<tr>
+<td>"Стоит отметить"</td>
+<td>убрать, написать факт напрямую</td>
+</tr>
+<tr>
+<td>"В контексте X"</td>
+<td>"для X", "при X", или убрать</td>
+</tr>
+<tr>
+<td>"обеспечивает"</td>
+<td>конкретный глагол: "даёт", "создаёт", "позволяет"</td>
+</tr>
+<tr>
+<td>Цепочка Р.п.</td>
+<td>разбить предлогами: "качество обслуживания для клиентов"</td>
+</tr>
+<tr>
+<td>Деепричастный оборот ×2</td>
+<td>разбить на два предложения</td>
+</tr>
+<tr>
+<td>Правило трёх</td>
+<td>два элемента или абзац с пояснениями</td>
+</tr>
+</tbody>
+</table>
+<h3>Англоязычные</h3>
+<table>
+<thead>
+<tr>
+<th>Что убить</th>
+<th>Чем заменить</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"delve"</td>
+<td>"look at", "examine", "explore"</td>
+</tr>
+<tr>
+<td>"landscape"</td>
+<td>name the specific domain</td>
+</tr>
+<tr>
+<td>"leverage"</td>
+<td>"use"</td>
+</tr>
+<tr>
+<td>"streamline"</td>
+<td>"simplify", "speed up"</td>
+</tr>
+<tr>
+<td>"transformative"</td>
+<td>describe the actual change</td>
+</tr>
+<tr>
+<td>"seamless"</td>
+<td>"smooth", "easy", or describe how</td>
+</tr>
+<tr>
+<td>"unlock"</td>
+<td>"enable", "allow", "open"</td>
+</tr>
+<tr>
+<td>"robust"</td>
+<td>"strong", "reliable", or specify</td>
+</tr>
+<tr>
+<td>"I hope this finds you well"</td>
+<td>cut entirely, start with substance</td>
+</tr>
+<tr>
+<td>"in conclusion"</td>
+<td>just state the conclusion</td>
+</tr>
+<tr>
+<td>Trailing ", ensuring X"</td>
+<td>new sentence: "This ensures X."</td>
+</tr>
+<tr>
+<td>Em-dash parenthetical</td>
+<td>use commas or restructure</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>IV. Detection Checklist</h2>
+<p>Use this checklist when reviewing text:</p>
+<pre><code>[ ] Banned words (EN): delve, tapestry, leverage, seamless, etc.
+[ ] Banned words (RU): является, данный, обеспечивает, осуществляет, etc.
+[ ] Banned phrases (EN): &quot;important to note&quot;, &quot;plays a key role&quot;, etc.
+[ ] Banned phrases (RU): &quot;В рамках&quot;, &quot;Важно отметить&quot;, &quot;Стоит подчеркнуть&quot;, etc.
+[ ] Structural: Rule of Three present?
+[ ] Structural: Trailing participle clauses?
+[ ] Structural: Negative parallelism (&quot;not just X, but Y&quot;)?
+[ ] Structural (RU): Genitive chains (3+ in a row)?
+[ ] Structural (RU): Nominalizations instead of verbs?
+[ ] Structural (RU): Depricipal clause pileup?
+[ ] Punctuation: Em-dash density (&gt;1 per paragraph EN, &gt;5/1000 chars RU)?
+[ ] Punctuation: Smart/curly quotes?
+[ ] Formatting: Excessive bold, emoji bullets, markdown artifacts?
+[ ] Formatting: Title Case headings in Russian?
+[ ] Sentence variety: all similar length? (burstiness check)
+[ ] Tone: forced optimism at the end?
+[ ] Tone: promotional language without substance?
+[ ] Dialogue artifacts: &quot;Конечно!&quot;, &quot;Let me know&quot;, etc.?
+[ ] English calques in Russian text?
+</code></pre>
+<hr />
+<h2>V. Severity Levels</h2>
+<ul>
+<li><strong>CRITICAL</strong> (instant fail): dialogue artifacts ("Конечно, я помогу!"), knowledge-cutoff disclaimers, em-dash density &gt;8/1000, markdown artifacts in non-markdown context, "delve"</li>
+<li><strong>HIGH</strong> (fix required): "является" density &gt;2 per page, "В рамках" anywhere, banned phrase from top-20 list, Rule of Three + trailing participle in same paragraph</li>
+<li><strong>MEDIUM</strong> (should fix): single banned word, minor genitive chain, one em-dash too many</li>
+<li><strong>LOW</strong> (optional): borderline synonym variety, slightly formulaic structure</li>
+</ul>
+<hr />
+<h2>VI. Context-Specific Presets</h2>
+<h3>Academic Russian (диссертация, статья)</h3>
+<ul>
+<li>Allow: "Таким образом" (1x in conclusions), "В рамках" (1x in intro if specifying scope)</li>
+<li>Strict on: номинализация, цепочки Р.п., деепричастные нагромождения, "является"</li>
+<li>Extra rule: avoid anglicisms, prefer established Russian terminology</li>
+</ul>
+<h3>Habr / Tech Blog</h3>
+<ul>
+<li>Strict on: em-dash density, listicle structure, bold spam, emoji bullets</li>
+<li>Allow: some informal constructions, code terms</li>
+<li>Extra rule: vary section structures, intersperse personal narrative</li>
+</ul>
+<h3>Telegram Post</h3>
+<ul>
+<li>Strict on: dialogue artifacts, promotional language, calques</li>
+<li>Allow: short sentences, colloquial tone</li>
+<li>Extra rule: no "Важно отметить" — just say it</li>
+</ul>
+<h3>Cold Outbound Email (EN)</h3>
+<ul>
+<li>Zero em-dashes allowed</li>
+<li>Zero banned phrases from email category</li>
+<li>Strict on: "I hope this finds you well", "looking forward to hearing"</li>
+<li>Extra rule: first sentence = substance, not pleasantry</li>
+</ul>
+<h3>Marketing Copy</h3>
+<ul>
+<li>Strict on: all SaaS-speak (leverage, unlock, seamless, synergy)</li>
+<li>Strict on: Rule of Three, trailing participles</li>
+<li>Extra rule: replace every buzzword with a concrete claim</li>
+</ul>
+<hr />
+<h2>VII. References</h2>
+<ol>
+<li><a href="https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing">Wikipedia:Signs of AI writing</a> — English catalog (community-maintained, updated frequently)</li>
+<li><a href="https://ru.wikipedia.org/wiki/Википедия:Признаки_сгенерированности_текста">Википедия:Признаки сгенерированности текста</a> — Russian catalog</li>
+<li><a href="https://github.com/crimeacs/ai-tells-validator">crimeacs/ai-tells-validator</a> — Claude Code skill with live Wikipedia prefetch + regex enforcement</li>
+<li><a href="https://habr.com/ru/articles/1030384/">7 метрик AI-хуманизатора (Habr)</a> — Russian structural metrics: dash density, burstiness, genitive chains</li>
+<li><a href="https://habr.com/ru/articles/987440/">Wikipedia выпустила гайд (Habr)</a> — Russian commentary on the Wikipedia guide</li>
+</ol>
+<hr />
+<h2>VIII. Usage Examples</h2>
+<h3>Example 1: Russian academic text</h3>
+<p><strong>Before (flagged):</strong></p>
+<blockquote>
+<p>В рамках данного исследования важно отметить, что предложенный метод является эффективным инструментом, обеспечивающим существенное улучшение качества обслуживания клиентов компании, демонстрируя при этом устойчивость к различным возмущениям.</p>
+</blockquote>
+<p><strong>Flags:</strong>
+- [PHRASE] "В рамках" → канцелярит
+- [WORD] "данного" → канцелярит
+- [PHRASE] "важно отметить" → дидактический маркер
+- [WORD] "является" → избыточная связка
+- [WORD] "обеспечивающим" → шаблонный глагол
+- [STRUCTURE] цепочка Р.п. "улучшение качества обслуживания клиентов компании"
+- [WORD] "демонстрируя" → шаблонный глагол</p>
+<p><strong>After (clean):</strong></p>
+<blockquote>
+<p>Предложенный метод улучшает обслуживание клиентов и устойчив к возмущениям.</p>
+</blockquote>
+<h3>Example 2: English outbound email</h3>
+<p><strong>Before (flagged):</strong></p>
+<blockquote>
+<p>I hope this finds you well. I wanted to reach out because we've built a transformative, seamless, and robust platform that helps companies leverage AI to unlock growth — driving efficiency across the entire pipeline.</p>
+</blockquote>
+<p><strong>Flags:</strong>
+- [PHRASE] "I hope this finds you well"
+- [PHRASE] "wanted to reach out"
+- [WORD] "transformative" + "seamless" + "robust" → triple banned word
+- [PATTERN] Rule of Three: "transformative, seamless, and robust"
+- [WORD] "leverage"
+- [WORD] "unlock"
+- [PUNCTUATION] em-dash
+- [PATTERN] trailing participle: ", driving efficiency"</p>
+<p><strong>After (clean):</strong></p>
+<blockquote>
+<p>We built a tool that cuts pipeline review time from 4 hours to 20 minutes. Three teams at [Company] use it today. Worth a 10-min call this week?</p>
+</blockquote></div>
+    </div>
+    
+  
+    <div class="skill-row" data-idx="2">
+      <div class="sr-icon"><i data-lucide="wand-2" style="width:18px;height:18px"></i></div>
+      <div class="sr-info">
+        <div class="sr-name">Генерация POI</div>
+        <div class="sr-desc">Создание новых точек маршрута из реестра 89 сюжетов Гасникова</div>
+      </div>
+      <span class="sr-badge planned">planned</span>
+      <div class="sr-actions">
+        <a class="sr-btn" href="https://github.com/MerkulovDaniil/tropa/blob/main/skills/poi-gen/SKILL.md" target="_blank" title="Raw файл"><i data-lucide="file-text" style="width:14px;height:14px"></i></a>
+        <button class="sr-btn" onclick="event.stopPropagation();navigator.clipboard.writeText('https://github.com/MerkulovDaniil/tropa/blob/main/skills/poi-gen/SKILL.md');this.classList.add('copied');setTimeout(()=>this.classList.remove('copied'),1500)" title="Копировать ссылку"><i data-lucide="copy" style="width:14px;height:14px"></i></button>
+      </div>
+    </div>
+    
+    <div class="skill-detail" data-idx="2">
+      <div class="sd-content"><h1>POI Generation Skill</h1>
+<h2>What is a POI</h2>
+<p>A POI (Point of Interest) is a single station on a scientific trail. Each POI has:
+- A scientific storyline tied to a physical location
+- Three levels of narration (L1 basic, L2 formulas, L3 deep facts)
+- A physical interactive — something visitors build, touch, or measure
+- Audio narration generated via TTS
+- A PDF card for print</p>
+<h2>Pipeline</h2>
+<pre><code>Storyline candidate → GROUND ON REAL POI → Critical-visitor test → Feasibility check →
+   Text (3 levels) → Anti-AI scan → SSML → TTS → Audio (MP3)
+                                                ↘ Typst → PDF card
+</code></pre>
+<h3>Step 0: GROUND ON REAL POI (mandatory — fail-fast filter)</h3>
+<p><strong>The single biggest mistake</strong>: extracting a "cool idea" from a lecture/book and adding it to the bank without first checking it lands on a real POI on a real route. A storyline without a place to live on the trail is <strong>useless</strong> — the bank is not a museum catalog, it is a deployment queue.</p>
+<p><strong>Two routes currently exist:</strong>
+- <code>bot/config/poi.innopolis.yaml</code> — Innopolis University, 8 POIs (entrance, atrium, robot path, Tesla marker, boulevard fork, sports zone, forest edge, data-center view)
+- <code>bot/config/poi.skolkovo.yaml</code> — Skolkovo Big Boulevard, 7 POIs (MCD station, Tehnopark, World Class, central square, Hypercube, Matrex, Skoltech)</p>
+<p><strong>For each candidate storyline, BEFORE anything else, answer:</strong></p>
+<ol>
+<li><strong>Which existing POI does this refine or extend?</strong> Open both YAMLs. Find a point with a visible physical object that anchors the story. Cite the POI <code>id</code>.</li>
+<li><strong>If no existing POI fits — does this justify a new POI on one of these routes?</strong> Propose specific GPS coordinates. If the only honest answer is "would need a hypothetical site that doesn't exist on either route" → <strong>archive, do not add to bank</strong>.</li>
+<li><strong>Critical-visitor test</strong>: imagine you are a sceptical, time-pressed walker passing this point. <em>Would you stop and listen?</em> If the honest answer is "only if I'm already into the topic" — <strong>archive</strong>. The trail is for the random kid, not for fans.</li>
+</ol>
+<p><strong>Common failure modes that trigger archive:</strong>
+- Pure abstract algorithm / pure game theory without a physical object on the route (e.g. tit-for-tat, Gale–Shapley, Arrow's theorem, Conway's Life, HyperLogLog, k-means).
+- Politics, voting systems, sociological models.
+- "Cool number trick" that needs paper/pencil and a quiet desk (Karatsuba, Newton division, Schwarz triangle).
+- Anything requiring a TV/screen/keyboard/touch device on the trail.
+- Anything where the only interactive is "read this text and think about it".</p>
+<p><strong>Common passes:</strong>
+- A story that uses a real lake, tree, rock, sky, building, fork in the path, bridge, statue as its anchor.
+- An abstract idea that has a <em>bodily</em> demo on a small stand (coin rotation paradox, Platonic-solid sculptures, Fermat-Torricelli weighted strings, complex number = rotation on a clock face).</p>
+<h3>Step 1: Select storyline from bank</h3>
+<p>Source: <code>content/storylines.yaml</code>.</p>
+<p>Pick by:
+- Route location (what's physically visible at the point)
+- Section variety (don't cluster 5 geometry POIs in a row)
+- Feasibility rating (prefer "easy", avoid "hard")
+- Budget (aim for &lt;500₽ per POI on average)</p>
+<h3>Step 2: Feasibility check (three gates)</h3>
+<p>Every POI must pass ALL three gates:</p>
+<p><strong>Gate 1 — School workshop:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Basic tools only</strong></td>
+<td>Wood, wire, string, magnets, metal — no CNC, no 3D printing</td>
+</tr>
+<tr>
+<td><strong>No electricity</strong></td>
+<td>No batteries, no power outlets, no electronics on the trail</td>
+</tr>
+<tr>
+<td><strong>No safety hazard</strong></td>
+<td>No chemicals, no fire, no sharp edges at child height</td>
+</tr>
+<tr>
+<td><strong>Portable</strong></td>
+<td>Fits in a car. Nothing heavier than 15 kg</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Gate 2 — Budget-accounted, non-exotic:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Any material OK</strong></td>
+<td>Stones, boards, planks, metal, plastic, paint, magnets, springs — whatever fits. Found and bought materials both fine.</td>
+</tr>
+<tr>
+<td><strong>Budget must include all costs</strong></td>
+<td>The realistic budget tier (300/600/1000/1500+ ₽) has to actually cover the listed parts, including installation. Don't list a "разметка площадки" and tag it «до 300₽».</td>
+</tr>
+<tr>
+<td><strong>Avoid exotic</strong></td>
+<td>Prefer common shop / Авито / Леруа / Чип-и-Дип / AliExpress parts. Don't require CNC-3D-printed-laser-cut-on-Mars unless that's the only way.</td>
+</tr>
+<tr>
+<td><strong>Consumables OK if sourced</strong></td>
+<td>If a part is consumable (replacement markers, sample cards, fresh paint), say <em>where to buy and how often to replace</em> in «Как сделать».</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Still fails Gate 2:</strong> food, soap, fresh paper that gets wet daily, anything that can't be re-bought from a known shop.</p>
+<p><strong>Gate 3 — Any weather outdoors:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Rain</strong></td>
+<td>Metal/wood/stone survive. Paper → laminate or metal engraving</td>
+</tr>
+<tr>
+<td><strong>Frost</strong></td>
+<td>No water, no rubber seals, no LCD screens</td>
+</tr>
+<tr>
+<td><strong>Wind</strong></td>
+<td>Loose parts chained/bolted. Nothing lighter than 200g free-standing</td>
+</tr>
+<tr>
+<td><strong>Sun</strong></td>
+<td>UV-resistant. No foam, no fabric, no food</td>
+</tr>
+<tr>
+<td><strong>Self-explanatory</strong></td>
+<td>Works without a guide. 20 seconds to understand</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Adaptation rule:</strong> If an idea is great but fails Gate 2/3, try: paper → metal engraving, cardboard → welded wire, loose objects → chained/mounted, flashlight → sunlight, water → dry alternative. If no viable adaptation exists → remove.</p>
+<p>If a storyline fails any gate and can't be adapted → remove.</p>
+<h3>Step 3: Write three narration levels</h3>
+<p>All narrations follow the Gasnikov style (see <code>bot/config/style.md</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Duration</th>
+<th>Content</th>
+<th>Style</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L1 (базовый)</td>
+<td>40-90 sec</td>
+<td>Hook + action + one key idea</td>
+<td>Energetic, surprising</td>
+</tr>
+<tr>
+<td>L2 (формулы)</td>
+<td>90-180 sec</td>
+<td>Mechanism + formula as words + cross-section</td>
+<td>Analytical, like a lecture</td>
+</tr>
+<tr>
+<td>L3 (факты)</td>
+<td>180-300 sec</td>
+<td>5 micro-stories, history, open question</td>
+<td>Conversational, like a podcast</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rules:</strong>
+1. Start with local binding: "Посмотри на...", "Прямо здесь..."
+2. One baffling opener per POI — a counter-intuitive claim
+3. Numbers always with units. Formulas spoken as words in audio.
+4. Short sentences (max 25 words for audio)
+5. No filler: "очень интересный эффект" = forbidden
+6. Eyes-free: narration must work without looking at a screen
+7. Focus on ideas, not names — don't name-drop scientists unless the name IS the story</p>
+<h3>Step 4: Anti-AI check (MANDATORY)</h3>
+<p>Before converting to SSML, run text through <code>skills/anti-ai-text/SKILL.md</code>.</p>
+<p>Kill: "является", "данный", "важно отметить", "представляет собой", "обеспечивает", trailing participles, rule-of-three adjectives.</p>
+<p>A narration that passes TTS but fails anti-AI is worse than no narration.</p>
+<h3>Step 5: SSML + TTS</h3>
+<p>Use <code>skills/salute-tts/SKILL.md</code> for the full TTS pipeline.</p>
+<p>The build script auto-selects engine:
+- <strong>Salute Speech</strong> if <code>SALUTE_AUTH_DATA</code> available (best quality, SSML support)
+- <strong>Edge TTS</strong> as fallback (free, no API key, <code>ru-RU-DmitryNeural</code> voice)</p>
+<pre><code class="language-bash"># Generate all levels for specific POIs
+python3 skills/salute-tts/build_audio.py --poi 01 05
+
+# Generate everything
+python3 skills/salute-tts/build_audio.py
+</code></pre>
+<p>SSML files go in <code>skills/salute-tts/narrations/</code> as <code>{nn}_{poi_id}_{level}.xml</code>.
+Audio output: <code>site/audio/{nn}_{poi_id}_{level}.mp3</code>.</p>
+<h3>Step 6: Physical interactive design</h3>
+<p>Each POI needs a hands-on element. Design principles from <code>docs/physical-interactives.md</code>:</p>
+<p><strong>Do:</strong>
+- One effect, large parts, no fragile electronics
+- Materials: plywood, metal, acrylic, rope, magnets, anti-vandal fasteners
+- Understandable in 20 seconds without instructions
+- Works in rain, wind, direct sun</p>
+<p><strong>Don't:</strong>
+- Touchscreens, small removable parts, long instructions
+- Anything dependent on power supply
+- Decoration without an experiment</p>
+<h3>Step 7: Budget estimation</h3>
+<table>
+<thead>
+<tr>
+<th>Material</th>
+<th>Typical cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Found materials (sticks, rocks, water)</td>
+<td>0₽</td>
+</tr>
+<tr>
+<td>Basic hardware (wire, magnets, springs)</td>
+<td>200-500₽</td>
+</tr>
+<tr>
+<td>Wood/plywood cuts</td>
+<td>500-1500₽</td>
+</tr>
+<tr>
+<td>Metal fabrication</td>
+<td>1500-3000₽</td>
+</tr>
+<tr>
+<td>Specialty items (prism, lens, tuning fork)</td>
+<td>1000-3000₽</td>
+</tr>
+</tbody>
+</table>
+<p>Target: <strong>average 500₽ per POI</strong>, max 2000₽ for complex items.</p>
+<p>Budget categories on the site:
+- до 300₽ — found/basic materials
+- до 600₽ — hardware store
+- до 1000₽ — wood workshop
+- свыше 1000₽ — specialty items</p>
+<h2>POI YAML format</h2>
+<pre><code class="language-yaml">- id: 1
+  name: &quot;university_entrance&quot;
+  lat: 55.7527
+  lon: 48.7440
+  trigger_radius_m: 30
+  topic: &quot;GPS/ГЛОНАСС, трилатерация&quot;
+  scenario_brief: &quot;One-sentence hook&quot;
+  level1_seed: &quot;L1 narration text&quot;
+  level2_seed: &quot;L2 narration with formulas&quot;
+  level3_seed: &quot;L3 narration with stories&quot;
+  physical_interactive: &quot;Description of hands-on element&quot;
+  sources: [&quot;source1&quot;, &quot;source2&quot;]
+  verified: false
+  budget_rub: 500
+</code></pre>
+<h2>Quality checklist</h2>
+<p>Before marking a POI as done:</p>
+<ul>
+<li>[ ] Tied to a real visible object at the location</li>
+<li>[ ] Has a number with units in every level</li>
+<li>[ ] Has a formula (spoken as words) in L2</li>
+<li>[ ] Physical interactive works without power</li>
+<li>[ ] Budget estimated and reasonable (&lt;2000₽)</li>
+<li>[ ] Anti-AI scan passed (0 flags)</li>
+<li>[ ] Audio generated for all 3 levels</li>
+<li>[ ] Audio comprehensible without looking at screen</li>
+<li>[ ] Duration within range (L1: 40-90s, L2: 90-180s, L3: 180-300s)</li>
+<li>[ ] Cross-section link to another field of science</li>
+</ul></div>
+    </div>
+    
+  
+    <div class="skill-row" data-idx="3">
+      <div class="sr-icon"><i data-lucide="wand-2" style="width:18px;height:18px"></i></div>
+      <div class="sr-info">
+        <div class="sr-name">Outdoor Scipop Architect</div>
+        <div class="sr-desc">Рабочий скилл команды Иннополиса: проектирование и верификация научпоп-экспонатов по манифесту — 8 фильтров, метод сечения, уровни А/Б/В, канон Перельмана/Ливанова</div>
+      </div>
+      <span class="sr-badge ready">ready</span>
+      <div class="sr-actions">
+        <a class="sr-btn" href="https://github.com/MerkulovDaniil/tropa/blob/main/skills/outdoor-scipop-architect/SKILL.md" target="_blank" title="Raw файл"><i data-lucide="file-text" style="width:14px;height:14px"></i></a>
+        <button class="sr-btn" onclick="event.stopPropagation();navigator.clipboard.writeText('https://github.com/MerkulovDaniil/tropa/blob/main/skills/outdoor-scipop-architect/SKILL.md');this.classList.add('copied');setTimeout(()=>this.classList.remove('copied'),1500)" title="Копировать ссылку"><i data-lucide="copy" style="width:14px;height:14px"></i></button>
+      </div>
+    </div>
+    
+    <div class="skill-detail" data-idx="3">
+      <div class="sd-content"><h1>Outdoor Scipop Architect</h1>
+<h2>Обзор</h2>
+<p>Проектировщик уличной научпоп-инфраструктуры по манифесту: вандалоустойчивые
+объекты, поперечное сечение реальности, метод вместо энциклопедии, локальный
+ландшафт как часть смысла, тексты трёх уровней в каноне русского научпопа.
+Главный сценарий — генерация концепции по «тема + локация»; вспомогательные
+сценарии — аудит существующих объектов и генерация текстов для готовых
+конструкций.</p>
+<h2>Когда активируется</h2>
+<ul>
+<li><strong>«Проект»</strong> (по умолчанию) — «придумай экспонат», «спроектируй стенд про X на Y», «есть идея и место».</li>
+<li><strong>«Аудит»</strong> — «проверь стенд», «прошёл бы это манифест», «разбери концепцию».</li>
+<li><strong>«Тексты»</strong> — «напиши А/Б/В», «перепиши под канон» (только если конструктив и сечение уже есть).</li>
+</ul>
+<h2>Алгоритм</h2>
+<ol>
+<li><strong>Загрузить фундамент.</strong> Прочитать <code>references/manifesto-filters.md</code> —
+   обязательно при любом формате. Без 8 фильтров скилл скатится в типовой
+   занимательный научпоп, что манифест прямо отвергает.</li>
+<li><strong>Определить формат.</strong> По формулировке запроса. Если неоднозначно —
+   спросить через <code>ask_user_input_v0</code> с тремя вариантами (Проект / Аудит /
+   Тексты).</li>
+<li><strong>Выполнить алгоритм формата.</strong> Открыть соответствующий reference:
+   <code>format-project.md</code>, <code>format-audit.md</code> или <code>format-texts.md</code>.</li>
+<li><strong>Проверить поперечное сечение.</strong> Обязательный шаг при любом формате.
+   Открыть <code>references/cross-section-method.md</code> и пройти все 5 шагов
+   алгоритма. Если сечение не вытаскивается — отбраковка с диагностикой.</li>
+<li><strong>Опереться на каталоги.</strong> При проектировании — <code>landscape-context.md</code>
+   и <code>construction-patterns.md</code>. При работе с текстами — <code>levels-a-b-c.md</code>
+   и <code>stylistic-playbook.md</code> (восемь приёмов канона Перельмана/Ливанова).</li>
+<li><strong>Применить шаблон вывода</strong> соответствующего формата.</li>
+</ol>
+<h2>Ключевой принцип проверки</h2>
+<p>Перед выдачей ответа проверить два пункта:</p>
+<ul>
+<li><strong>Сечение (фильтр 3)</strong> — структура сформулирована одной фразой без
+  называния объектов? Есть ≥3 явления из разных доменов с механизмом?</li>
+<li><strong>Метод (фильтр 5)</strong> — посетитель уносит <strong>способ рассуждать</strong>, а не
+  очередной факт? Когнитивный сдвиг сформулирован как «он увидит, что…» или
+  «он сам выведет, что…», а не «он узнает, что…»?</li>
+</ul>
+<p>Если хотя бы один не пройден — это не доработка, а отбраковка сюжета.
+Манифест категоричнее музейной педагогики.</p>
+<h2>Ограничения</h2>
+<ul>
+<li>НЕ предлагать решения с активной электроникой, юстировкой, тонкой оптикой
+  на открытом доступе — фильтр 1 (честность) их отсекает.</li>
+<li>НЕ натягивать сечение из живого мира, если на тропе оно невидимо —
+  это случай отбраковки, см. <code>examples/engineer-of-nature-rejected.md</code>.</li>
+<li>НЕ копировать стиль эталона WP003 буквально; <strong>понимать, почему он
+  работает</strong>, и применять приёмы канона (<code>stylistic-playbook.md</code>).</li>
+<li>НЕ путать с <code>science-museum-curator</code>: тот — для музейных экспозиций
+  под крышей; здесь — открытое пространство, тиражируемая сеть.</li>
+</ul>
+<h2>Справочные материалы</h2>
+<table>
+<thead>
+<tr>
+<th>Файл</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>references/manifesto-filters.md</code></td>
+<td>8 фильтров: признаки, red flags, как чинить</td>
+</tr>
+<tr>
+<td><code>references/cross-section-method.md</code></td>
+<td>Метод поперечного сечения, главная отбраковочная процедура</td>
+</tr>
+<tr>
+<td><code>references/landscape-context.md</code></td>
+<td>Каталог ландшафтных триггеров и подходящих сечений</td>
+</tr>
+<tr>
+<td><code>references/construction-patterns.md</code></td>
+<td>Вандалоустойчивые типовые узлы</td>
+</tr>
+<tr>
+<td><code>references/levels-a-b-c.md</code></td>
+<td>Спецификация трёх уровней объяснения</td>
+</tr>
+<tr>
+<td><code>references/stylistic-playbook.md</code></td>
+<td>Канон Перельмана/Ливанова: 8 операциональных приёмов</td>
+</tr>
+<tr>
+<td><code>references/format-project.md</code></td>
+<td>Алгоритм и шаблон формата «Проект»</td>
+</tr>
+<tr>
+<td><code>references/format-audit.md</code></td>
+<td>Алгоритм и шаблон формата «Аудит»</td>
+</tr>
+<tr>
+<td><code>references/format-texts.md</code></td>
+<td>Алгоритм и шаблон формата «Тексты»</td>
+</tr>
+<tr>
+<td><code>examples/echo-distance-exemplar.md</code></td>
+<td>Эталон: разбор WP003 «Услышь расстояние»</td>
+</tr>
+<tr>
+<td><code>examples/engineer-of-nature-rejected.md</code></td>
+<td>Анти-эталон: разбор отбракованного WP005</td>
+</tr>
+</tbody>
+</table></div>
+    </div>
+    
+  
+    <div class="skill-row" data-idx="4">
+      <div class="sr-icon"><i data-lucide="wand-2" style="width:18px;height:18px"></i></div>
+      <div class="sr-info">
+        <div class="sr-name">Storyline Proofread</div>
+        <div class="sr-desc">Quality-gate вычитки сюжета до издательского качества: панель адверсариальных критиков (текст + визуал по HTML и PDF) + цикл правок до чистоты, включая добавление научных схем нужного стиля</div>
+      </div>
+      <span class="sr-badge ready">ready</span>
+      <div class="sr-actions">
+        <a class="sr-btn" href="https://github.com/MerkulovDaniil/tropa/blob/main/skills/storyline-proofread/SKILL.md" target="_blank" title="Raw файл"><i data-lucide="file-text" style="width:14px;height:14px"></i></a>
+        <button class="sr-btn" onclick="event.stopPropagation();navigator.clipboard.writeText('https://github.com/MerkulovDaniil/tropa/blob/main/skills/storyline-proofread/SKILL.md');this.classList.add('copied');setTimeout(()=>this.classList.remove('copied'),1500)" title="Копировать ссылку"><i data-lucide="copy" style="width:14px;height:14px"></i></button>
+      </div>
+    </div>
+    
+    <div class="skill-detail" data-idx="4">
+      <div class="sd-content"><h1>Storyline Proofread — quality gate</h1>
+<h2>Философия</h2>
+<p>Это <strong>не инструкция «что сделать»</strong>, а <strong>планка качества и цикл обратной связи</strong>.
+Задача скилла — не «пройтись разок», а <strong>крутить цикл правок столько, сколько
+нужно</strong>, пока каждый из критически настроенных проверщиков — текстовых и
+<strong>визуальных</strong> — не подтвердит, что придраться больше не к чему. Артефакт
+готов не когда «я внёс правки», а когда <strong>я сам открыл результат (HTML и PDF)
+и ни один критик не нашёл ни одного дефекта два круга подряд</strong>.</p>
+<p><strong>Категорически запрещены shortcut'ы.</strong> Нельзя: проверить часть и
+экстраполировать на остальное; «на глаз» решить что и так нормально; принять
+свою же правку без повторного рендера и просмотра; остановиться на первом
+чистом круге. Лучше потратить много времени и итераций, чем выпустить
+«почти готово».</p>
+<h2>Что на входе и что значит «готово»</h2>
+<ul>
+<li><strong>Вход:</strong> один сюжет <code>content/storylines/&lt;slug&gt;.md</code> (или список).</li>
+<li><strong>Готово (стоп-условие):</strong> для каждого уровня и его PDF выполнены ВСЕ
+  критерии всех критиков из <code>references/critic-panel.md</code> — включая покрытие
+  визуалом (где идея просит схему — она есть и доведена до книжного качества
+  по <code>references/figure-style.md</code>), — и <strong>два полных круга подряд</strong> не дали ни
+  одной находки. Только тогда сюжет считается вычитанным.</li>
+</ul>
+<h2>Цикл (повторять до стоп-условия)</h2>
+<pre><code>loop:
+  1. RENDER   — пересобрать сайт (python3 build.py) → HTML + PDF уровней.
+  2. CRITICS  — прогнать ВСЮ панель критиков (references/critic-panel.md):
+                каждый критик независимо, адверсариально, ищет дефекты.
+                Визуальные критики ОБЯЗАТЕЛЬНО открывают рендер
+                (см. references/visual-review.md) — скриншот HTML каждого
+                таба + просмотр PDF каждого уровня. Чтение исходника не
+                заменяет просмотр рендера.
+  3. COLLECT  — собрать все находки в один список с severity (blocker/major/minor).
+  4. if находок == 0:
+        clean_rounds += 1
+        if clean_rounds &gt;= 2: → ГОТОВО, выйти.
+     else:
+        clean_rounds = 0
+        FIX — устранить ВСЕ находки в исходнике .md (или в build.py/шаблоне,
+              если дефект системный — тогда чинить корень, а не симптом).
+  5. → loop
+</code></pre>
+<p>Параллелить критиков и сюжеты разумно (один субагент = один критик или один
+сюжет), но <strong>синтез находок и решение «готово/не готово» — централизованно</strong>.
+При большом объёме (вычитка всех сюжетов разом) запускать через Workflow:
+pipeline по сюжетам, внутри — панель критиков, цикл до чистоты.</p>
+<h2>Панель критиков (кратко; полностью — references/critic-panel.md)</h2>
+<table>
+<thead>
+<tr>
+<th>Критик</th>
+<th>Что ловит</th>
+<th>Чем смотрит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Структурный</strong></td>
+<td>нарушения формата (см. references/format-contract.md): строительные метки, прилипший дек, чужие <code>##</code>, битые табы</td>
+<td>исходник + HTML</td>
+</tr>
+<tr>
+<td><strong>Научный</strong></td>
+<td>фактические ошибки, кривые/пропущенные формулы, единицы, числа</td>
+<td>исходник + рендер формул</td>
+</tr>
+<tr>
+<td><strong>Язык и типографика</strong></td>
+<td>опечатки, канцелярит, ИИ-звучание, тире/кавычки, висячие предлоги</td>
+<td>исходник + HTML</td>
+</tr>
+<tr>
+<td><strong>Канон Гасникова</strong></td>
+<td>локальная привязка, хук, метод вместо факта, уровни А/Б/В</td>
+<td>исходник</td>
+</tr>
+<tr>
+<td><strong>Визуальный HTML</strong></td>
+<td>вёрстка, иллюстрация, переносы, пустоты, дек/подзаголовки, мобилка</td>
+<td><strong>скриншот каждого таба</strong></td>
+</tr>
+<tr>
+<td><strong>Визуальный PDF</strong></td>
+<td>книжное качество: масштхед, буквица, типографика, формулы, footer, переносы</td>
+<td><strong>открытый PDF каждого уровня</strong></td>
+</tr>
+<tr>
+<td><strong>Совещание автор↔зритель</strong></td>
+<td>доносит ли схема идею: автор (видит концепт) формулирует замысел, зритель (видит ТОЛЬКО картинку) — восприятие; радикально разошлись → чинить схему</td>
+<td><strong>2 независимых агента на фигуру</strong></td>
+</tr>
+<tr>
+<td><strong>Артефакт-критик</strong></td>
+<td>несёт ли артефакт мысль и выдержит ли буллшит-детектор: необходимость (не пересказ прозы), одна яркая идея, ни одной натянутой строки/пустой «—» ячейки, непротиворечивость прозе</td>
+<td><strong>скептичный эксперт-предметник по каждой таблице/схеме</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Каждый критик настроен <strong>скептически</strong>: его работа — найти, к чему придраться,
+а не подтвердить, что «нормально». Пустой отчёт критика допустим только если
+он реально не нашёл дефектов, просмотрев рендер.</p>
+<h2>Жёсткие правила</h2>
+<ul>
+<li><strong>«Sent» ≠ «verified».</strong> Любая правка считается применённой только после
+  пересборки и повторного просмотра рендера тем критиком, чью находку чинили.</li>
+<li><strong>Корень, а не симптом.</strong> Если дефект повторяется в нескольких сюжетах —
+  чинить в <code>build.py</code>/шаблоне/формате, а не править каждый файл вручную.</li>
+<li><strong>Не фабриковать факты.</strong> Восстанавливать можно только то, что уже сказано
+  словами в тексте (стандартная формула, арифметика). Спорное — флагать, не
+  выдумывать. См. правило no_unfounded_claims.</li>
+<li><strong>Не ломать смысл.</strong> Перед удалением блока — понять, что это; «на
+  согласовании»/внутренние пометки убирать из публички, но сообщать об этом.</li>
+<li><strong>Самоэволюция скилла.</strong> Если в цикле всплыл класс дефектов, которого нет в
+  <code>critic-panel.md</code> или <code>format-contract.md</code>, — дописать его туда. Скилл
+  улучшается вместе с сюжетами.</li>
+</ul>
+<h2>Справочные материалы</h2>
+<table>
+<thead>
+<tr>
+<th>Файл</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>references/format-contract.md</code></td>
+<td>Канонический формат сюжета + как он рендерится в HTML и PDF (контракт с build.py)</td>
+</tr>
+<tr>
+<td><code>references/critic-panel.md</code></td>
+<td>Полные чек-листы всех шести критиков</td>
+</tr>
+<tr>
+<td><code>references/visual-review.md</code></td>
+<td>Как поднять рендер, снять скриншоты HTML и открыть PDF; книжная планка качества</td>
+</tr>
+<tr>
+<td><code>references/figure-style.md</code></td>
+<td>Стиль научных схем (вектор, штрих, Libertinus Serif) + цикл полировки одной фигуры субагентом</td>
+</tr>
+</tbody>
+</table></div>
+    </div>
+    
+  
+    <div class="skill-row" data-idx="5">
+      <div class="sr-icon"><i data-lucide="wand-2" style="width:18px;height:18px"></i></div>
+      <div class="sr-info">
+        <div class="sr-name">Narration Generation</div>
+        <div class="sr-desc">Пайплайн storyline → тексты L1/L2/L3 → anti-AI → SSML → готовое аудио для точки маршрута</div>
+      </div>
+      <span class="sr-badge ready">ready</span>
+      <div class="sr-actions">
+        <a class="sr-btn" href="https://github.com/MerkulovDaniil/tropa/blob/main/skills/narration-gen/SKILL.md" target="_blank" title="Raw файл"><i data-lucide="file-text" style="width:14px;height:14px"></i></a>
+        <button class="sr-btn" onclick="event.stopPropagation();navigator.clipboard.writeText('https://github.com/MerkulovDaniil/tropa/blob/main/skills/narration-gen/SKILL.md');this.classList.add('copied');setTimeout(()=>this.classList.remove('copied'),1500)" title="Копировать ссылку"><i data-lucide="copy" style="width:14px;height:14px"></i></button>
+      </div>
+    </div>
+    
+    <div class="skill-detail" data-idx="5">
+      <div class="sd-content"><h1>Narration Generation</h1>
+<p>Full pipeline: storyline → L1/L2/L3 text → anti-AI → SSML → audio.</p>
+<h2>Quick start</h2>
+<pre><code class="language-bash"># Generate narrations + SSML for storyline #5, POI &quot;hilltop&quot;, prefix 01
+python3 skills/narration-gen/generate.py --storyline 5 --poi hilltop --nn 01
+
+# Same + generate audio
+python3 skills/narration-gen/generate.py --storyline 5 --poi hilltop --nn 01 --tts
+</code></pre>
+<p>Output: <code>skills/salute-tts/narrations/{nn}_{poi}_{l1,l2,l3}.xml</code></p>
+<h2>Manual generation (Claude Code agent)</h2>
+<p>When generating narrations directly (without the script), follow this exact structure.</p>
+<h3>Step 1: Read the storyline</h3>
+<p>From <code>content/storylines.yaml</code>, grab:
+- <code>title</code> — the hook question
+- <code>topic</code> — scientific domain
+- <code>cross_section</code> — where else this principle appears
+- <code>section</code> — category</p>
+<h3>Step 2: Write L1 (40-90 sec, 80-150 words)</h3>
+<p>Structure:
+1. <strong>Local binding</strong> (1 sentence) — "Посмотри на...", "Прямо здесь..."
+2. <strong>Baffling claim</strong> (1 sentence) — counter-intuitive, makes listener stop
+3. <strong>Action</strong> (1-2 sentences) — what to do right now (look, touch, listen, count)
+4. <strong>Explanation</strong> (2-3 sentences) — how it works, with one number+unit
+5. <strong>Bridge</strong> (1 sentence) — where else this works</p>
+<p>Example (GPS point):</p>
+<blockquote>
+<p>Открой бот — он уже знает, что ты у главного входа. Но ни один спутник тебя не видел. Ни камеры, ни луча, ни фотографии.
+Спутники не ищут тебя. Каждый передаёт одно: сейчас такое-то время, я в такой-то точке. Телефон ловит сигналы и замеряет задержку. Один спутник — расстояние. Три спутника — три сферы. Точка пересечения — ты.
+Ошибка в миллионную долю секунды сдвигает на 300 метров. Поэтому на орбите — атомные часы. Так же охотится летучая мышь: крик, задержка, расстояние.</p>
+</blockquote>
+<h3>Step 3: Write L2 (90-180 sec, 150-300 words)</h3>
+<p>Structure:
+1. Recap mechanism from L1 (1-2 sentences, don't repeat verbatim)
+2. <strong>Formula step-by-step</strong>: explain what each symbol means BEFORE writing the formula
+3. <strong>Numerical estimate</strong>: plug in real numbers, get a result with units
+4. <strong>Cross-section</strong>: same math in another domain (1-2 sentences)</p>
+<p>Formula rule: explain THEN name. "Расстояние равно скорости, умноженной на время задержки... записывается как ро равно цэ умножить на дельта тэ."</p>
+<h3>Step 4: Write L3 (180-300 sec, 300-500 words)</h3>
+<p>Five micro-stories, each 2-4 sentences:
+1. <strong>Historical anecdote</strong> — who discovered this and how
+2. <strong>Surprising application</strong> — where else this principle works (unexpected domain)
+3. <strong>Record/extreme</strong> — biggest, smallest, fastest example
+4. <strong>Paradox or failure</strong> — when it breaks or gives counter-intuitive result
+5. <strong>Open question</strong> — what we still don't know</p>
+<p>Each micro-story starts with a bold hook. Separate with pauses.</p>
+<h3>Step 5: Anti-AI check</h3>
+<p>Scan EVERY generated text. Kill on sight:</p>
+<table>
+<thead>
+<tr>
+<th>Kill</th>
+<th>Replace with</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"является"</td>
+<td>тире or nothing</td>
+</tr>
+<tr>
+<td>"данный"</td>
+<td>"этот" or remove</td>
+</tr>
+<tr>
+<td>"обеспечивает"</td>
+<td>"даёт", "создаёт"</td>
+</tr>
+<tr>
+<td>"В рамках"</td>
+<td>"В", "При", "Для"</td>
+</tr>
+<tr>
+<td>"Важно отметить"</td>
+<td>just state the fact</td>
+</tr>
+<tr>
+<td>"Таким образом"</td>
+<td>remove or "Итого:"</td>
+</tr>
+<tr>
+<td>"представляет собой"</td>
+<td>тире</td>
+</tr>
+<tr>
+<td>triple adjectives</td>
+<td>keep two or rephrase</td>
+</tr>
+<tr>
+<td>trailing ", обеспечивая X"</td>
+<td>new sentence</td>
+</tr>
+</tbody>
+</table>
+<p>If ANY flag remains after one rewrite pass, rewrite again. Zero tolerance.</p>
+<h3>Step 6: Convert to SSML</h3>
+<p>Wrap in <code>&lt;speak&gt;</code> tags. Rules:</p>
+<pre><code class="language-xml">&lt;speak&gt;
+First paragraph text.
+&lt;break time=&quot;400ms&quot;/&gt;
+Second paragraph. Use *emphasis before key words.
+&lt;break time=&quot;400ms&quot;/&gt;
+Third paragraph.
+&lt;/speak&gt;
+</code></pre>
+<ul>
+<li><code>&lt;break time="400ms"/&gt;</code> between paragraphs</li>
+<li><code>&lt;break time="500ms"/&gt;</code> before dramatic reveal in L3</li>
+<li><code>*</code> before emphasized words (no space: <code>*триста метров</code>)</li>
+<li>Stress marks: apostrophe after stressed vowel for tricky words</li>
+</ul>
+<p>Stress dictionary (always apply):</p>
+<pre><code>трилатерация → трилатера'ция
+реверберация → ревербера'ция
+ковариация → ковариа'ция
+когезия → коге'зия
+кавитация → кавита'ция
+ксилема → ксиле'ма
+Фарадей → Фараде'й
+Торричелли → Торриче'лли
+Бернулли → Берну'лли
+Вардроп → Вардро'п
+Браесс → Бра'есс
+</code></pre>
+<p>Numbers as words: "300 м" → "триста метров", "10⁻³" → "десять в минус третьей", "ρgh" → "ро же аш".</p>
+<h3>Step 7: Save and build</h3>
+<pre><code>skills/salute-tts/narrations/{nn}_{poi_id}_l1.xml
+skills/salute-tts/narrations/{nn}_{poi_id}_l2.xml
+skills/salute-tts/narrations/{nn}_{poi_id}_l3.xml
+</code></pre>
+<p>Then:</p>
+<pre><code class="language-bash">python3 skills/salute-tts/build_audio.py --poi {nn}
+</code></pre>
+<h2>Validation</h2>
+<p>Before committing:
+- [ ] L1: 80-150 words, no formulas, one number+unit
+- [ ] L2: has formula explained step-by-step, numerical estimate
+- [ ] L3: 5 distinct micro-stories, each with own hook
+- [ ] Anti-AI: 0 flags on all three levels
+- [ ] SSML: stress marks on all tricky words
+- [ ] Listens well without looking at screen
+- [ ] No "посмотри на график" or "как показано на схеме"</p></div>
+    </div>
+    
+  
+  </div>
+</div>
+
+<script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
+<script defer src="/assets/site-bar/bot.js"></script>
+
+<script>
+document.querySelector('.skill-grid').addEventListener('click', function(e) {
+  var row = e.target.closest('.skill-row');
+  if (!row || e.target.closest('.sr-btn')) return;
+  var idx = row.dataset.idx;
+  var detail = document.querySelector('.skill-detail[data-idx="'+idx+'"]');
+  if (!detail) return;
+  var wasVisible = detail.classList.contains('visible');
+  document.querySelectorAll('.skill-detail').forEach(function(d){d.classList.remove('visible')});
+  document.querySelectorAll('.skill-row').forEach(function(r){r.classList.remove('active')});
+  if (!wasVisible) {
+    detail.classList.add('visible');
+    row.classList.add('active');
+  }
+});
+</script>
+
+</body>
+</html>

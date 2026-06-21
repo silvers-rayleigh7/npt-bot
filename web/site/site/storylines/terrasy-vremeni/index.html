@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Террасы времени — Тропа</title>
+<link rel="icon" href="/assets/trees.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site-bar/bot.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
+<script>
+// Рендер математики ТОЛЬКО после загрузки шрифтов KaTeX. Иначе KaTeX считает
+// позицию черты корня/дроби по метрикам фолбэк-шрифта → линия ложится поперёк
+// подкоренного (видимое «зачёркивание»), и без ре-рендера не лечится.
+// ignoredClasses:['katex'] — повторный проход не трогает уже отрендеренное.
+(function(){
+  var KX={delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false,ignoredClasses:['katex']};
+  function whenFontsReady(cb){
+    var fams=['KaTeX_Main','KaTeX_Math','KaTeX_Size1','KaTeX_Size2','KaTeX_Size3','KaTeX_Size4','KaTeX_AMS'];
+    if(document.fonts&&document.fonts.load){
+      Promise.all(fams.map(function(f){return document.fonts.load('1em '+f).catch(function(){});}))
+        .then(function(){return document.fonts.ready;}).then(cb,cb);
+    } else { cb(); }
+  }
+  window.tropaMath=function(el){ if(typeof renderMathInElement==='function'){ whenFontsReady(function(){ renderMathInElement(el,KX); }); } };
+  window.addEventListener('load',function(){ window.tropaMath(document.body); });
+})();
+</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip}
+body{max-width:100%;overflow-x:clip}
+/* TROPA design system — палитра дизайн-пака */
+:root{
+  --sand:#DBD4C7;--sage:#B8B5A6;--olive:#7C7F6A;--char:#3E4038;--ink:#1A1A18;
+  --g:#7C7F6A;--gd:#3E4038;--gl:#F4F2EE;--bg:#FFFFFF;--card:#FFFFFF;
+  --tx:#1A1A18;--tm:#6E7163;--bd:#EAE7E0;--r:10px;
+  --serif:"Cormorant Garamond",Georgia,serif;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:-0.01em}
+a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
+.w{max-width:760px;margin:0 auto;padding:0 24px}
+.nav{padding:14px 0;border-bottom:1px solid var(--bd);background:#fff}
+.nav-inner{display:flex;align-items:center;gap:22px}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.3rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);line-height:1;display:flex;align-items:center;gap:9px}
+.nav-logo img{width:22px;height:22px}
+.nav-spacer{flex:1}
+.nav-link{font-size:0.82rem;color:var(--tm);display:flex;align-items:center;line-height:1;letter-spacing:0.01em}
+.nav-link:hover{color:var(--ink);text-decoration:none}
+.nav-icon{display:flex;align-items:center;justify-content:center;color:var(--tm);transition:color 0.15s}
+.nav-icon:hover{color:var(--olive);text-decoration:none}
+.nav-icon i{width:16px;height:16px}
+
+.sg-hero{padding:48px 0 8px;text-align:center}
+.sg-hero img{height:auto;max-height:46px;width:auto;opacity:.8;display:block;margin:0 auto 16px}
+.sg-hero img.sg-icon{max-height:200px;max-width:440px;width:80%;opacity:1;margin:0 auto 4px}
+.sg-kicker{font-size:0.76rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--olive);margin-bottom:10px}
+.sg-hero h1{font-size:2.3rem;font-weight:700;line-height:1.12;margin-bottom:8px}
+.sg-deck{font-family:var(--serif);font-style:italic;font-size:1.3rem;color:var(--tm);line-height:1.3;margin:0 auto 12px;max-width:560px}
+.sg-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:0.8rem}
+.sg-tag{padding:2px 9px;border-radius:20px;background:var(--gl);color:var(--tm)}
+.sg-geo{color:var(--olive);font-weight:600}
+.tabs{display:flex;align-items:center;gap:4px;border-bottom:1px solid var(--bd);margin:26px 0 0;flex-wrap:wrap}
+.tab{font-family:var(--serif);font-size:1.05rem;font-weight:600;padding:9px 16px;color:var(--tm);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);border-bottom-color:var(--olive)}
+.tab-pdf{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--tm);transition:color .15s}
+.tab-pdf:hover{color:var(--olive);text-decoration:none}
+.tab-pdf i{width:15px;height:15px;stroke-width:1.4}
+/* читается как книжная статья */
+.body{padding:26px 0 8px;font-family:Georgia,"PT Serif","Times New Roman",serif;font-size:1.16rem;line-height:1.84;max-width:660px;color:#262521}
+.body p{margin:0 0 1.05em}.body p:first-of-type{font-size:1.22rem;color:#1c1b17}
+.body strong{color:var(--ink);font-weight:600}
+.body h2,.body h3,.body h4{font-family:var(--serif);font-weight:600;color:var(--char);margin:1.6em 0 .5em;font-size:1.4rem;line-height:1.25;text-align:center}
+.body ul,.body ol{margin:1em 0 1em 22px}.body li{margin:.4em 0}
+.body table{border-collapse:collapse;font-size:0.96rem;margin:1.2em 0;display:block;max-width:100%;overflow-x:auto}
+.body img{max-width:100%;height:auto;display:block;margin:0 auto}
+.body figure.fig{margin:2em auto;text-align:center;max-width:560px}
+.body figure.fig img{max-width:88%;max-height:340px;width:auto;height:auto}
+.body figure.fig figcaption{font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--tm);line-height:1.4;margin-top:.7em;max-width:480px;margin-left:auto;margin-right:auto}
+.body th,.body td{border:1px solid var(--bd);padding:7px 14px;text-align:left}
+.body .formula{text-align:center;font-size:1.2rem;margin:1.4em auto;color:var(--char);letter-spacing:.02em}
+.body .katex-display{margin:1.4em 0}
+.divider{margin:48px 0 12px;text-align:center}.divider img{width:170px;opacity:.85}
+.site-url{text-align:center;font-size:0.78rem;letter-spacing:0.16em;color:var(--tm);margin-bottom:28px}
+.back{font-size:0.85rem}
+
+@media(max-width:640px){
+  .w{padding:0 16px}
+  .nav-inner{gap:14px}
+  .nav-logo{font-size:1.12rem;letter-spacing:0.08em;gap:7px}
+  .nav-logo img{width:19px;height:19px}
+  .nav-link{font-size:0.8rem}
+  .nav-icon{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="w nav-inner">
+  <a href="/" class="nav-logo"><img src="/assets/trees.svg" alt="">Тропа</a>
+  <a href="/storylines/" class="nav-link">Сюжеты</a>
+  <a href="/innopolis/" class="nav-link">Маршрут</a>
+  <a href="/skills/" class="nav-link">Скиллы</a>
+  <a href="/bot/" class="nav-link">Бот</a>
+  <a href="/guides/" class="nav-link">Гиды</a>
+  <div class="nav-spacer"></div>
+  <a href="https://github.com/MerkulovDaniil/tropa" class="nav-icon"><i data-lucide="github"></i></a>
+  <a href="https://t.me/zoobr_bot" class="nav-icon"><i data-lucide="send"></i></a>
+</div></nav>
+
+<div class="w">
+  <div class="sg-hero">
+    <img class="sg-icon" src="/assets/icons/terrasy-vremeni.svg" alt="">
+    
+    <div class="sg-kicker">Научная тропа Иннополиса</div>
+    <h1>Террасы времени</h1>
+    <div class="sg-deck" id="sg-deck">Почему склон долины — это лестница?</div>
+    <div class="sg-meta">
+      <a class="sg-geo" href="https://yandex.ru/maps/?pt=48.73229,55.75809&z=17&l=map" target="_blank" rel="noopener">📍 на карте</a>
+      <span class="sg-tag">геология</span><span class="sg-tag">рельеф</span>
+    </div>
+  </div>
+
+  
+  <div class="tabs">
+    <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
+  </div>
+  
+  <div class="body lvl" data-i="0" style=""><p>Когда уровень в водохранилище сбрасывают рывками, на бетонной стенке остаются горизонтальные полосы — отметки, на которых вода держалась дольше всего перед очередным сбросом.</p>
+<figure class="fig"><img src="/assets/figures/terrasy-vremeni-2.svg" alt="Стенка водохранилища: каждый сброс уровня оставил горизонтальную полосу, выше — старше. Та же логика, что лестница речных террас на склоне."><figcaption>Стенка водохранилища: каждый сброс уровня оставил горизонтальную полосу, выше — старше. Та же логика, что лестница речных террас на склоне.</figcaption></figure>
+<p>Склон, на котором ты стоишь, — край долины Волги. Присмотрись к нему выше уреза воды: на склонах больших речных долин видны такие же следы, только намного крупнее — ровные площадки на разных высотах, вытянутые вдоль реки. Современное русло проходит ниже всех площадок.</p>
+<p>Каждая площадка когда-то была дном реки или её поймой. Потом река опустилась ниже, а прежняя поверхность осталась на старой высоте. Чем выше площадка, тем она древнее. Эти ровные ступени называются речными террасами.</p>
+<p>Верхняя терраса над Волгой поднята на несколько десятков метров над рекой — самые древние и высокие площадки в долинах Волги и Камы доходили до 75–95 м над меженным урезом<sup id="fnref:volga"><a class="footnote-ref" href="#fn:volga">1</a></sup>. Это лестница, в которой каждая ступень — отдельная эпоха, а весь склон — летопись сотен тысяч лет.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:volga">
+<p>Наиболее древние и высокие надпойменные террасы в долинах Волги и Камы (Республика Татарстан) сформировались около 1 млн лет назад, а их высота до затопления водохранилищами достигала 75–95 м над меженным урезом. <a href="https://tatarica.org/ru/razdely/priroda/relef/terrasy">Террасы — Татарская энциклопедия TATARICA</a>&#160;<a class="footnote-backref" href="#fnref:volga" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  <div class="body lvl" data-i="1" style="display:none"><figure class="fig"><img src="/assets/figures/terrasy-vremeni-1.svg" alt="Склон долины — лестница: плоские террасы и крутые уступы между ними; пунктир — прежние уровни реки."><figcaption>Склон долины — лестница: плоские террасы и крутые уступы между ними; пунктир — прежние уровни реки.</figcaption></figure>
+<h3>Почему река держится на одной высоте?</h3>
+<p>Главная характеристика реки на длинном участке — её <strong>продольный уклон</strong>: на сколько метров вода опускается на каждый километр пути. У равнинной реки это сантиметры на километр, у горной — метры на километр.</p>
+<p>Уклон не случаен. Если он слишком крут, поток несётся быстро и подмывает дно — река углубляет русло, и уклон уменьшается. Если слишком пологий, скорость падает, наносы выпадают на дно — русло поднимается, и уклон растёт. Со временем уклон выходит на ту величину, при которой эрозия и накопление наносов уравновешивают друг друга. Дальше река переносит наносы и не меняет своей высоты — она лишь медленно расширяет пойму вбок. Такое состояние называют <strong>продольным профилем равновесия</strong>.</p>
+<p>У этой равновесной кривой есть нижняя точка — уровень, ниже которого река углубляться уже не может. Этот уровень называется <strong>базисом эрозии</strong>. Обычно базис — это уровень моря или озера, в которое впадает река. Базис смещается при тектоническом поднятии суши и при изменении климата; когда он сдвигается, прежний профиль перестаёт быть равновесным, и река начинает перестраивать русло.</p>
+<h3>Что происходит, когда базис понижается?</h3>
+<p>Прежний уклон оказывается избыточным. Река начинает врезаться в собственное дно и постепенно опускает русло к новому положению равновесия. Прежняя пойма остаётся на старой высоте, уже отделённая от потока.</p>
+<p>Такие приподнятые остатки бывших пойм называются <strong>речными террасами</strong>. Серия террас на склоне — запись нескольких понижений базиса подряд: ровная площадка отвечает периоду покоя, уступ между площадками — этапу врезания.</p>
+<p>Отсюда ответ на главный вопрос. Склон выходит лестницей, а не ровным скатом, именно потому, что базис понижается рывками: за каждым быстрым врезанием идёт долгий покой, и за этот покой река успевает выработать новую плоскую площадку. Понижался бы базис плавно — река шла бы за ним сплошным углублением, и склон оказался бы просто наклонным, без ступеней.</p>
+<h3>Насколько быстро врезается река</h3>
+<p>Высоту ступени задаёт глубина одного врезания, а скорость, с которой река прошла этот путь вниз, легко оценить. Если терраса поднята на высоту $H$ над современным руслом, а врезание заняло время $T$, средняя скорость врезания равна</p>
+<p>$$ v = \frac{H}{T} $$</p>
+<p>Подставим волжскую террасу округлёнными значениями: $H \approx 100$ м (порядок высоты древних террас Волги), $T \approx 1\,000\,000$ лет (возраст самых древних и высоких из них<sup id="fnref:volga"><a class="footnote-ref" href="#fn:volga">1</a></sup>). Тогда</p>
+<p>$$ v = \frac{100\ \text{м}}{1\,000\,000\ \text{лет}} \approx 0{,}1\ \text{мм/год} $$</p>
+<p>Это десятая доля миллиметра в год — толщина человеческого волоса. И ровно того же порядка, что скорость, с которой тектонические силы поднимают древние платформы. Совпадение наводит на мысль, что главный двигатель врезания на Русской равнине — именно медленный подъём коры; почему это лишь догадка, а не доказательство, разберём на следующем уровне.</p>
+<h3>Тот же механизм в овраге</h3>
+<p>В овраге всё разыгрывается по той же схеме, только в сжатом времени. После распашки и разрушения дернового покрова базис эрозии для местного ручья резко падает. За несколько десятилетий в верховье оврага вырастают маленькие ступеньки — та же лестница террас, в миниатюре. Большой реке на перестройку русла требуются тысячи лет; оврагу — десятилетия.</p>
+<h3>Где этот рельеф работает</h3>
+<p>На высоких речных террасах часто стоят старые города: Саратов, Нижний Новгород, Ярославль. Терраса выше паводкового уровня и при этом близка к реке — главной транспортной артерии прошлого. Опоры крупных мостов через большие реки уходят сквозь рыхлые аллювиальные слои террас вниз, к коренным породам: это самое надёжное основание.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:volga">
+<p>Наиболее древние и высокие надпойменные террасы в долинах Волги и Камы (Республика Татарстан) сформировались около 1 млн лет назад, а их высота до затопления водохранилищами достигала 75–95 м над меженным урезом. <a href="https://tatarica.org/ru/razdely/priroda/relef/terrasy">Террасы — Татарская энциклопедия TATARICA</a>&#160;<a class="footnote-backref" href="#fnref:volga" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  <div class="body lvl" data-i="2" style="display:none"><h3>Что записано в лестнице</h3>
+<p>Раз ступени появляются только при рывках базиса, склон долины становится прямой записью этих рывков. Число площадок отвечает числу крупных перестроек базиса. Высота каждого уступа — амплитуде отдельного понижения. Ширина площадки — длительности покоя между понижениями: чем дольше река стояла на одном уровне, тем шире пойму она успела сточить вбок. Поэтому по одному поперечному разрезу долины читается вся последовательность событий — как по годовым кольцам на спиле.</p>
+<p>Есть и обратная сторона такой записи. Каждое новое врезание частично срезает прежние площадки, и нижние ступени затирают следы верхних. Самые древние, верхние террасы сохраняются хуже всего — потому их датировки и оказываются самыми спорными.</p>
+<h3>Что значит скорость в одну десятую миллиметра</h3>
+<p>Оценка $v \approx 0{,}1$ мм/год из предыдущего уровня выглядит ничтожной, но именно её малость и содержательна. Это тот же порядок, что у скорости, с которой тектонические силы поднимают древние платформы вроде Русской. Совпадение двух независимо измеренных величин — врезания реки и подъёма коры — косвенно говорит, что у них общий источник: река режет вниз не сама по себе, а потому, что суша под ней медленно растёт. Но «тот же порядок» — это не доказательство: климат менял сток той же реки и тоже мог двигать врезание. Поэтому совпадение скоростей принимают как довод в пользу тектоники, а не как окончательный приговор.</p>
+<h3>Как определяют возраст террас</h3>
+<p>Возраст устанавливают несколькими независимыми методами; согласие результатов считается главным критерием надёжности.</p>
+<table>
+<thead>
+<tr>
+<th>Метод датировки</th>
+<th>По чему работает</th>
+<th>Предел</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Радиоуглеродный</td>
+<td>органика: дерево, кости, уголь</td>
+<td>до 50 тыс. лет</td>
+</tr>
+<tr>
+<td>OSL-люминесценция</td>
+<td>минералы зёрен осадка</td>
+<td>до сотен тыс. лет</td>
+</tr>
+<tr>
+<td>Корреляция с океаном</td>
+<td>морские осадки, изотопная шкала</td>
+<td>сотни тыс. — млн лет</td>
+</tr>
+</tbody>
+</table>
+<p><em>Радиоуглеродный анализ.</em> Работает по органическим остаткам — древесине, костям, углю — в речных отложениях. Применим для возрастов до 50 тысяч лет.</p>
+<p><em>Оптически стимулированная люминесценция.</em> Минералы в отложениях под действием природной радиоактивности постепенно накапливают сигнал, а солнечный свет полностью обнуляет его. Лабораторное измерение даёт время, прошедшее с момента, когда минерал в последний раз был на поверхности под солнцем и затем оказался похороненным под наносами. Та же физика лежит в основе термолюминесцентного датирования керамики в археологии: там сигнал обнуляется обжигом, а измеряется тысячелетия спустя.</p>
+<p><em>Корреляция с океаном.</em> Местные террасы сопоставляются с глобальной шкалой колебаний уровня океана, восстановленной по морским осадкам.</p>
+<h3>Морские террасы</h3>
+<p>На побережьях работает тот же механизм. В последний ледниковый максимум уровень океана стоял примерно на 125 метров ниже нынешнего<sup id="fnref:lgm"><a class="footnote-ref" href="#fn:lgm">1</a></sup>, а в межледниковья поднимался обратно. Эти циклы повторяются с периодом около 100 тысяч лет — следствие медленных изменений орбиты и наклона земной оси (циклы Миланковича). Каждый крупный подъём оставлял на берегу ровную полосу — морскую террасу, а там, где суша вдобавок медленно поднималась, такие полосы выстраивались в лестницу из нескольких уровней<sup id="fnref:marterr"><a class="footnote-ref" href="#fn:marterr">2</a></sup>. Принцип подстройки рельефа к меняющемуся базису одинаков для речной террасы, морской террасы и верховья оврага; различаются только источник изменений и характерное время процесса.</p>
+<h3>Что остаётся неясным</h3>
+<p>В каждой долине история террас складывается из двух наложенных причин. Первая — климат: он меняет объём стока и количество наносов и действует синхронно на больших территориях. Вторая — тектоника: медленные движения коры поднимают или опускают участки суши локально.</p>
+<p>На масштабе континента эти вклады разделимы — климатический сигнал общий, тектонический локально-региональный. Но в одной долине, особенно для древних верхних террас, чьи возрасты лежат за пределом радиоуглеродного метода, расцепить вклады бывает крайне трудно. Одну и ту же лестницу можно реконструировать и как след смен климата, и как след тектонического поднятия. Поэтому реконструкции древнейших террас обычно даются с диапазоном возможных интерпретаций.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:lgm">
+<p>В последний ледниковый максимум (около 20 тысяч лет назад) глобальный уровень моря был примерно на 125 м ниже современного. <a href="https://en.wikipedia.org/wiki/Last_Glacial_Maximum">Last Glacial Maximum</a>&#160;<a class="footnote-backref" href="#fnref:lgm" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:marterr">
+<p>Большинство морских террас образовано сочетанием колебаний уровня океана в четвертичном периоде и тектонического поднятия берега, отчего они и выстраиваются в ступени. <a href="https://en.wikipedia.org/wiki/Marine_terrace">Marine terrace</a>&#160;<a class="footnote-backref" href="#fnref:marterr" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  
+</div>
+
+<script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
+<script defer src="/assets/site-bar/bot.js"></script>
+
+<script>
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
+var TROPA_DECKS = ["Почему склон долины — это лестница?", "Что задаёт высоту каждой ступени?", "Террасы: происхождение, датировка, открытые вопросы"];
+
+(function(){
+  var tabs=document.querySelectorAll('.tab'), bodies=document.querySelectorAll('.lvl');
+  var pdfs=TROPA_PDFS, decks=TROPA_DECKS, deckEl=document.getElementById('sg-deck');
+  document.querySelector('.tabs')&&document.querySelector('.tabs').addEventListener('click',function(e){
+    var t=e.target.closest('.tab'); if(!t)return;
+    tabs.forEach(function(x){x.classList.remove('active')}); t.classList.add('active');
+    var i=+t.dataset.i;
+    bodies.forEach(function(b){b.style.display=(+b.dataset.i===i)?'':'none'});
+    if(deckEl){ if(decks[i]){deckEl.textContent=decks[i];deckEl.style.display='';if(window.tropaMath)window.tropaMath(deckEl);} else {deckEl.style.display='none'} }
+    var link=document.getElementById('pdf-link'); if(link&&pdfs[i])link.href=pdfs[i];
+    if(window.tropaMath)window.tropaMath(bodies[i]);
+  });
+})();
+
+</script>
+
+</body>
+</html>

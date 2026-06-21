@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Тропа — научный аудиогид</title>
+<link rel="icon" href="/assets/trees.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site-bar/bot.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
+<script>
+// Рендер математики ТОЛЬКО после загрузки шрифтов KaTeX. Иначе KaTeX считает
+// позицию черты корня/дроби по метрикам фолбэк-шрифта → линия ложится поперёк
+// подкоренного (видимое «зачёркивание»), и без ре-рендера не лечится.
+// ignoredClasses:['katex'] — повторный проход не трогает уже отрендеренное.
+(function(){
+  var KX={delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false,ignoredClasses:['katex']};
+  function whenFontsReady(cb){
+    var fams=['KaTeX_Main','KaTeX_Math','KaTeX_Size1','KaTeX_Size2','KaTeX_Size3','KaTeX_Size4','KaTeX_AMS'];
+    if(document.fonts&&document.fonts.load){
+      Promise.all(fams.map(function(f){return document.fonts.load('1em '+f).catch(function(){});}))
+        .then(function(){return document.fonts.ready;}).then(cb,cb);
+    } else { cb(); }
+  }
+  window.tropaMath=function(el){ if(typeof renderMathInElement==='function'){ whenFontsReady(function(){ renderMathInElement(el,KX); }); } };
+  window.addEventListener('load',function(){ window.tropaMath(document.body); });
+})();
+</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip}
+body{max-width:100%;overflow-x:clip}
+/* TROPA design system — палитра дизайн-пака */
+:root{
+  --sand:#DBD4C7;--sage:#B8B5A6;--olive:#7C7F6A;--char:#3E4038;--ink:#1A1A18;
+  --g:#7C7F6A;--gd:#3E4038;--gl:#F4F2EE;--bg:#FFFFFF;--card:#FFFFFF;
+  --tx:#1A1A18;--tm:#6E7163;--bd:#EAE7E0;--r:10px;
+  --serif:"Cormorant Garamond",Georgia,serif;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:-0.01em}
+a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
+.w{max-width:760px;margin:0 auto;padding:0 24px}
+.nav{padding:14px 0;border-bottom:1px solid var(--bd);background:#fff}
+.nav-inner{display:flex;align-items:center;gap:22px}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.3rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);line-height:1;display:flex;align-items:center;gap:9px}
+.nav-logo img{width:22px;height:22px}
+.nav-spacer{flex:1}
+.nav-link{font-size:0.82rem;color:var(--tm);display:flex;align-items:center;line-height:1;letter-spacing:0.01em}
+.nav-link:hover{color:var(--ink);text-decoration:none}
+.nav-icon{display:flex;align-items:center;justify-content:center;color:var(--tm);transition:color 0.15s}
+.nav-icon:hover{color:var(--olive);text-decoration:none}
+.nav-icon i{width:16px;height:16px}
+
+.hero{padding:80px 0 48px;text-align:center;position:relative;overflow:hidden}
+#contour-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:auto;cursor:crosshair;z-index:0}
+.hero>*{position:relative;z-index:1}
+.hero h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;letter-spacing:-0.03em;line-height:1.15;margin-bottom:12px}
+.hero h1 span{color:var(--g)}
+.section{padding:48px 0}
+.section-label{font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--g);margin-bottom:8px;display:block}
+.section h2{font-size:1.5rem;font-weight:700;margin-bottom:8px}
+.section-desc{color:var(--tm);font-size:0.92rem;margin-bottom:24px}
+.route-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.route-card{display:block;background:#fff;border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;transition:all 0.15s}
+.route-card:hover{border-color:var(--g);box-shadow:0 4px 16px rgba(47,111,99,0.08);text-decoration:none;transform:translateY(-2px)}
+.route-card .rc-map{height:180px;background:#eef2f0;position:relative}
+.route-card .rc-map img{width:100%;height:100%;object-fit:cover}
+.route-card .rc-status{position:absolute;top:10px;right:10px;font-size:0.7rem;padding:3px 8px;border-radius:6px;font-weight:500}
+.rc-status.draft{background:#fef3c7;color:#92400e}
+.rc-status.ready{background:var(--gl);color:var(--g)}
+.route-card .rc-body{padding:16px}
+.route-card .rc-name{font-weight:600;font-size:1rem;color:var(--tx)}
+.route-card .rc-meta{font-size:0.82rem;color:var(--tm);margin-top:3px}
+.flow-section{padding:48px 0 32px}
+.flow-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.flow-col-label{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--g);margin-bottom:12px}
+.flow-col{display:flex;flex-direction:column;gap:0}
+.flow-step{display:flex;align-items:center;gap:10px;padding:10px 14px}
+.flow-step i{width:18px;height:18px;color:var(--g);flex-shrink:0}
+.flow-step span{font-size:0.88rem;font-weight:500}
+.flow-dot{padding:0 0 0 18px;height:20px;position:relative}
+.flow-dot::before{content:'';position:absolute;left:22px;top:0;width:1.5px;height:100%;background:var(--bd)}
+.arch-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+.arch-card.full{grid-column:1/-1}
+.arch-card{padding:20px;background:#fff;border:1px solid var(--bd);border-radius:var(--r)}
+.arch-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.arch-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.arch-icon i{width:20px;height:20px}
+.arch-icon.site{background:var(--gl);color:var(--olive)}
+.arch-icon.bot{background:var(--gl);color:var(--char)}
+.arch-icon.skills{background:var(--gl);color:var(--sage)}
+.arch-skills-list{display:flex;flex-wrap:wrap;gap:8px;list-style:none}
+.arch-skills-list li{display:flex;align-items:center;gap:6px;font-size:0.82rem;padding:6px 12px;background:var(--gl);border-radius:20px;color:var(--tx)}
+.arch-skills-list li i{width:14px;height:14px;color:var(--tm)}
+.arch-title{font-weight:700;font-size:0.95rem;line-height:1.2}
+.arch-path{font-size:0.75rem;color:var(--tm);font-family:monospace}
+.arch-items{list-style:none;display:flex;flex-direction:column;gap:6px}
+.arch-items li{display:flex;align-items:center;gap:8px;font-size:0.82rem;color:var(--tx)}
+.arch-items li i{width:14px;height:14px;color:var(--tm);flex-shrink:0}
+@media(max-width:540px){.arch-grid{grid-template-columns:1fr}.flow-grid{grid-template-columns:1fr;gap:32px}}
+
+@media(max-width:640px){
+  .w{padding:0 16px}
+  .nav-inner{gap:14px}
+  .nav-logo{font-size:1.12rem;letter-spacing:0.08em;gap:7px}
+  .nav-logo img{width:19px;height:19px}
+  .nav-link{font-size:0.8rem}
+  .nav-icon{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="w nav-inner">
+  <a href="/" class="nav-logo"><img src="/assets/trees.svg" alt="">Тропа</a>
+  <a href="/storylines/" class="nav-link">Сюжеты</a>
+  <a href="/innopolis/" class="nav-link">Маршрут</a>
+  <a href="/skills/" class="nav-link">Скиллы</a>
+  <a href="/bot/" class="nav-link">Бот</a>
+  <a href="/guides/" class="nav-link">Гиды</a>
+  <div class="nav-spacer"></div>
+  <a href="https://github.com/MerkulovDaniil/tropa" class="nav-icon"><i data-lucide="github"></i></a>
+  <a href="https://t.me/zoobr_bot" class="nav-icon"><i data-lucide="send"></i></a>
+</div></nav>
+
+<div class="hero">
+  <canvas id="contour-canvas"></canvas>
+  <h1>Научно-популярная <span>тропа</span></h1>
+</div>
+
+<div class="w">
+<div class="flow-section">
+  <div class="flow-grid">
+    <div>
+      <div class="flow-col-label">Как мы делаем тропу</div>
+      <div class="flow-col">
+        <div class="flow-step"><i data-lucide="lightbulb"></i><span>Научный сюжет</span></div>
+        <div class="flow-dot"></div>
+        <div class="flow-step"><i data-lucide="map-pin"></i><span>Привязка к месту</span></div>
+        <div class="flow-dot"></div>
+        <div class="flow-step"><i data-lucide="layers"></i><span>Тексты трёх уровней</span></div>
+        <div class="flow-dot"></div>
+        <div class="flow-step"><i data-lucide="audio-lines"></i><span>Озвучка</span></div>
+        <div class="flow-dot"></div>
+        <div class="flow-step"><i data-lucide="route"></i><span>Готовый маршрут</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="flow-col-label">Как проходят тропу</div>
+      <div class="flow-col">
+        <div class="flow-step"><i data-lucide="footprints"></i><span>Подходишь к точке</span></div>
+        <div class="flow-dot"></div>
+        <div class="flow-step"><i data-lucide="radar"></i><span>Бот видит локацию</span></div>
+        <div class="flow-dot"></div>
+        <div class="flow-step"><i data-lucide="volume-2"></i><span>Голосовой рассказ</span></div>
+        <div class="flow-dot"></div>
+        <div class="flow-step"><i data-lucide="message-circle"></i><span>Задаёшь вопрос</span></div>
+        <div class="flow-dot"></div>
+        <div class="flow-step"><i data-lucide="brain"></i><span>Ответ от ИИ</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="arch">
+  <h2>Что внутри</h2>
+  <div class="arch-grid">
+    <div class="arch-card">
+      <div class="arch-head">
+        <div class="arch-icon site"><i data-lucide="globe"></i></div>
+        <div>
+          <div class="arch-title">Сайт</div>
+          <div class="arch-path">site/</div>
+        </div>
+      </div>
+      <ul class="arch-items">
+        <li><i data-lucide="layout"></i> Страницы маршрутов с картой</li>
+        <li><i data-lucide="headphones"></i> Аудиогиды по каждой точке</li>
+        <li><i data-lucide="file-text"></i> PDF-карточки для печати</li>
+      </ul>
+    </div>
+    <div class="arch-card">
+      <div class="arch-head">
+        <div class="arch-icon bot"><i data-lucide="bot"></i></div>
+        <div>
+          <div class="arch-title">Telegram-бот</div>
+          <div class="arch-path">bot/</div>
+        </div>
+      </div>
+      <ul class="arch-items">
+        <li><i data-lucide="radar"></i> Следит за геолокацией</li>
+        <li><i data-lucide="audio-lines"></i> Запускает рассказ у каждой точки</li>
+        <li><i data-lucide="brain"></i> Отвечает на вопросы через ИИ</li>
+        <li><i data-lucide="layers"></i> Базовый · с формулами · доп. факты</li>
+      </ul>
+    </div>
+    <div class="arch-card full">
+      <div class="arch-head">
+        <div class="arch-icon skills"><i data-lucide="wand-2"></i></div>
+        <div>
+          <div class="arch-title">Skills</div>
+          <div class="arch-path">Claude Code агенты для разработки</div>
+        </div>
+      </div>
+      <ul class="arch-skills-list">
+        <li><i data-lucide="volume-2"></i> TTS-озвучка</li>
+        <li><i data-lucide="scan-text"></i> Anti-AI текст</li>
+        <li><i data-lucide="map-pin-plus"></i> Генерация POI</li>
+        <li><i data-lucide="compass"></i> Проектирование экспонатов</li>
+        <li><i data-lucide="file-text"></i> Тексты трёх уровней</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="routes">
+  <h2>Маршруты</h2>
+  <div class="route-gallery">
+  
+  <a href="/innopolis/" class="route-card">
+    <div class="rc-map">
+      <img src="/assets/innopolis-map.png" alt="Научная тропа Иннополиса" onerror="this.parentElement.style.background='var(--gl)'">
+      <span class="rc-status ready">готов</span>
+    </div>
+    <div class="rc-body">
+      <div class="rc-name">Научная тропа Иннополиса</div>
+      <div class="rc-meta">Иннополис, Татарстан · правый берег Волги &middot;  км &middot; 13 точек &middot; 110 мин</div>
+    </div>
+  </a>
+  
+  </div>
+</div>
+</div>
+
+<script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
+<script defer src="/assets/site-bar/bot.js"></script>
+
+<script>
+
+(function(){
+  var canvas=document.getElementById('contour-canvas');if(!canvas)return;
+  var ctx=canvas.getContext('2d'),W,H,dpr;
+  function resize(){var h=canvas.parentElement;dpr=window.devicePixelRatio||1;W=h.offsetWidth;H=h.offsetHeight;canvas.width=W*dpr;canvas.height=H*dpr;canvas.style.width=W+'px';canvas.style.height=H+'px';ctx.setTransform(dpr,0,0,dpr,0,0)}
+  function f(x,y){return -1.8*Math.exp(-((x-.3)**2+(y-.7)**2)/.08)-2.2*Math.exp(-((x-.75)**2+(y-.25)**2)/.06)-1*Math.exp(-((x-.6)**2+(y-.65)**2)/.12)+.6*Math.exp(-((x-.5)**2+(y-.5)**2)/.3)-.8*Math.exp(-((x-.15)**2+(y-.3)**2)/.1)}
+  function grad(x,y){var h=.001;return[(f(x+h,y)-f(x-h,y))/(2*h),(f(x,y+h)-f(x,y-h))/(2*h)]}
+  function gd(sx,sy){var p=[[sx,sy]],x=sx,y=sy,lr=.006;for(var i=0;i<500;i++){var g=grad(x,y),n=Math.sqrt(g[0]*g[0]+g[1]*g[1]);if(n<.01)break;x-=lr*g[0];y-=lr*g[1];x=Math.max(.01,Math.min(.99,x));y=Math.max(.01,Math.min(.99,y));p.push([x,y])}return p}
+  function contour(lv,res){var s=[],st=1/res;for(var i=0;i<res;i++)for(var j=0;j<res;j++){var x0=i*st,y0=j*st,x1=x0+st,y1=y0+st,v00=f(x0,y0)-lv,v10=f(x1,y0)-lv,v01=f(x0,y1)-lv,v11=f(x1,y1)-lv,idx=(v00>0?8:0)|(v10>0?4:0)|(v11>0?2:0)|(v01>0?1:0);if(!idx||idx==15)continue;var t=function(a,b){return a/(a-b)},tp=[x0+st*t(v00,v10),y0],bt=[x0+st*t(v01,v11),y1],lf=[x0,y0+st*t(v00,v01)],rt=[x1,y0+st*t(v10,v11)],cs={1:[[lf,bt]],2:[[bt,rt]],3:[[lf,rt]],4:[[tp,rt]],5:[[tp,lf],[bt,rt]],6:[[tp,bt]],7:[[tp,lf]],8:[[tp,lf]],9:[[tp,bt]],10:[[tp,rt],[bt,lf]],11:[[tp,rt]],12:[[lf,rt]],13:[[bt,rt]],14:[[lf,bt]]};if(cs[idx])s.push.apply(s,cs[idx])}return s}
+  var lvs=[],allC;for(var l=-2.4;l<=.6;l+=.12)lvs.push(l);allC=lvs.map(function(l){return contour(l,100)});
+  var trails=[],tick=0;trails.push({path:gd(.12,.85),frame:0,settled:false});
+  function ts(px,py){return[px*W,py*H]}
+  function fs(sx,sy){return[sx/W,sy/H]}
+  canvas.addEventListener('click',function(e){var r=canvas.getBoundingClientRect(),n=fs(e.clientX-r.left,e.clientY-r.top);if(n[0]>.01&&n[0]<.99&&n[1]>.01&&n[1]<.99){var p=gd(n[0],n[1]);if(p.length>2)trails.push({path:p,frame:0,settled:false})}});
+  canvas.addEventListener('touchstart',function(e){e.preventDefault();var t=e.touches[0],r=canvas.getBoundingClientRect(),n=fs(t.clientX-r.left,t.clientY-r.top);if(n[0]>.01&&n[0]<.99&&n[1]>.01&&n[1]<.99){var p=gd(n[0],n[1]);if(p.length>2)trails.push({path:p,frame:0,settled:false})}},{passive:false});
+  function draw(){ctx.clearRect(0,0,W,H);tick++;
+    for(var ci=0;ci<allC.length;ci++){var sg=allC[ci],a=.04+.08*(ci/allC.length);ctx.strokeStyle='rgba(47,111,99,'+a+')';ctx.lineWidth=.5;ctx.beginPath();for(var s=0;s<sg.length;s++){var p=ts(sg[s][0][0],sg[s][0][1]),q=ts(sg[s][1][0],sg[s][1][1]);ctx.moveTo(p[0],p[1]);ctx.lineTo(q[0],q[1])}ctx.stroke()}
+    var keep=[];for(var ti=0;ti<trails.length;ti++){var tr=trails[ti],p=tr.path,h=Math.min(tr.frame,p.length-1),is=h>=p.length-1;if(!tr.settled&&is){tr.settled=true;tr.sa=tick}var ga=1;if(tr.settled){var age=tick-tr.sa;if(age>300){ga=Math.max(0,1-(age-300)/120);if(ga<=0)continue}}var ts0=Math.max(0,h-50);for(var i=ts0;i<h;i++){var pr=(i-ts0)/Math.max(1,h-ts0),al=(0.05+.6*pr)*ga;ctx.strokeStyle='rgba(240,79,58,'+al+')';ctx.lineWidth=1+2*pr;ctx.beginPath();var a1=ts(p[i][0],p[i][1]),a2=ts(p[i+1][0],p[i+1][1]);ctx.moveTo(a1[0],a1[1]);ctx.lineTo(a2[0],a2[1]);ctx.stroke()}if(is&&p.length>1){ctx.strokeStyle='rgba(240,79,58,'+(0.1*ga)+')';ctx.lineWidth=1;ctx.beginPath();var s0=ts(p[0][0],p[0][1]);ctx.moveTo(s0[0],s0[1]);for(var i=1;i<p.length;i++){var si=ts(p[i][0],p[i][1]);ctx.lineTo(si[0],si[1])}ctx.stroke()}var hp=ts(p[h][0],p[h][1]);ctx.beginPath();var gl=ctx.createRadialGradient(hp[0],hp[1],0,hp[0],hp[1],16);gl.addColorStop(0,'rgba(240,79,58,'+(0.3*ga)+')');gl.addColorStop(1,'rgba(240,79,58,0)');ctx.fillStyle=gl;ctx.arc(hp[0],hp[1],16,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(hp[0],hp[1],3.5,0,Math.PI*2);ctx.fillStyle='rgba(240,79,58,'+ga+')';ctx.fill();if(!is)tr.frame+=2;keep.push(tr)}trails=keep;requestAnimationFrame(draw)}
+  window.addEventListener('resize',resize);resize();draw();
+})();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Входной стенд — Тропа</title>
+<link rel="icon" href="/assets/trees.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site-bar/bot.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
+<script>
+// Рендер математики ТОЛЬКО после загрузки шрифтов KaTeX. Иначе KaTeX считает
+// позицию черты корня/дроби по метрикам фолбэк-шрифта → линия ложится поперёк
+// подкоренного (видимое «зачёркивание»), и без ре-рендера не лечится.
+// ignoredClasses:['katex'] — повторный проход не трогает уже отрендеренное.
+(function(){
+  var KX={delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false,ignoredClasses:['katex']};
+  function whenFontsReady(cb){
+    var fams=['KaTeX_Main','KaTeX_Math','KaTeX_Size1','KaTeX_Size2','KaTeX_Size3','KaTeX_Size4','KaTeX_AMS'];
+    if(document.fonts&&document.fonts.load){
+      Promise.all(fams.map(function(f){return document.fonts.load('1em '+f).catch(function(){});}))
+        .then(function(){return document.fonts.ready;}).then(cb,cb);
+    } else { cb(); }
+  }
+  window.tropaMath=function(el){ if(typeof renderMathInElement==='function'){ whenFontsReady(function(){ renderMathInElement(el,KX); }); } };
+  window.addEventListener('load',function(){ window.tropaMath(document.body); });
+})();
+</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip}
+body{max-width:100%;overflow-x:clip}
+/* TROPA design system — палитра дизайн-пака */
+:root{
+  --sand:#DBD4C7;--sage:#B8B5A6;--olive:#7C7F6A;--char:#3E4038;--ink:#1A1A18;
+  --g:#7C7F6A;--gd:#3E4038;--gl:#F4F2EE;--bg:#FFFFFF;--card:#FFFFFF;
+  --tx:#1A1A18;--tm:#6E7163;--bd:#EAE7E0;--r:10px;
+  --serif:"Cormorant Garamond",Georgia,serif;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:-0.01em}
+a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
+.w{max-width:760px;margin:0 auto;padding:0 24px}
+.nav{padding:14px 0;border-bottom:1px solid var(--bd);background:#fff}
+.nav-inner{display:flex;align-items:center;gap:22px}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.3rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);line-height:1;display:flex;align-items:center;gap:9px}
+.nav-logo img{width:22px;height:22px}
+.nav-spacer{flex:1}
+.nav-link{font-size:0.82rem;color:var(--tm);display:flex;align-items:center;line-height:1;letter-spacing:0.01em}
+.nav-link:hover{color:var(--ink);text-decoration:none}
+.nav-icon{display:flex;align-items:center;justify-content:center;color:var(--tm);transition:color 0.15s}
+.nav-icon:hover{color:var(--olive);text-decoration:none}
+.nav-icon i{width:16px;height:16px}
+
+.sg-hero{padding:48px 0 8px;text-align:center}
+.sg-hero img{height:auto;max-height:46px;width:auto;opacity:.8;display:block;margin:0 auto 16px}
+.sg-hero img.sg-icon{max-height:200px;max-width:440px;width:80%;opacity:1;margin:0 auto 4px}
+.sg-kicker{font-size:0.76rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--olive);margin-bottom:10px}
+.sg-hero h1{font-size:2.3rem;font-weight:700;line-height:1.12;margin-bottom:8px}
+.sg-deck{font-family:var(--serif);font-style:italic;font-size:1.3rem;color:var(--tm);line-height:1.3;margin:0 auto 12px;max-width:560px}
+.sg-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:0.8rem}
+.sg-tag{padding:2px 9px;border-radius:20px;background:var(--gl);color:var(--tm)}
+.sg-geo{color:var(--olive);font-weight:600}
+.tabs{display:flex;align-items:center;gap:4px;border-bottom:1px solid var(--bd);margin:26px 0 0;flex-wrap:wrap}
+.tab{font-family:var(--serif);font-size:1.05rem;font-weight:600;padding:9px 16px;color:var(--tm);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);border-bottom-color:var(--olive)}
+.tab-pdf{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--tm);transition:color .15s}
+.tab-pdf:hover{color:var(--olive);text-decoration:none}
+.tab-pdf i{width:15px;height:15px;stroke-width:1.4}
+/* читается как книжная статья */
+.body{padding:26px 0 8px;font-family:Georgia,"PT Serif","Times New Roman",serif;font-size:1.16rem;line-height:1.84;max-width:660px;color:#262521}
+.body p{margin:0 0 1.05em}.body p:first-of-type{font-size:1.22rem;color:#1c1b17}
+.body strong{color:var(--ink);font-weight:600}
+.body h2,.body h3,.body h4{font-family:var(--serif);font-weight:600;color:var(--char);margin:1.6em 0 .5em;font-size:1.4rem;line-height:1.25;text-align:center}
+.body ul,.body ol{margin:1em 0 1em 22px}.body li{margin:.4em 0}
+.body table{border-collapse:collapse;font-size:0.96rem;margin:1.2em 0;display:block;max-width:100%;overflow-x:auto}
+.body img{max-width:100%;height:auto;display:block;margin:0 auto}
+.body figure.fig{margin:2em auto;text-align:center;max-width:560px}
+.body figure.fig img{max-width:88%;max-height:340px;width:auto;height:auto}
+.body figure.fig figcaption{font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--tm);line-height:1.4;margin-top:.7em;max-width:480px;margin-left:auto;margin-right:auto}
+.body th,.body td{border:1px solid var(--bd);padding:7px 14px;text-align:left}
+.body .formula{text-align:center;font-size:1.2rem;margin:1.4em auto;color:var(--char);letter-spacing:.02em}
+.body .katex-display{margin:1.4em 0}
+.divider{margin:48px 0 12px;text-align:center}.divider img{width:170px;opacity:.85}
+.site-url{text-align:center;font-size:0.78rem;letter-spacing:0.16em;color:var(--tm);margin-bottom:28px}
+.back{font-size:0.85rem}
+
+@media(max-width:640px){
+  .w{padding:0 16px}
+  .nav-inner{gap:14px}
+  .nav-logo{font-size:1.12rem;letter-spacing:0.08em;gap:7px}
+  .nav-logo img{width:19px;height:19px}
+  .nav-link{font-size:0.8rem}
+  .nav-icon{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="w nav-inner">
+  <a href="/" class="nav-logo"><img src="/assets/trees.svg" alt="">Тропа</a>
+  <a href="/storylines/" class="nav-link">Сюжеты</a>
+  <a href="/innopolis/" class="nav-link">Маршрут</a>
+  <a href="/skills/" class="nav-link">Скиллы</a>
+  <a href="/bot/" class="nav-link">Бот</a>
+  <a href="/guides/" class="nav-link">Гиды</a>
+  <div class="nav-spacer"></div>
+  <a href="https://github.com/MerkulovDaniil/tropa" class="nav-icon"><i data-lucide="github"></i></a>
+  <a href="https://t.me/zoobr_bot" class="nav-icon"><i data-lucide="send"></i></a>
+</div></nav>
+
+<div class="w">
+  <div class="sg-hero">
+    <img class="sg-icon" src="/assets/icons/vhod.svg" alt="">
+    
+    <div class="sg-kicker">Научная тропа Иннополиса</div>
+    <h1>Входной стенд</h1>
+    <div class="sg-deck" id="sg-deck">Можно ли пройти по обычному лесу и выйти из него физиком?</div>
+    <div class="sg-meta">
+      <a class="sg-geo" href="https://yandex.ru/maps/?pt=48.73783,55.74755&z=17&l=map" target="_blank" rel="noopener">📍 на карте</a>
+      <span class="sg-tag">навигация</span><span class="sg-tag">методология</span>
+    </div>
+  </div>
+
+  
+  <div class="tabs">
+    <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
+  </div>
+  
+  <div class="body lvl" data-i="0" style=""><p>Эта тропа построена как серия остановок, где ты наблюдаешь за природой, задаёшь вопросы, смотришь по сторонам и находишь ответы.</p>
+<p>Перед тобой два маршрута — короткая петля 4 км и длинная 12 км. На каждой остановке тебя ждёт маленькое наблюдение: чем-то удивиться, что-то сравнить, что-то потрогать. И на каждой — одно число, которое меняет взгляд на привычное: почему один и тот же метр породы может означать и тысячу лет, и целый миллион; на сколько круче падает на южную грань валуна полуденный луч, чем на северную; как смартфон находит тебя по сигналу со спутника на высоте двадцать тысяч километров.</p>
+<figure class="fig"><img src="/assets/figures/vhod-1.svg" alt="Схема двух маршрутов из одного входа: короткая петля 4 км целиком внутри длинной 12 км — длинная примерно втрое больше. Пином отмечен вход «вы здесь»."><figcaption>Схема двух маршрутов из одного входа: короткая петля 4 км целиком внутри длинной 12 км — длинная примерно втрое больше. Пином отмечен вход «вы здесь».</figcaption></figure>
+<p>Цель не в том, чтобы запомнить факты, а в том, чтобы научиться смотреть на мир по-новому: видеть в привычном — непривычное, а в странном — закономерность.</p>
+<p>Сверься с картой, выбери маршрут и двигайся по указателям. На каждом стенде задержись хотя бы на пару минут и сделай то, что написано: посмотри, сравни, шагни.</p>
+<p><strong>Правила.</strong> Не мусорить. Не повреждать объекты и стенды. Не ломать деревья и ветки.</p></div>
+  
+  <div class="body lvl" data-i="1" style="display:none"><p>Осмотрись прямо сейчас. Что тебя окружает? Светит ли солнце? Есть ли на небе облака? Поют ли птицы?</p>
+<p>Научной прогулку делает не маршрут, а одна привычка: к каждому наблюдению добавлять вопрос «почему?» и искать общую причину за множеством разных следствий. У всего есть причина — и, как правило, одна причина стоит за многими событиями сразу. Поэтому наука не складывает факты в кучу, а ищет за грудой следствий немногие причины, из которых эти следствия выводятся. Так знание само укладывается в голове: помнить нужно немного, а объяснить можно многое.</p>
+<p>Отсюда — устройство каждого стенда: один и тот же замкнутый цикл, по которому идёт и сам стенд, и любая наука.</p>
+<figure class="fig"><img src="/assets/figures/vhod-2.svg" alt="Научный метод как замкнутый цикл: наблюдение → причина → проверка → применение — и снова наблюдение."><figcaption>Научный метод как замкнутый цикл: наблюдение → причина → проверка → применение — и снова наблюдение.</figcaption></figure>
+<p>Ты замечаешь явление, предполагаешь причину, проверяешь её сравнением, а затем используешь найденное правило, чтобы предсказать следующее наблюдение. И круг замыкается: применение подсказывает, на что смотреть дальше.</p>
+<p>Времени на это хватит. Длинная петля — двенадцать километров; при спокойном шаге около $4$ км/ч прогулка занимает</p>
+<p>$$t = \frac{12\ \text{км}}{4\ \text{км/ч}} = 3\ \text{часа}.$$</p>
+<p>Три часа — это не дорога из точки в точку, а запас на то, чтобы у каждого стенда задержаться, посмотреть и спросить «почему?».</p>
+<p>Прежде чем идти дальше — остановись и найди вокруг себя одно явление. Что-то, что ты раньше не замечал или принимал как должное. Запомни это и проверь по дороге: не ответит ли на него один из следующих стендов?</p>
+<p>Хочешь узнать больше — сканируй QR-код.</p></div>
+  
+  <div class="body lvl" data-i="2" style="display:none"><p>Любой факт сегодня — в телефоне за десять секунд. Ценнее самого факта стало умение видеть за разными явлениями общий принцип и связи между ними. Но почему это вообще возможно — почему мир удаётся объяснять немногими принципами?</p>
+<p>Физик Ричард Фейнман предложил такой мысленный опыт: если бы всё научное знание погибло и потомкам можно было передать лишь одну фразу, он выбрал бы мысль о том, что всё состоит из атомов — крошечных частиц в вечном движении, которые притягиваются на расстоянии и отталкиваются при сжатии<sup id="fnref:feyn"><a class="footnote-ref" href="#fn:feyn">1</a></sup>. Из одной этой идеи выводится поразительно многое: почему вода замерзает, почему пахнет цветок, почему дерево стоит и держит форму. В этом и состоит сила науки: немногих фундаментальных принципов хватает, чтобы объяснить огромное разнообразие явлений, и формулируются они часто просто, хотя следствия бывают сложны.</p>
+<figure class="fig"><img src="/assets/figures/vhod-3.svg" alt="Идея Фейнмана: из одного принципа — «всё состоит из атомов в вечном движении» — выводится множество разных явлений."><figcaption>Идея Фейнмана: из одного принципа — «всё состоит из атомов в вечном движении» — выводится множество разных явлений.</figcaption></figure>
+<p>Именно поэтому работает цикл со входного стенда — наблюдение → причина → проверка → применение. Если за множеством наблюдений и правда стоит немного причин, то, нащупав одну, ты сразу объясняешь десятки разных случаев и можешь предсказать новые. Каждый стенд тропы доводит этот круг до конца на одном конкретном примере.</p>
+<p>В конце прогулки попробуй вспомнить: какой из твоих «странных» вопросов так и не получил ответа на стендах? Это и есть самый ценный вопрос — тот, с которым можно дальше исследовать мир. Наука тем и интересна, что за каждым новым открытием начинается неизвестное.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:feyn">
+<p>Р. Фейнман, Р. Лейтон, М. Сэндс. Фейнмановские лекции по физике, т. 1, гл. 1 «Атомы в движении» — «атомная гипотеза». <a href="https://www.feynmanlectures.caltech.edu/I_01.html">The Feynman Lectures on Physics, Vol. I, Ch. 1 «Atoms in Motion»</a>&#160;<a class="footnote-backref" href="#fnref:feyn" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  
+</div>
+
+<script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
+<script defer src="/assets/site-bar/bot.js"></script>
+
+<script>
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
+var TROPA_DECKS = ["Можно ли пройти по обычному лесу и выйти из него физиком?", "Что делает прогулку научной?", "Почему наука — это не просто факты, а способ узнавать мир?"];
+
+(function(){
+  var tabs=document.querySelectorAll('.tab'), bodies=document.querySelectorAll('.lvl');
+  var pdfs=TROPA_PDFS, decks=TROPA_DECKS, deckEl=document.getElementById('sg-deck');
+  document.querySelector('.tabs')&&document.querySelector('.tabs').addEventListener('click',function(e){
+    var t=e.target.closest('.tab'); if(!t)return;
+    tabs.forEach(function(x){x.classList.remove('active')}); t.classList.add('active');
+    var i=+t.dataset.i;
+    bodies.forEach(function(b){b.style.display=(+b.dataset.i===i)?'':'none'});
+    if(deckEl){ if(decks[i]){deckEl.textContent=decks[i];deckEl.style.display='';if(window.tropaMath)window.tropaMath(deckEl);} else {deckEl.style.display='none'} }
+    var link=document.getElementById('pdf-link'); if(link&&pdfs[i])link.href=pdfs[i];
+    if(window.tropaMath)window.tropaMath(bodies[i]);
+  });
+})();
+
+</script>
+
+</body>
+</html>

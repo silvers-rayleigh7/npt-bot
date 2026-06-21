@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сюжеты — Тропа</title>
+<link rel="icon" href="/assets/trees.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site-bar/bot.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
+<script>
+// Рендер математики ТОЛЬКО после загрузки шрифтов KaTeX. Иначе KaTeX считает
+// позицию черты корня/дроби по метрикам фолбэк-шрифта → линия ложится поперёк
+// подкоренного (видимое «зачёркивание»), и без ре-рендера не лечится.
+// ignoredClasses:['katex'] — повторный проход не трогает уже отрендеренное.
+(function(){
+  var KX={delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false,ignoredClasses:['katex']};
+  function whenFontsReady(cb){
+    var fams=['KaTeX_Main','KaTeX_Math','KaTeX_Size1','KaTeX_Size2','KaTeX_Size3','KaTeX_Size4','KaTeX_AMS'];
+    if(document.fonts&&document.fonts.load){
+      Promise.all(fams.map(function(f){return document.fonts.load('1em '+f).catch(function(){});}))
+        .then(function(){return document.fonts.ready;}).then(cb,cb);
+    } else { cb(); }
+  }
+  window.tropaMath=function(el){ if(typeof renderMathInElement==='function'){ whenFontsReady(function(){ renderMathInElement(el,KX); }); } };
+  window.addEventListener('load',function(){ window.tropaMath(document.body); });
+})();
+</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip}
+body{max-width:100%;overflow-x:clip}
+/* TROPA design system — палитра дизайн-пака */
+:root{
+  --sand:#DBD4C7;--sage:#B8B5A6;--olive:#7C7F6A;--char:#3E4038;--ink:#1A1A18;
+  --g:#7C7F6A;--gd:#3E4038;--gl:#F4F2EE;--bg:#FFFFFF;--card:#FFFFFF;
+  --tx:#1A1A18;--tm:#6E7163;--bd:#EAE7E0;--r:10px;
+  --serif:"Cormorant Garamond",Georgia,serif;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:-0.01em}
+a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
+.w{max-width:760px;margin:0 auto;padding:0 24px}
+.nav{padding:14px 0;border-bottom:1px solid var(--bd);background:#fff}
+.nav-inner{display:flex;align-items:center;gap:22px}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.3rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);line-height:1;display:flex;align-items:center;gap:9px}
+.nav-logo img{width:22px;height:22px}
+.nav-spacer{flex:1}
+.nav-link{font-size:0.82rem;color:var(--tm);display:flex;align-items:center;line-height:1;letter-spacing:0.01em}
+.nav-link:hover{color:var(--ink);text-decoration:none}
+.nav-icon{display:flex;align-items:center;justify-content:center;color:var(--tm);transition:color 0.15s}
+.nav-icon:hover{color:var(--olive);text-decoration:none}
+.nav-icon i{width:16px;height:16px}
+
+.page-hero{padding:52px 0 6px;display:flex;align-items:center;gap:18px}
+.page-hero img{max-height:48px;width:auto;opacity:.8}
+.page-hero h1{font-size:2.1rem;font-weight:700;margin-bottom:2px}
+.page-hero p{color:var(--tm);font-size:0.95rem}
+.sl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px;margin:30px 0 60px}
+/* иллюстрация во всю карточку + агрессивный белый градиент снизу под крупный заголовок */
+.sl-card{display:block;position:relative;aspect-ratio:2/1;border:1px solid #D6CFC1;border-radius:14px;overflow:hidden;background:#fff;transition:border-color .15s;text-decoration:none}
+.sl-card:hover{border-color:var(--olive);text-decoration:none}
+.sl-ic{position:absolute;inset:0;background-position:center 20%;background-size:122%;background-repeat:no-repeat;opacity:.9}
+.sl-veil{position:absolute;inset:0;background:linear-gradient(to top,#ffffff 0%,#ffffff 26%,rgba(255,255,255,.82) 48%,rgba(255,255,255,0) 78%)}
+.sl-title{position:absolute;left:22px;right:22px;bottom:18px;font-family:var(--serif);font-size:1.75rem;font-weight:600;line-height:1.03;color:var(--ink);transition:color .15s}
+.sl-card:hover .sl-title{color:var(--gd)}
+@media(max-width:640px){.sl-grid{grid-template-columns:1fr}}
+
+@media(max-width:640px){
+  .w{padding:0 16px}
+  .nav-inner{gap:14px}
+  .nav-logo{font-size:1.12rem;letter-spacing:0.08em;gap:7px}
+  .nav-logo img{width:19px;height:19px}
+  .nav-link{font-size:0.8rem}
+  .nav-icon{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="w nav-inner">
+  <a href="/" class="nav-logo"><img src="/assets/trees.svg" alt="">Тропа</a>
+  <a href="/storylines/" class="nav-link">Сюжеты</a>
+  <a href="/innopolis/" class="nav-link">Маршрут</a>
+  <a href="/skills/" class="nav-link">Скиллы</a>
+  <a href="/bot/" class="nav-link">Бот</a>
+  <a href="/guides/" class="nav-link">Гиды</a>
+  <div class="nav-spacer"></div>
+  <a href="https://github.com/MerkulovDaniil/tropa" class="nav-icon"><i data-lucide="github"></i></a>
+  <a href="https://t.me/zoobr_bot" class="nav-icon"><i data-lucide="send"></i></a>
+</div></nav>
+
+<div class="w">
+  <div class="page-hero">
+    <img src="/assets/glyphs/mountains.png" alt="">
+    <div>
+      <h1>Сюжеты</h1>
+      <p>Вычитанные научные сюжеты тропы — каждый с тремя уровнями глубины</p>
+    </div>
+  </div>
+  <div class="sl-grid">
+    
+    <a class="sl-card" href="/storylines/almazy/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/almazy.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Алмазные копи Якутии</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/batagay/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/batagay.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Батагайский провал</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/belaya-bereza/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/belaya-bereza.svg)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Белая берёза</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/belyaev/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/belyaev.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Одомашнивание лисиц</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/bessel/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/bessel.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Расстояние до звезды</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/dendrohronologiya/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/dendrohronologiya.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Как деревья хранят память о прошлом</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/dvizhushaya-dyuna/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/dvizhushaya-dyuna.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Движущаяся дюна</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/fraktalnaya-ramka/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/fraktalnaya-ramka.svg)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Фрактальная рамка</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/geo-srez/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/geo-srez.svg)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Геологический срез</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/kant-sistema/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/kant-sistema.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Рождение Солнечной системы</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/kantorovich/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/kantorovich.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Как назначить цену ресурсу</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/klimat-yakutii/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/klimat-yakutii.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Резкоконтинентальный климат Якутии</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/kraevedenie/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/kraevedenie.svg)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Краеведческий стенд</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/kvadrat-zhizni/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/kvadrat-zhizni.svg)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Квадрат жизни</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/lavrentyev/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/lavrentyev.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Как металл заставили течь</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/lenskie-stolby/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/lenskie-stolby.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Ленские столбы</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/mamonty/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/mamonty.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Мамонты Якутии</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/mayatniki/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/mayatniki.svg)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Маятниковая роща</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/mikrobiom/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/mikrobiom.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Как питание народа настраивает пищеварение</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/minkovsky/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/minkovsky.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Пространство-время Минковского</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/most-leonardo/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/most-leonardo.svg)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Мост Леонардо</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/mys-taran/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/mys-taran.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Мыс Таран</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/obratnye-zadachi/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/obratnye-zadachi.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Обратные задачи</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/observatoriya/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/observatoriya.svg)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Обсерватория</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/sem-mostov/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/sem-mostov.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Семь мостов Кёнигсберга</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/seysmograf-viherta/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/seysmograf-viherta.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Сейсмограф Вихерта</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/skrytaya-matematika/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/skrytaya-matematika.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Скрытая математика размера</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/sobolev/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/sobolev.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Математика негладкого мира</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/solnechnaya-sistema/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/solnechnaya-sistema.svg)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Солнечная система</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/solnechnye-chasy/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/solnechnye-chasy.svg)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Солнечные часы</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/sputnik/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/sputnik.svg)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Спутниковая навигация</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/staryj-les/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/staryj-les.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Почему старый лес нельзя посадить заново</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/tancuyushiy-les/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/tancuyushiy-les.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Танцующий лес</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/terrasy-vremeni/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/terrasy-vremeni.svg)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Террасы времени</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/uslysh-rasstoyanie/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/uslysh-rasstoyanie.svg)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Услышь расстояние</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/valun-termometr/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/valun-termometr.svg)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Валун-термометр</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/vhod/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/vhod.svg)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Входной стенд</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/vishtynec/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/vishtynec.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Озеро Виштынец</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/vodorazdel/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/vodorazdel.svg)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Водораздел</span>
+    </a>
+    
+    <a class="sl-card" href="/storylines/yantar/">
+      <div class="sl-ic" style="background-image:url(/assets/icons/yantar.png)"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">Балтийский янтарь</span>
+    </a>
+    
+  </div>
+</div>
+
+<script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
+<script defer src="/assets/site-bar/bot.js"></script>
+
+</body>
+</html>

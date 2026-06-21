@@ -1,0 +1,19 @@
+[Unit]
+Description=Tropa site-bar API (LLM-прокси виджета сайта: GigaChat -> OpenRouter)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/tropa-bot/server
+# .env лежит рядом с приложением; дублируется через load_dotenv в app.py
+EnvironmentFile=/opt/tropa-bot/server/.env
+ExecStart=/opt/tropa-bot/server/.venv/bin/python -m uvicorn app:app --host 127.0.0.1 --port 8000 --workers 1
+Restart=always
+RestartSec=3
+# uvicorn слушает только localhost; наружу — только через nginx /api/
+NoNewPrivileges=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

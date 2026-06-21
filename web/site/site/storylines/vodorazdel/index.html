@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Водораздел — Тропа</title>
+<link rel="icon" href="/assets/trees.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site-bar/bot.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
+<script>
+// Рендер математики ТОЛЬКО после загрузки шрифтов KaTeX. Иначе KaTeX считает
+// позицию черты корня/дроби по метрикам фолбэк-шрифта → линия ложится поперёк
+// подкоренного (видимое «зачёркивание»), и без ре-рендера не лечится.
+// ignoredClasses:['katex'] — повторный проход не трогает уже отрендеренное.
+(function(){
+  var KX={delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false,ignoredClasses:['katex']};
+  function whenFontsReady(cb){
+    var fams=['KaTeX_Main','KaTeX_Math','KaTeX_Size1','KaTeX_Size2','KaTeX_Size3','KaTeX_Size4','KaTeX_AMS'];
+    if(document.fonts&&document.fonts.load){
+      Promise.all(fams.map(function(f){return document.fonts.load('1em '+f).catch(function(){});}))
+        .then(function(){return document.fonts.ready;}).then(cb,cb);
+    } else { cb(); }
+  }
+  window.tropaMath=function(el){ if(typeof renderMathInElement==='function'){ whenFontsReady(function(){ renderMathInElement(el,KX); }); } };
+  window.addEventListener('load',function(){ window.tropaMath(document.body); });
+})();
+</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip}
+body{max-width:100%;overflow-x:clip}
+/* TROPA design system — палитра дизайн-пака */
+:root{
+  --sand:#DBD4C7;--sage:#B8B5A6;--olive:#7C7F6A;--char:#3E4038;--ink:#1A1A18;
+  --g:#7C7F6A;--gd:#3E4038;--gl:#F4F2EE;--bg:#FFFFFF;--card:#FFFFFF;
+  --tx:#1A1A18;--tm:#6E7163;--bd:#EAE7E0;--r:10px;
+  --serif:"Cormorant Garamond",Georgia,serif;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:-0.01em}
+a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
+.w{max-width:760px;margin:0 auto;padding:0 24px}
+.nav{padding:14px 0;border-bottom:1px solid var(--bd);background:#fff}
+.nav-inner{display:flex;align-items:center;gap:22px}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.3rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);line-height:1;display:flex;align-items:center;gap:9px}
+.nav-logo img{width:22px;height:22px}
+.nav-spacer{flex:1}
+.nav-link{font-size:0.82rem;color:var(--tm);display:flex;align-items:center;line-height:1;letter-spacing:0.01em}
+.nav-link:hover{color:var(--ink);text-decoration:none}
+.nav-icon{display:flex;align-items:center;justify-content:center;color:var(--tm);transition:color 0.15s}
+.nav-icon:hover{color:var(--olive);text-decoration:none}
+.nav-icon i{width:16px;height:16px}
+
+.sg-hero{padding:48px 0 8px;text-align:center}
+.sg-hero img{height:auto;max-height:46px;width:auto;opacity:.8;display:block;margin:0 auto 16px}
+.sg-hero img.sg-icon{max-height:200px;max-width:440px;width:80%;opacity:1;margin:0 auto 4px}
+.sg-kicker{font-size:0.76rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--olive);margin-bottom:10px}
+.sg-hero h1{font-size:2.3rem;font-weight:700;line-height:1.12;margin-bottom:8px}
+.sg-deck{font-family:var(--serif);font-style:italic;font-size:1.3rem;color:var(--tm);line-height:1.3;margin:0 auto 12px;max-width:560px}
+.sg-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:0.8rem}
+.sg-tag{padding:2px 9px;border-radius:20px;background:var(--gl);color:var(--tm)}
+.sg-geo{color:var(--olive);font-weight:600}
+.tabs{display:flex;align-items:center;gap:4px;border-bottom:1px solid var(--bd);margin:26px 0 0;flex-wrap:wrap}
+.tab{font-family:var(--serif);font-size:1.05rem;font-weight:600;padding:9px 16px;color:var(--tm);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);border-bottom-color:var(--olive)}
+.tab-pdf{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--tm);transition:color .15s}
+.tab-pdf:hover{color:var(--olive);text-decoration:none}
+.tab-pdf i{width:15px;height:15px;stroke-width:1.4}
+/* читается как книжная статья */
+.body{padding:26px 0 8px;font-family:Georgia,"PT Serif","Times New Roman",serif;font-size:1.16rem;line-height:1.84;max-width:660px;color:#262521}
+.body p{margin:0 0 1.05em}.body p:first-of-type{font-size:1.22rem;color:#1c1b17}
+.body strong{color:var(--ink);font-weight:600}
+.body h2,.body h3,.body h4{font-family:var(--serif);font-weight:600;color:var(--char);margin:1.6em 0 .5em;font-size:1.4rem;line-height:1.25;text-align:center}
+.body ul,.body ol{margin:1em 0 1em 22px}.body li{margin:.4em 0}
+.body table{border-collapse:collapse;font-size:0.96rem;margin:1.2em 0;display:block;max-width:100%;overflow-x:auto}
+.body img{max-width:100%;height:auto;display:block;margin:0 auto}
+.body figure.fig{margin:2em auto;text-align:center;max-width:560px}
+.body figure.fig img{max-width:88%;max-height:340px;width:auto;height:auto}
+.body figure.fig figcaption{font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--tm);line-height:1.4;margin-top:.7em;max-width:480px;margin-left:auto;margin-right:auto}
+.body th,.body td{border:1px solid var(--bd);padding:7px 14px;text-align:left}
+.body .formula{text-align:center;font-size:1.2rem;margin:1.4em auto;color:var(--char);letter-spacing:.02em}
+.body .katex-display{margin:1.4em 0}
+.divider{margin:48px 0 12px;text-align:center}.divider img{width:170px;opacity:.85}
+.site-url{text-align:center;font-size:0.78rem;letter-spacing:0.16em;color:var(--tm);margin-bottom:28px}
+.back{font-size:0.85rem}
+
+@media(max-width:640px){
+  .w{padding:0 16px}
+  .nav-inner{gap:14px}
+  .nav-logo{font-size:1.12rem;letter-spacing:0.08em;gap:7px}
+  .nav-logo img{width:19px;height:19px}
+  .nav-link{font-size:0.8rem}
+  .nav-icon{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="w nav-inner">
+  <a href="/" class="nav-logo"><img src="/assets/trees.svg" alt="">Тропа</a>
+  <a href="/storylines/" class="nav-link">Сюжеты</a>
+  <a href="/innopolis/" class="nav-link">Маршрут</a>
+  <a href="/skills/" class="nav-link">Скиллы</a>
+  <a href="/bot/" class="nav-link">Бот</a>
+  <a href="/guides/" class="nav-link">Гиды</a>
+  <div class="nav-spacer"></div>
+  <a href="https://github.com/MerkulovDaniil/tropa" class="nav-icon"><i data-lucide="github"></i></a>
+  <a href="https://t.me/zoobr_bot" class="nav-icon"><i data-lucide="send"></i></a>
+</div></nav>
+
+<div class="w">
+  <div class="sg-hero">
+    <img class="sg-icon" src="/assets/icons/vodorazdel.svg" alt="">
+    
+    <div class="sg-kicker">Научная тропа Иннополиса</div>
+    <h1>Водораздел</h1>
+    <div class="sg-deck" id="sg-deck">Куда уходит вода?</div>
+    <div class="sg-meta">
+      <a class="sg-geo" href="https://yandex.ru/maps/?pt=48.72993,55.76006&z=17&l=map" target="_blank" rel="noopener">📍 на карте</a>
+      <span class="sg-tag">гидрология</span><span class="sg-tag">геоморфология</span>
+    </div>
+  </div>
+
+  
+  <div class="tabs">
+    <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
+  </div>
+  
+  <div class="body lvl" data-i="0" style=""><figure class="fig"><img src="/assets/figures/vodorazdel-1.svg" alt="Водораздел делит сток надвое: с гребня вода уходит в два соседних бассейна."><figcaption>Водораздел делит сток надвое: с гребня вода уходит в два соседних бассейна.</figcaption></figure>
+<p>Конёк двускатной крыши делит дождь между двумя жёлобами: капли с одного ската уходят в один водосток, со второго — в другой, а граница пробегает ровно по верхней линии. Площадка под ногами устроена так же, только сделана не строителем, а самой природой.</p>
+<p>Присмотрись: от узкой полосы под ногами поверхность мягко понижается в две стороны, к вытянутым ложбинам. В сухую погоду их легко не заметить, но во время дождя и снеготаяния по ним сбегает вода. Капля, упавшая чуть в одну сторону от линии под ногами, уйдёт в один сток, упавшая чуть в другую — в соседний.</p>
+<p>Эту линию называют водоразделом. Площадь, с которой вода собирается в один сток, — её водосбором. Водораздел нигде не размечен: его рисует сам рельеф, и проходит он по гребням — там, где склон меняет направление. Площадка вокруг стенда — примерно сто на сто метров; короткий ливень в десять миллиметров обрушивает на неё около ста тонн воды, и ту часть, что сбежит по поверхности, водораздел под ногами делит надвое.</p></div>
+  
+  <div class="body lvl" data-i="1" style="display:none"><p><strong>Как вода выбирает путь?</strong> Каждая капля движется вниз по самому крутому из доступных ей склонов: гравитация тянет её к земле, а рельеф направляет туда, где спуск круче всего. Маленькие потоки сливаются в ручьи, ручьи — в малые реки, малые реки — в большие. Вода, ушедшая с этой площадки, в конце концов попадает в Свиягу, оттуда в Волгу и в Каспий.</p>
+<p><strong>Сколько воды приносит обычный дождь?</strong> Метеорологи измеряют дождь толщиной слоя воды, который остался бы на ровной поверхности, если бы ничего не впитывалось и не стекало. Слой в десять миллиметров — примерно с кончик мизинца — даёт на квадратный километр 10 000 тонн воды.</p>
+<p><strong>Куда она уходит?</strong> По поверхности течёт не вся эта масса. Часть впитывается в почву и пополняет грунтовые воды (инфильтрация), часть испаряется с поверхности и через листья деревьев (испарение и транспирация), а остаток сбегает к понижениям и образует поверхностный сток — именно его собирают ручьи и реки. Бухгалтерия дождя сводится к простому балансу:</p>
+<p>$$ R = P - I - E - T $$</p>
+<p>где $P$ — выпавшие осадки, $I$ — инфильтрация, $E$ — испарение, $T$ — транспирация, а сток $R$ — то, что осталось ручьям. Под лесом почва рыхлая и проницаемая, поэтому большая доля воды уходит в землю: из тех же десяти миллиметров до стока доходит лишь пятая-четвёртая часть. Из ста тонн, упавших на площадку у стенда, по ложбинам сбежит порядка двадцати-двадцати пяти тонн — остальное впитается и испарится.</p>
+<p>Та же закономерность встречается не только в течении воды, но и в движении самых разных потоков: кровотоком в тканях, распространением тепла, электрическими цепями и даже обучением нейронных сетей. Во всех этих системах под действием разницы давлений, температур, напряжений или вероятностей что-то переносится из области «избытка» в область «недостатка». Подробнее по QR-коду.</p></div>
+  
+  <div class="body lvl" data-i="2" style="display:none"><p><strong>1. Что общего у дождя, крови и нейронной сети?</strong> На первый взгляд ничего. Но если смотреть на них как на потоки, устроены все три одинаково: что-то течёт по «склону» некоторого поля, и пространство при этом разделяется на области сбора.</p>
+<p>В гидрологии градиентом служит высота, потоком — стекающая вода, бассейном — речной водосбор, гребнем — водораздел.</p>
+<p>В тканях организма градиент задаёт давление, потоком служат кровь и межклеточная жидкость, бассейнами — зоны, которые «обслуживает» каждый капилляр или вена. И речная сеть, и сеть капилляров устроены ветвисто, по сходным геометрическим правилам — это одно из проявлений общего закона переноса по градиенту.</p>
+<p>В машинном обучении параметры обучающейся модели — это точка в многомерном пространстве, на котором задана функция потерь. Оптимизатор сдвигает эту точку по антиградиенту, и она приходит в один из локальных минимумов. Множество начальных положений, из которых траектория сходится к одному и тому же минимуму, называется его бассейном притяжения, а граница между двумя соседними бассейнами — гребнем функции потерь. Слова «бассейн» и «граница бассейна» используются здесь не как метафора: гидрология и обучение нейросетей описываются одной геометрической схемой — спуском по градиенту скалярного поля. Конкретные уравнения у воды и у нейросети, конечно, разные, но геометрия «куда сходятся траектории и где их граница» работает одинаково. Строго совпадает геометрия как раз у этих двух крайних случаев — рельефа и потерь; кровоток же остаётся более рыхлой аналогией, поэтому в таблицу ниже вынесены только два примера общей схемы.</p>
+<table>
+<thead>
+<tr>
+<th>Область</th>
+<th>Поле</th>
+<th>Что течёт</th>
+<th>Область сбора</th>
+<th>Граница</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Гидрология</td>
+<td>высота</td>
+<td>вода</td>
+<td>водосбор</td>
+<td>водораздел</td>
+</tr>
+<tr>
+<td>Нейросеть</td>
+<td>потери</td>
+<td>параметры</td>
+<td>бассейн</td>
+<td>гребень</td>
+</tr>
+</tbody>
+</table>
+<p><strong>2. Почему важно, что растёт на водосборе?</strong> Баланс $R = P - I - E - T$ из соседнего уровня устроен так, что одно и то же небо над лесом и над пашней наполняет ручьи по-разному. Кроны смягчают удар капель, подстилка и корни делают почву рыхлой и проницаемой — под лесом в сток уходит лишь пятая-четвёртая доля дождя, остальное успевает впитаться. На распаханном или утоптанном склоне почва плотная, вода не успевает уйти вглубь, и в сток обращается уже половина и больше. Поэтому облесённый водосбор отдаёт воду медленно и даёт сглаженный паводок, а голое поле — резкий и высокий: тот же дождь, но совсем другой характер реки.</p>
+<p><strong>3. Как измеряют водосборы?</strong> Площадь и геометрию водосбора сегодня вычисляют по цифровой модели рельефа. Для каждой клетки расчётной сетки алгоритм определяет направление наибольшего уклона и трассирует путь воды до точки слива; объединение клеток, чьи траектории сходятся в одном устье, и составляет водосбор. Этот способ восьми направлений предложили ещё в 1980-х годах<sup id="fnref:d8"><a class="footnote-ref" href="#fn:d8">1</a></sup>, и сегодня он лежит в основе любой гидрологической карты, нарисованной по спутниковым данным.</p>
+<p>Сами доли стока измеряют экспериментально — десятилетиями сравнивают пару соседних водосборов с разным покровом, облесённый и распаханный. Такие парные наблюдения и показали, что лес меняет не столько общий объём задержанной воды, сколько режим её движения — растягивает сток во времени. В машинном обучении ландшафт функции потерь обследуют тысячами численных запусков с разных начальных точек и составляют карту бассейнов притяжения — она играет ту же роль, что карта водосборов в гидрологии.</p>
+<p><strong>4. Стоят ли водоразделы на месте?</strong> Нет, речная сеть медленно перестраивается. Один из ручьёв подмывает свой берег быстрее соседа и постепенно отступает вверх по течению; в какой-то момент он подходит к водоразделу настолько близко, что захватывает часть водосбора соседа. Это явление называется перехватом рек, или речным пиратством; узнают его по характерному колену — резкому излому речной долины там, где русло свернуло в чужой бассейн<sup id="fnref:capture"><a class="footnote-ref" href="#fn:capture">2</a></sup>. Водораздел при этом сдвигается медленно — на сотни метров за тысячи лет.</p>
+<p>Где и когда произойдёт следующий перехват, заранее предсказать нельзя: процесс зависит от прочности пород, режима осадков, растительного покрова и редких событий вроде катастрофических наводнений. Не исключено, что гребень под этим стендом тоже медленно ползёт в одну из сторон — тогда капля, уходящая сейчас в один сток, через несколько тысяч лет попадёт в другой.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:d8">
+<p>Алгоритм восьми направлений (D8) для трассировки стока по цифровой модели рельефа предложили О’Каллахан и Марк в 1984 году. <a href="https://en.wikipedia.org/wiki/Watershed_delineation">Watershed delineation</a>&#160;<a class="footnote-backref" href="#fnref:d8" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:capture">
+<p>Колено перехвата — диагностический признак речного пиратства. <a href="https://ru.wikipedia.org/wiki/Перехват_реки">Перехват реки</a>&#160;<a class="footnote-backref" href="#fnref:capture" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  
+</div>
+
+<script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
+<script defer src="/assets/site-bar/bot.js"></script>
+
+<script>
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
+var TROPA_DECKS = ["Куда уходит вода?", "Откуда берётся речная сеть?", "Где ещё работает водораздел — и стоит ли он на месте?"];
+
+(function(){
+  var tabs=document.querySelectorAll('.tab'), bodies=document.querySelectorAll('.lvl');
+  var pdfs=TROPA_PDFS, decks=TROPA_DECKS, deckEl=document.getElementById('sg-deck');
+  document.querySelector('.tabs')&&document.querySelector('.tabs').addEventListener('click',function(e){
+    var t=e.target.closest('.tab'); if(!t)return;
+    tabs.forEach(function(x){x.classList.remove('active')}); t.classList.add('active');
+    var i=+t.dataset.i;
+    bodies.forEach(function(b){b.style.display=(+b.dataset.i===i)?'':'none'});
+    if(deckEl){ if(decks[i]){deckEl.textContent=decks[i];deckEl.style.display='';if(window.tropaMath)window.tropaMath(deckEl);} else {deckEl.style.display='none'} }
+    var link=document.getElementById('pdf-link'); if(link&&pdfs[i])link.href=pdfs[i];
+    if(window.tropaMath)window.tropaMath(bodies[i]);
+  });
+})();
+
+</script>
+
+</body>
+</html>

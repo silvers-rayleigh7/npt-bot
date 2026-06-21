@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Скиллы — {{ site.title }}{% endblock %}
+{% block styles %}{% raw %}
+.page-hero{padding:48px 0 32px}
+.page-hero h1{font-size:1.8rem;font-weight:700;margin-bottom:4px}
+.page-hero p{color:var(--tm);font-size:0.92rem}
+.skill-grid{display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
+.skill-row{display:flex;align-items:center;gap:14px;padding:16px 20px;border:1px solid var(--bd);border-radius:var(--r);cursor:pointer;transition:all 0.15s;background:#fff}
+.skill-row:hover{border-color:var(--g);box-shadow:0 2px 8px rgba(47,111,99,0.06)}
+.skill-row.active{border-color:var(--g);background:var(--gl)}
+.skill-row .sr-icon{flex-shrink:0;width:36px;height:36px;border-radius:8px;background:var(--gl);display:flex;align-items:center;justify-content:center;color:var(--g)}
+.skill-row .sr-info{flex:1;min-width:0}
+.skill-row .sr-name{font-weight:600;font-size:0.95rem}
+.skill-row .sr-desc{font-size:0.8rem;color:var(--tm);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.skill-row .sr-badge{font-size:0.68rem;padding:2px 7px;border-radius:5px;font-weight:500;flex-shrink:0}
+.sr-badge.ready{background:var(--gl);color:var(--g)}
+.sr-badge.planned{background:#fef3c7;color:#92400e}
+.skill-row .sr-actions{display:flex;gap:6px;flex-shrink:0}
+.sr-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:6px;border:1px solid var(--bd);background:#fff;color:var(--tm);cursor:pointer;transition:all 0.15s;text-decoration:none}
+.sr-btn:hover{border-color:var(--g);color:var(--g);background:var(--gl);text-decoration:none}
+.sr-btn.copied{border-color:var(--g);color:var(--g);background:var(--gl)}
+.skill-detail{display:none;border:1px solid var(--bd);border-radius:var(--r);margin-top:-6px;padding:24px;background:#fff}
+.skill-detail.visible{display:block}
+.skill-detail .sd-content{font-size:0.85rem;line-height:1.7;color:var(--tx);max-width:720px}
+.sd-content h2{font-size:1rem;font-weight:600;margin:20px 0 8px;color:var(--gd)}
+.sd-content h3{font-size:0.9rem;font-weight:600;margin:14px 0 6px}
+.sd-content table{width:100%;border-collapse:collapse;font-size:0.82rem;margin:8px 0}
+.sd-content th{text-align:left;padding:6px 10px;border-bottom:1px solid var(--bd);font-weight:600;font-size:0.78rem;color:var(--tm)}
+.sd-content td{padding:6px 10px;border-bottom:1px solid var(--bd)}
+.sd-content code{background:var(--gl);padding:1px 5px;border-radius:4px;font-size:0.82rem}
+.sd-content pre{background:#1a2320;color:#a8d5c8;padding:14px 18px;border-radius:8px;font-size:0.8rem;overflow-x:auto;margin:8px 0;line-height:1.5}
+.sd-content pre code{background:none;padding:0;color:inherit}
+.sd-content ul,.sd-content ol{padding-left:20px;margin:6px 0}
+.sd-content li{margin:3px 0}
+.sd-content blockquote{border-left:3px solid var(--g);padding:4px 14px;margin:8px 0;color:var(--tm);font-style:italic}
+@media(max-width:640px){.skill-row .sr-desc{display:none}.skill-row{padding:12px 14px}}
+{% endraw %}{% endblock %}
+
+{% block content %}
+<div class="w">
+  <div class="page-hero">
+    <h1>Скиллы</h1>
+    <p>Навыки для Claude Code. Клик — раскрыть документацию. Копировать — добавить себе.</p>
+  </div>
+  <div class="skill-grid">
+  {% for sk in skills %}
+    <div class="skill-row" data-idx="{{ loop.index0 }}">
+      <div class="sr-icon"><i data-lucide="wand-2" style="width:18px;height:18px"></i></div>
+      <div class="sr-info">
+        <div class="sr-name">{{ sk.name }}</div>
+        <div class="sr-desc">{{ sk.desc }}</div>
+      </div>
+      <span class="sr-badge {{ sk.status or 'ready' }}">{{ sk.status or 'ready' }}</span>
+      <div class="sr-actions">
+        {% if sk.raw_url %}<a class="sr-btn" href="{{ sk.raw_url }}" target="_blank" title="Raw файл"><i data-lucide="file-text" style="width:14px;height:14px"></i></a>{% endif %}
+        {% if sk.raw_url %}<button class="sr-btn" onclick="event.stopPropagation();navigator.clipboard.writeText('{{ sk.raw_url }}');this.classList.add('copied');setTimeout(()=>this.classList.remove('copied'),1500)" title="Копировать ссылку"><i data-lucide="copy" style="width:14px;height:14px"></i></button>{% endif %}
+      </div>
+    </div>
+    {% if sk.content %}
+    <div class="skill-detail" data-idx="{{ loop.index0 }}">
+      <div class="sd-content">{{ sk.content }}</div>
+    </div>
+    {% endif %}
+  {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.querySelector('.skill-grid').addEventListener('click', function(e) {
+  var row = e.target.closest('.skill-row');
+  if (!row || e.target.closest('.sr-btn')) return;
+  var idx = row.dataset.idx;
+  var detail = document.querySelector('.skill-detail[data-idx="'+idx+'"]');
+  if (!detail) return;
+  var wasVisible = detail.classList.contains('visible');
+  document.querySelectorAll('.skill-detail').forEach(function(d){d.classList.remove('visible')});
+  document.querySelectorAll('.skill-row').forEach(function(r){r.classList.remove('active')});
+  if (!wasVisible) {
+    detail.classList.add('visible');
+    row.classList.add('active');
+  }
+});
+</script>
+{% endblock %}

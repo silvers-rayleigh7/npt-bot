@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Балтийский янтарь — Тропа</title>
+<link rel="icon" href="/assets/trees.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site-bar/bot.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
+<script>
+// Рендер математики ТОЛЬКО после загрузки шрифтов KaTeX. Иначе KaTeX считает
+// позицию черты корня/дроби по метрикам фолбэк-шрифта → линия ложится поперёк
+// подкоренного (видимое «зачёркивание»), и без ре-рендера не лечится.
+// ignoredClasses:['katex'] — повторный проход не трогает уже отрендеренное.
+(function(){
+  var KX={delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false,ignoredClasses:['katex']};
+  function whenFontsReady(cb){
+    var fams=['KaTeX_Main','KaTeX_Math','KaTeX_Size1','KaTeX_Size2','KaTeX_Size3','KaTeX_Size4','KaTeX_AMS'];
+    if(document.fonts&&document.fonts.load){
+      Promise.all(fams.map(function(f){return document.fonts.load('1em '+f).catch(function(){});}))
+        .then(function(){return document.fonts.ready;}).then(cb,cb);
+    } else { cb(); }
+  }
+  window.tropaMath=function(el){ if(typeof renderMathInElement==='function'){ whenFontsReady(function(){ renderMathInElement(el,KX); }); } };
+  window.addEventListener('load',function(){ window.tropaMath(document.body); });
+})();
+</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip}
+body{max-width:100%;overflow-x:clip}
+/* TROPA design system — палитра дизайн-пака */
+:root{
+  --sand:#DBD4C7;--sage:#B8B5A6;--olive:#7C7F6A;--char:#3E4038;--ink:#1A1A18;
+  --g:#7C7F6A;--gd:#3E4038;--gl:#F4F2EE;--bg:#FFFFFF;--card:#FFFFFF;
+  --tx:#1A1A18;--tm:#6E7163;--bd:#EAE7E0;--r:10px;
+  --serif:"Cormorant Garamond",Georgia,serif;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:-0.01em}
+a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
+.w{max-width:760px;margin:0 auto;padding:0 24px}
+.nav{padding:14px 0;border-bottom:1px solid var(--bd);background:#fff}
+.nav-inner{display:flex;align-items:center;gap:22px}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.3rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);line-height:1;display:flex;align-items:center;gap:9px}
+.nav-logo img{width:22px;height:22px}
+.nav-spacer{flex:1}
+.nav-link{font-size:0.82rem;color:var(--tm);display:flex;align-items:center;line-height:1;letter-spacing:0.01em}
+.nav-link:hover{color:var(--ink);text-decoration:none}
+.nav-icon{display:flex;align-items:center;justify-content:center;color:var(--tm);transition:color 0.15s}
+.nav-icon:hover{color:var(--olive);text-decoration:none}
+.nav-icon i{width:16px;height:16px}
+
+.sg-hero{padding:48px 0 8px;text-align:center}
+.sg-hero img{height:auto;max-height:46px;width:auto;opacity:.8;display:block;margin:0 auto 16px}
+.sg-hero img.sg-icon{max-height:200px;max-width:440px;width:80%;opacity:1;margin:0 auto 4px}
+.sg-kicker{font-size:0.76rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--olive);margin-bottom:10px}
+.sg-hero h1{font-size:2.3rem;font-weight:700;line-height:1.12;margin-bottom:8px}
+.sg-deck{font-family:var(--serif);font-style:italic;font-size:1.3rem;color:var(--tm);line-height:1.3;margin:0 auto 12px;max-width:560px}
+.sg-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:0.8rem}
+.sg-tag{padding:2px 9px;border-radius:20px;background:var(--gl);color:var(--tm)}
+.sg-geo{color:var(--olive);font-weight:600}
+.tabs{display:flex;align-items:center;gap:4px;border-bottom:1px solid var(--bd);margin:26px 0 0;flex-wrap:wrap}
+.tab{font-family:var(--serif);font-size:1.05rem;font-weight:600;padding:9px 16px;color:var(--tm);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);border-bottom-color:var(--olive)}
+.tab-pdf{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--tm);transition:color .15s}
+.tab-pdf:hover{color:var(--olive);text-decoration:none}
+.tab-pdf i{width:15px;height:15px;stroke-width:1.4}
+/* читается как книжная статья */
+.body{padding:26px 0 8px;font-family:Georgia,"PT Serif","Times New Roman",serif;font-size:1.16rem;line-height:1.84;max-width:660px;color:#262521}
+.body p{margin:0 0 1.05em}.body p:first-of-type{font-size:1.22rem;color:#1c1b17}
+.body strong{color:var(--ink);font-weight:600}
+.body h2,.body h3,.body h4{font-family:var(--serif);font-weight:600;color:var(--char);margin:1.6em 0 .5em;font-size:1.4rem;line-height:1.25;text-align:center}
+.body ul,.body ol{margin:1em 0 1em 22px}.body li{margin:.4em 0}
+.body table{border-collapse:collapse;font-size:0.96rem;margin:1.2em 0;display:block;max-width:100%;overflow-x:auto}
+.body img{max-width:100%;height:auto;display:block;margin:0 auto}
+.body figure.fig{margin:2em auto;text-align:center;max-width:560px}
+.body figure.fig img{max-width:88%;max-height:340px;width:auto;height:auto}
+.body figure.fig figcaption{font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--tm);line-height:1.4;margin-top:.7em;max-width:480px;margin-left:auto;margin-right:auto}
+.body th,.body td{border:1px solid var(--bd);padding:7px 14px;text-align:left}
+.body .formula{text-align:center;font-size:1.2rem;margin:1.4em auto;color:var(--char);letter-spacing:.02em}
+.body .katex-display{margin:1.4em 0}
+.divider{margin:48px 0 12px;text-align:center}.divider img{width:170px;opacity:.85}
+.site-url{text-align:center;font-size:0.78rem;letter-spacing:0.16em;color:var(--tm);margin-bottom:28px}
+.back{font-size:0.85rem}
+
+@media(max-width:640px){
+  .w{padding:0 16px}
+  .nav-inner{gap:14px}
+  .nav-logo{font-size:1.12rem;letter-spacing:0.08em;gap:7px}
+  .nav-logo img{width:19px;height:19px}
+  .nav-link{font-size:0.8rem}
+  .nav-icon{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="w nav-inner">
+  <a href="/" class="nav-logo"><img src="/assets/trees.svg" alt="">Тропа</a>
+  <a href="/storylines/" class="nav-link">Сюжеты</a>
+  <a href="/innopolis/" class="nav-link">Маршрут</a>
+  <a href="/skills/" class="nav-link">Скиллы</a>
+  <a href="/bot/" class="nav-link">Бот</a>
+  <a href="/guides/" class="nav-link">Гиды</a>
+  <div class="nav-spacer"></div>
+  <a href="https://github.com/MerkulovDaniil/tropa" class="nav-icon"><i data-lucide="github"></i></a>
+  <a href="https://t.me/zoobr_bot" class="nav-icon"><i data-lucide="send"></i></a>
+</div></nav>
+
+<div class="w">
+  <div class="sg-hero">
+    <img class="sg-icon" src="/assets/icons/yantar.png" alt="">
+    
+    <div class="sg-kicker">Калининградская область</div>
+    <h1>Балтийский янтарь</h1>
+    <div class="sg-deck" id="sg-deck">Почему капля смолы пережила сорок миллионов лет, а упавший рядом лист — нет?</div>
+    <div class="sg-meta">
+      <a class="sg-geo" href="https://yandex.ru/maps/?pt=19.9389,54.8716&z=17&l=map" target="_blank" rel="noopener">📍 на карте</a>
+      <span class="sg-tag">химия</span><span class="sg-tag">геология</span>
+    </div>
+  </div>
+
+  
+  <div class="tabs">
+    <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
+  </div>
+  
+  <div class="body lvl" data-i="0" style=""><p>Лист, ветка, насекомое — всё, что падает в лесу, за год-другой съедают бактерии и грибы. А капля хвойной смолы иногда не сгнивает, а каменеет и доживает до наших дней, да ещё с мухой внутри. Прямо здесь, на пляже под Янтарным, после шторма такие капли — теперь жёлтые камешки — волны выбрасывают на песок.</p>
+<p>Это и есть янтарь: окаменевшая смола древних хвойных. Родился он не там, где его добывают. Десятки миллионов лет назад в тёплых эоценовых лесах смола капала со стволов, ручьи и реки сносили затвердевшие комки в дельту древнего моря, и там они оседали вместе с песком. Так возник особый слой — <strong>«голубая земля»</strong>, зеленоватый глауконитовый песок, в котором сегодня сосредоточено больше <strong>90% мировых запасов</strong> янтаря<sup id="fnref:deposit"><a class="footnote-ref" href="#fn:deposit">1</a></sup>.</p>
+<figure class="fig"><img src="/assets/figures/yantar-1.svg" alt="Смола капает в эоценовом лесу, реки сносят комки в море, и они оседают в «голубой земле» — глауконитовом песке. Янтарь рождается не там, где его добывают."><figcaption>Смола капает в эоценовом лесу, реки сносят комки в море, и они оседают в «голубой земле» — глауконитовом песке. Янтарь рождается не там, где его добывают.</figcaption></figure>
+<p>Чтобы мягкая смола стала камнем, а муха внутри — пережила динозавров, должны были сойтись две вещи: особая химия смолы и осадок без кислорода. Разберём обе.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:deposit">
+<p>Главное в мире месторождение балтийского янтаря — Приморское у посёлка Янтарный (Калининградская область); янтареносный слой — «голубая земля», глауконитовый песок на глубине порядка 25–40 м. Сегодня отсюда происходит более 90% мирового янтаря (<a href="https://en.wikipedia.org/wiki/Baltic_amber">Wikipedia, «Baltic amber»</a>).&#160;<a class="footnote-backref" href="#fnref:deposit" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  <div class="body lvl" data-i="1" style="display:none"><p>Живица хвойного дерева — смесь терпеноидов: лёгких пахучих молекул и тяжёлых смоляных кислот и спиртов. На воздухе она бы окислилась и разрушилась. Но у её молекул есть <strong>двойные связи</strong> — слабые места, по которым молекулы охотно сшиваются друг с другом. Попав в осадок без доступа кислорода, смола идёт не по пути гниения, а по пути полимеризации: множество мелких молекул-звеньев соединяется в одну сплошную трёхмерную сетку.</p>
+<p>$$ n \cdot (\text{мономер}) \;\longrightarrow\; [-\text{звено}-]_n $$</p>
+<p>Летучие вещества постепенно уходят, сетка стягивается и уплотняется, мягкая смола твердеет и становится нерастворимым полимером. Балтийский янтарь даже выделяют в особый сорт — <strong>сукцинит</strong>: при нагреве он отдаёт 3–8% <strong>янтарной кислоты</strong>, простой двухосновной кислоты<sup id="fnref:succ"><a class="footnote-ref" href="#fn:succ">1</a></sup>:</p>
+<p>$$ \text{HOOC–CH}_2\text{–CH}_2\text{–COOH} $$</p>
+<p>А ещё смола работает как <strong>консервант</strong>. Попав в каплю, насекомое сперва вязнет и обездвиживается; антисептические терпены подавляют бактерий, а сама смола вытягивает из тканей воду. Когда сверху ляжет бескислородный осадок и начнётся полимеризация, организм оказывается герметично запечатан — и время для него почти останавливается.</p>
+<h3>Где работает тот же закон?</h3>
+<p>Сшивание мелких молекул в сетку по двойным связям — это и есть рождение полимера. По той же химии затвердевают эпоксидная смола и лак, сваривается резина при вулканизации, твердеют современные пластики. Янтарь — просто полимер, который природа сварила сама, без завода и за сорок миллионов лет.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:succ">
+<p>Балтийский янтарь содержит 3–8% янтарной (сукциновой) кислоты, поэтому его выделяют как «сукцинит»; доля зависит от выветривания и слоя (<a href="https://uwaterloo.ca/earth-sciences-museum/resources/detailed-rocks-and-minerals-articles/baltic-amber">Earth Sciences Museum, University of Waterloo, «Baltic amber»</a>).&#160;<a class="footnote-backref" href="#fnref:succ" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  <div class="body lvl" data-i="2" style="display:none"><p>Любая мёртвая ткань разлагается, и доля уцелевшего падает по экспоненте:</p>
+<p>$$ N(t) = N_0\, e^{-k t} $$</p>
+<p>где $k$ — скорость распада: чем она больше, тем быстрее тает вещество. Весь фокус янтаря в том, что он резко <strong>снижает $k$</strong> — обезвоженная, бескислородная, запечатанная в полимере ткань почти перестаёт гнить, и «часы гниения» едва идут. Поэтому хитиновый панцирь, волоски и даже микроскопические щетинки насекомого видны спустя десятки миллионов лет так, будто муха увязла вчера.</p>
+<figure class="fig"><img src="/assets/figures/yantar-2.svg" alt="Доля уцелевшей ткани падает по экспоненте $e^{-kt}$. В обычных условиях k велик и ткань исчезает быстро; в янтаре k почти ноль — поэтому включение доживает до наших дней."><figcaption>Доля уцелевшей ткани падает по экспоненте $e^{-kt}$. В обычных условиях k велик и ткань исчезает быстро; в янтаре k почти ноль — поэтому включение доживает до наших дней.</figcaption></figure>
+<h3>Как по мухе в камне читают древний климат?</h3>
+<p>Запечатанные в янтаре насекомые и растения — <strong>инклюзы</strong> — это перепись эоценовой экосистемы. Чтобы по ней узнать климат, применяют <strong>метод взаимного климатического диапазона</strong>: у каждого ископаемого вида находят ближайших современных родичей и смотрят, при каких температуре и влажности те живут сегодня; пересечение всех диапазонов и есть искомый климат<sup id="fnref:mcr"><a class="footnote-ref" href="#fn:mcr">1</a></sup>. Чем больше видов в выборке, тем уже пересечение и точнее оценка. Выходит, что эоценовая Прибалтика была заметно теплее нынешней: среднегодовая температура порядка +10…+20 °C, осадки 750–1500 мм в год — тёплый влажный лес, в котором и текла смолой будущая «голубая земля».</p>
+<h3>Сколько ей лет и как это узнали?</h3>
+<p>Возраст балтийского янтаря оценивают примерно в <strong>40 миллионов лет</strong> (эоцен), хотя разные методы и слои дают разброс от 35 до 48 млн<sup id="fnref:age"><a class="footnote-ref" href="#fn:age">2</a></sup>. Возраст слоя читают сразу по двум независимым «часам»: по микрофауне в осадке и по геологии вмещающих пород — и обе стрелки указывают на эоцен.</p>
+<h3>Открытый вопрос</h3>
+<p>Каждый кусок янтаря — это один кадр исчезнувшего леса. Но смола застывала не на всех деревьях и не во всякую погоду, и до нас дошли лишь те капли, что попали в нужный осадок. Насколько полную картину эоценового леса можно собрать по такой неслучайной выборке — и где в ней заведомые пробелы?</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:mcr">
+<p>Метод взаимного климатического диапазона (mutual climatic range / coexistence approach): климат прошлого восстанавливают по пересечению современных климатических диапазонов ближайших родичей ископаемых видов (<a href="https://en.wikipedia.org/wiki/Coexistence_approach">Wikipedia, «Coexistence approach»</a>).&#160;<a class="footnote-backref" href="#fnref:mcr" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:age">
+<p>Оценки возраста балтийского янтаря расходятся: часто приводят ~44 млн лет (средний эоцен), общий разброс по разным методам — примерно 35–48 млн лет (<a href="https://en.wikipedia.org/wiki/Baltic_amber">Wikipedia, «Baltic amber»</a>).&#160;<a class="footnote-backref" href="#fnref:age" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  
+</div>
+
+<script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
+<script defer src="/assets/site-bar/bot.js"></script>
+
+<script>
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
+var TROPA_DECKS = ["Почему капля смолы пережила сорок миллионов лет, а упавший рядом лист — нет?", "Что превращает мягкую смолу в вечный камень?", "Почему янтарь называют капсулой времени?"];
+
+(function(){
+  var tabs=document.querySelectorAll('.tab'), bodies=document.querySelectorAll('.lvl');
+  var pdfs=TROPA_PDFS, decks=TROPA_DECKS, deckEl=document.getElementById('sg-deck');
+  document.querySelector('.tabs')&&document.querySelector('.tabs').addEventListener('click',function(e){
+    var t=e.target.closest('.tab'); if(!t)return;
+    tabs.forEach(function(x){x.classList.remove('active')}); t.classList.add('active');
+    var i=+t.dataset.i;
+    bodies.forEach(function(b){b.style.display=(+b.dataset.i===i)?'':'none'});
+    if(deckEl){ if(decks[i]){deckEl.textContent=decks[i];deckEl.style.display='';if(window.tropaMath)window.tropaMath(deckEl);} else {deckEl.style.display='none'} }
+    var link=document.getElementById('pdf-link'); if(link&&pdfs[i])link.href=pdfs[i];
+    if(window.tropaMath)window.tropaMath(bodies[i]);
+  });
+})();
+
+</script>
+
+</body>
+</html>

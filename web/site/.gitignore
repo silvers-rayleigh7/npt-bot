@@ -1,0 +1,29 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Runtime state and generated audio
+logs/
+bot/logs/
+
+# Workflow scratch (storyline-proofread runs)
+.render/
+.wf_*.js
+
+# Local secrets
+.env
+bot/config/bot.yaml
+
+# Large generated media drafts
+*.wav
+*.mp3
+*.oga
+
+# Exception: site audio for deployment
+!site/audio/*_l[123].mp3
+.tools/
+site-bar/server/.env

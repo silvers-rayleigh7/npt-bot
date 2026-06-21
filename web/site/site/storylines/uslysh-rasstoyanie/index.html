@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Услышь расстояние — Тропа</title>
+<link rel="icon" href="/assets/trees.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site-bar/bot.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
+<script>
+// Рендер математики ТОЛЬКО после загрузки шрифтов KaTeX. Иначе KaTeX считает
+// позицию черты корня/дроби по метрикам фолбэк-шрифта → линия ложится поперёк
+// подкоренного (видимое «зачёркивание»), и без ре-рендера не лечится.
+// ignoredClasses:['katex'] — повторный проход не трогает уже отрендеренное.
+(function(){
+  var KX={delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false,ignoredClasses:['katex']};
+  function whenFontsReady(cb){
+    var fams=['KaTeX_Main','KaTeX_Math','KaTeX_Size1','KaTeX_Size2','KaTeX_Size3','KaTeX_Size4','KaTeX_AMS'];
+    if(document.fonts&&document.fonts.load){
+      Promise.all(fams.map(function(f){return document.fonts.load('1em '+f).catch(function(){});}))
+        .then(function(){return document.fonts.ready;}).then(cb,cb);
+    } else { cb(); }
+  }
+  window.tropaMath=function(el){ if(typeof renderMathInElement==='function'){ whenFontsReady(function(){ renderMathInElement(el,KX); }); } };
+  window.addEventListener('load',function(){ window.tropaMath(document.body); });
+})();
+</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip}
+body{max-width:100%;overflow-x:clip}
+/* TROPA design system — палитра дизайн-пака */
+:root{
+  --sand:#DBD4C7;--sage:#B8B5A6;--olive:#7C7F6A;--char:#3E4038;--ink:#1A1A18;
+  --g:#7C7F6A;--gd:#3E4038;--gl:#F4F2EE;--bg:#FFFFFF;--card:#FFFFFF;
+  --tx:#1A1A18;--tm:#6E7163;--bd:#EAE7E0;--r:10px;
+  --serif:"Cormorant Garamond",Georgia,serif;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:-0.01em}
+a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
+.w{max-width:760px;margin:0 auto;padding:0 24px}
+.nav{padding:14px 0;border-bottom:1px solid var(--bd);background:#fff}
+.nav-inner{display:flex;align-items:center;gap:22px}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.3rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);line-height:1;display:flex;align-items:center;gap:9px}
+.nav-logo img{width:22px;height:22px}
+.nav-spacer{flex:1}
+.nav-link{font-size:0.82rem;color:var(--tm);display:flex;align-items:center;line-height:1;letter-spacing:0.01em}
+.nav-link:hover{color:var(--ink);text-decoration:none}
+.nav-icon{display:flex;align-items:center;justify-content:center;color:var(--tm);transition:color 0.15s}
+.nav-icon:hover{color:var(--olive);text-decoration:none}
+.nav-icon i{width:16px;height:16px}
+
+.sg-hero{padding:48px 0 8px;text-align:center}
+.sg-hero img{height:auto;max-height:46px;width:auto;opacity:.8;display:block;margin:0 auto 16px}
+.sg-hero img.sg-icon{max-height:200px;max-width:440px;width:80%;opacity:1;margin:0 auto 4px}
+.sg-kicker{font-size:0.76rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--olive);margin-bottom:10px}
+.sg-hero h1{font-size:2.3rem;font-weight:700;line-height:1.12;margin-bottom:8px}
+.sg-deck{font-family:var(--serif);font-style:italic;font-size:1.3rem;color:var(--tm);line-height:1.3;margin:0 auto 12px;max-width:560px}
+.sg-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:0.8rem}
+.sg-tag{padding:2px 9px;border-radius:20px;background:var(--gl);color:var(--tm)}
+.sg-geo{color:var(--olive);font-weight:600}
+.tabs{display:flex;align-items:center;gap:4px;border-bottom:1px solid var(--bd);margin:26px 0 0;flex-wrap:wrap}
+.tab{font-family:var(--serif);font-size:1.05rem;font-weight:600;padding:9px 16px;color:var(--tm);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);border-bottom-color:var(--olive)}
+.tab-pdf{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--tm);transition:color .15s}
+.tab-pdf:hover{color:var(--olive);text-decoration:none}
+.tab-pdf i{width:15px;height:15px;stroke-width:1.4}
+/* читается как книжная статья */
+.body{padding:26px 0 8px;font-family:Georgia,"PT Serif","Times New Roman",serif;font-size:1.16rem;line-height:1.84;max-width:660px;color:#262521}
+.body p{margin:0 0 1.05em}.body p:first-of-type{font-size:1.22rem;color:#1c1b17}
+.body strong{color:var(--ink);font-weight:600}
+.body h2,.body h3,.body h4{font-family:var(--serif);font-weight:600;color:var(--char);margin:1.6em 0 .5em;font-size:1.4rem;line-height:1.25;text-align:center}
+.body ul,.body ol{margin:1em 0 1em 22px}.body li{margin:.4em 0}
+.body table{border-collapse:collapse;font-size:0.96rem;margin:1.2em 0;display:block;max-width:100%;overflow-x:auto}
+.body img{max-width:100%;height:auto;display:block;margin:0 auto}
+.body figure.fig{margin:2em auto;text-align:center;max-width:560px}
+.body figure.fig img{max-width:88%;max-height:340px;width:auto;height:auto}
+.body figure.fig figcaption{font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--tm);line-height:1.4;margin-top:.7em;max-width:480px;margin-left:auto;margin-right:auto}
+.body th,.body td{border:1px solid var(--bd);padding:7px 14px;text-align:left}
+.body .formula{text-align:center;font-size:1.2rem;margin:1.4em auto;color:var(--char);letter-spacing:.02em}
+.body .katex-display{margin:1.4em 0}
+.divider{margin:48px 0 12px;text-align:center}.divider img{width:170px;opacity:.85}
+.site-url{text-align:center;font-size:0.78rem;letter-spacing:0.16em;color:var(--tm);margin-bottom:28px}
+.back{font-size:0.85rem}
+
+@media(max-width:640px){
+  .w{padding:0 16px}
+  .nav-inner{gap:14px}
+  .nav-logo{font-size:1.12rem;letter-spacing:0.08em;gap:7px}
+  .nav-logo img{width:19px;height:19px}
+  .nav-link{font-size:0.8rem}
+  .nav-icon{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="w nav-inner">
+  <a href="/" class="nav-logo"><img src="/assets/trees.svg" alt="">Тропа</a>
+  <a href="/storylines/" class="nav-link">Сюжеты</a>
+  <a href="/innopolis/" class="nav-link">Маршрут</a>
+  <a href="/skills/" class="nav-link">Скиллы</a>
+  <a href="/bot/" class="nav-link">Бот</a>
+  <a href="/guides/" class="nav-link">Гиды</a>
+  <div class="nav-spacer"></div>
+  <a href="https://github.com/MerkulovDaniil/tropa" class="nav-icon"><i data-lucide="github"></i></a>
+  <a href="https://t.me/zoobr_bot" class="nav-icon"><i data-lucide="send"></i></a>
+</div></nav>
+
+<div class="w">
+  <div class="sg-hero">
+    <img class="sg-icon" src="/assets/icons/uslysh-rasstoyanie.svg" alt="">
+    
+    <div class="sg-kicker">Научная тропа Иннополиса</div>
+    <h1>Услышь расстояние</h1>
+    <div class="sg-deck" id="sg-deck">Хлопни в ладоши — эхо вернётся через секунду. Это линейка на 170 метров. Как?</div>
+    <div class="sg-meta">
+      <a class="sg-geo" href="https://yandex.ru/maps/?pt=48.72934,55.75375&z=17&l=map" target="_blank" rel="noopener">📍 на карте</a>
+      <span class="sg-tag">акустика</span><span class="sg-tag">физика</span>
+    </div>
+  </div>
+
+  
+  <div class="tabs">
+    <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
+  </div>
+  
+  <div class="body lvl" data-i="0" style=""><figure class="fig"><img src="/assets/figures/uslysh-rasstoyanie-1.svg" alt="Звук идёт до преграды и возвращается эхом: путь туда и обратно вдвое больше расстояния."><figcaption>Звук идёт до преграды и возвращается эхом: путь туда и обратно вдвое больше расстояния.</figcaption></figure>
+<p>Встань на помост лицом к противоположному склону. За спиной — звукопоглощающий экран: он гасит звук, уходящий в сторону леса, чтобы обратно приходило только эхо от склона. Громко хлопни в ладоши один раз — и отсчитай про себя время до возвращения эха. Затем обогни экран, встань лицом к лесу и хлопни снова: лес ближе склона, и его эхо вернётся заметно быстрее. Разницу слышно на слух.</p>
+<p>Звук идёт с известной скоростью, поэтому задержка эха — это, по сути, линейка: чем дальше склон, тем дольше ждёшь ответа.</p></div>
+  
+  <div class="body lvl" data-i="1" style="display:none"><p>Скорость звука в воздухе у земли при обычной температуре близка к $340$ м/с и от направления почти не зависит<sup id="fnref:speed"><a class="footnote-ref" href="#fn:speed">1</a></sup>. За время $t$ между хлопком и эхом волна успевает дойти до склона и вернуться, то есть пройти удвоенное расстояние. Значит, расстояние до склона — это половина пройденного пути:</p>
+<p>$$ s = \frac{v \cdot t}{2} $$</p>
+<p>где $v$ — скорость звука. Считать удобно в уме: эхо через секунду — склон в $170$ метрах, через полсекунды — в $85$, через две секунды — в $340$.</p>
+<p>Тот же приём работает в технике и в живой природе. Корабельный эхолот измеряет глубину моря по времени возвращения сигнала. Ультразвуковой сканер строит изображение внутренних органов по отражению волн внутри тела. А летучие мыши и дельфины буквально «видят» мир эхом: испускают звуки и определяют расстояние до объектов по задержке отклика.</p>
+<h3>Почему то же эхо, что есть на улице, пропадает в комнате?</h3>
+<p>Дело не в стенах, а в слухе: у него конечное временное разрешение. Если отражение приходит почти сразу за исходным звуком, мозг не разделяет их и слышит как один слитный сигнал. Отдельное эхо мы замечаем, только когда задержка превышает порог различения — около $50$ миллисекунд<sup id="fnref:echo"><a class="footnote-ref" href="#fn:echo">2</a></sup>. Меньшие задержки сливаются в гулкость и эхом не воспринимаются.</p>
+<p>Этот порог сразу задаёт минимальную дистанцию, с которой эхо вообще различимо. Подставим граничную задержку в ту же формулу:</p>
+<p>$$ s_{\min} = \frac{v\,t_{\text{порог}}}{2} = \frac{340 \cdot 0{,}05}{2} \approx 8{,}5\ \text{м} $$</p>
+<p>За пороговые $50$ мс звук пробегает около $17$ метров туда-обратно, то есть до препятствия и назад — а это всего 8–9 метров до стены. Ближе этого предела отражения сливаются с исходным звуком в реверберацию. В комнате все стены ближе, поэтому эха и нет; склон оврага далеко за порогом — и эхо слышно отчётливо.</p>
+<h3>Как впервые измерили скорость звука</h3>
+<p>Скорость звука в воздухе одним из первых измерил французский математик Марен Мерсенн около $1630$ года — сразу двумя способами<sup id="fnref:mersenne"><a class="footnote-ref" href="#fn:mersenne">3</a></sup>. В первом он засекал секундным маятником время между вспышкой пушечного выстрела и приходом звука на известном расстоянии: свет доходит практически мгновенно, поэтому весь интервал — это время пробега звука. Вышло около $448$ м/с. Во втором Мерсенн становился на известном расстоянии от стены и засекал время между выстрелом и эхом — тем же приёмом, что повторяет посетитель этого стенда. Здесь получилось около $315$ м/с.</p>
+<p>Разрыв между двумя цифрами был так велик, что современники подозревали: отражённый звук будто бы движется медленнее прямого. На деле всё портила неточность отсчёта времени без хороших часов. Истинное значение лежит между двумя измерениями Мерсенна и при умеренной температуре близко к $340$ м/с; к концу XVIII века его определили уже точно.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:speed">
+<p>Скорость звука в воздухе при температуре около 15 °C близка к 340 м/с. <a href="https://ru.wikipedia.org/wiki/Скорость_звука">Скорость звука</a>&#160;<a class="footnote-backref" href="#fnref:speed" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:echo">
+<p>Порог различения отдельного эха для речи и коротких сигналов наступает при задержке примерно 50 мс; при меньших задержках работает закон первого фронта (эффект предшествования), и звуки сливаются. <a href="https://en.wikipedia.org/wiki/Precedence_effect">Precedence effect</a>&#160;<a class="footnote-backref" href="#fnref:echo" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:mersenne">
+<p>Марен Мерсенн (1588–1648) опубликовал измерения скорости звука около 1630 года: метод вспышки выстрела дал ≈ 448 м/с, метод эха — ≈ 315 м/с. <a href="https://en.wikipedia.org/wiki/Speed_of_sound">Speed of sound</a>&#160;<a class="footnote-backref" href="#fnref:mersenne" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  <div class="body lvl" data-i="2" style="display:none"><p>Эхолокация держится на одном допущении: что скорость звука известна. Стоит присмотреться — и оказывается, что она заметно гуляет с температурой, и именно это ограничивает точность измерения расстояния по эху.</p>
+<h3>Волновая модель эха</h3>
+<p>Звук — продольная механическая волна: вдоль луча распространяются не сами молекулы воздуха, а области повышенного и пониженного давления. Скорость волны определяется тем, насколько быстро среда передаёт упругие деформации. Для идеального газа её задаёт формула</p>
+<p>$$ v = \sqrt{\frac{\gamma R T}{M}} $$</p>
+<p>где $\gamma$ — показатель адиабаты, $R$ — универсальная газовая постоянная, $T$ — абсолютная температура, $M$ — молярная масса газа.</p>
+<p>Главное следствие — под корнем стоит температура: чем теплее воздух, тем быстрее звук. У земли скорость растёт примерно на $0{,}6$ м/с на каждый градус<sup id="fnref:speed-temp"><a class="footnote-ref" href="#fn:speed-temp">1</a></sup>:</p>
+<table>
+<thead>
+<tr>
+<th>Температура, °C</th>
+<th>Скорость звука, м/с </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$0$</td>
+<td>$331$</td>
+</tr>
+<tr>
+<td>$15$</td>
+<td>$340$</td>
+</tr>
+<tr>
+<td>$30$</td>
+<td>$349$</td>
+</tr>
+</tbody>
+</table>
+<p>Поэтому летним днём и морозным утром одно и то же эхо отвечает за немного разные расстояния, и «$340$ м/с» — это оценка для умеренных $15$ °C, а не универсальная константа.</p>
+<h3>Почему эхолокация — это измерение времени</h3>
+<p>Расстояние до препятствия мы достаём из задержки по той же формуле $s = v \cdot t / 2$: волна идёт туда и обратно, поэтому путь вдвое больше. Значит, точность дальности целиком упирается в точность хронометража: ошибка во времени напрямую переходит в ошибку в метрах. По сути любая эхолокация — от корабельного эхолота до медицинского сканера — это умение очень точно измерять время прихода отражённого сигнала.</p>
+<h3>Эхолот живой природы</h3>
+<p>Особенно впечатляет эхолокация летучих мышей. Они испускают короткие импульсы частотой примерно от $14$ до более чем $100$ килогерц — в основном это ультразвук, выше порога человеческого слуха, — и разбирают отражённый сигнал за доли секунды<sup id="fnref:bats"><a class="footnote-ref" href="#fn:bats">2</a></sup>. Техника умеет посылать и принимать такой ультразвук не хуже мыши. Но мозг животного делает большее: по одному отклику он одновременно восстанавливает расстояние, размер, форму, фактуру поверхности и даже характер движения добычи.</p>
+<p>Как нейронные сети мозга выполняют такую обработку в реальном времени — до сих пор одна из открытых задач нейрофизиологии.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:speed-temp">
+<p>Скорость звука в сухом воздухе: ≈ 331 м/с при 0 °C, ≈ 340 м/с при 15 °C, ≈ 349 м/с при 30 °C (рост ≈ 0,6 м/с на градус). <a href="https://ru.wikipedia.org/wiki/Скорость_звука">Скорость звука</a>&#160;<a class="footnote-backref" href="#fnref:speed-temp" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:bats">
+<p>Частоты эхолокационных сигналов рукокрылых лежат в диапазоне примерно от 14 до более чем 100 кГц; у отдельных видов верхняя граница ещё выше. <a href="https://en.wikipedia.org/wiki/Animal_echolocation">Animal echolocation</a>&#160;<a class="footnote-backref" href="#fnref:bats" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  
+</div>
+
+<script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
+<script defer src="/assets/site-bar/bot.js"></script>
+
+<script>
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
+var TROPA_DECKS = ["Хлопни в ладоши — эхо вернётся через секунду. Это линейка на 170 метров. Как?", "Откуда из задержки берутся метры?", "Скорость звука мы взяли как $340$ м/с — но насколько она постоянна?"];
+
+(function(){
+  var tabs=document.querySelectorAll('.tab'), bodies=document.querySelectorAll('.lvl');
+  var pdfs=TROPA_PDFS, decks=TROPA_DECKS, deckEl=document.getElementById('sg-deck');
+  document.querySelector('.tabs')&&document.querySelector('.tabs').addEventListener('click',function(e){
+    var t=e.target.closest('.tab'); if(!t)return;
+    tabs.forEach(function(x){x.classList.remove('active')}); t.classList.add('active');
+    var i=+t.dataset.i;
+    bodies.forEach(function(b){b.style.display=(+b.dataset.i===i)?'':'none'});
+    if(deckEl){ if(decks[i]){deckEl.textContent=decks[i];deckEl.style.display='';if(window.tropaMath)window.tropaMath(deckEl);} else {deckEl.style.display='none'} }
+    var link=document.getElementById('pdf-link'); if(link&&pdfs[i])link.href=pdfs[i];
+    if(window.tropaMath)window.tropaMath(bodies[i]);
+  });
+})();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">Маршрут научной тропы Университета Иннополис</title>
+  <desc id="desc">Схема восьми точек маршрута вокруг кампуса Университета Иннополис.</desc>
+  <rect width="1280" height="720" fill="#f7f8f3"/>
+  <rect x="72" y="78" width="1136" height="564" rx="24" fill="#ffffff" stroke="#d7dccf" stroke-width="2"/>
+  <path d="M179 491 C285 355, 337 238, 463 260 S642 430, 744 356 S878 163, 1018 236 S1099 440, 954 503 S674 542, 544 465 S307 613, 179 491Z" fill="none" stroke="#2f6f63" stroke-width="16" stroke-linecap="round" opacity="0.18"/>
+  <path d="M179 491 C285 355, 337 238, 463 260 S642 430, 744 356 S878 163, 1018 236 S1099 440, 954 503 S674 542, 544 465 S307 613, 179 491Z" fill="none" stroke="#2f6f63" stroke-width="5" stroke-linecap="round"/>
+  <text x="100" y="130" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#17211d">Университет Иннополис: первый маршрут</text>
+  <text x="100" y="168" font-family="Arial, sans-serif" font-size="19" fill="#52615a">1.8 км · 8 POI · 45 минут · координаты готовы к полевой GPS-проверке</text>
+
+  <g font-family="Arial, sans-serif">
+    <g transform="translate(179 491)">
+      <circle r="25" fill="#f04f3a"/>
+      <text x="-8" y="8" font-size="22" font-weight="700" fill="#fff">1</text>
+      <text x="-70" y="56" font-size="17" font-weight="700" fill="#17211d">Вход</text>
+      <text x="-112" y="80" font-size="14" fill="#52615a">GPS/ГЛОНАСС</text>
+    </g>
+    <g transform="translate(463 260)">
+      <circle r="25" fill="#3c7dd9"/>
+      <text x="-8" y="8" font-size="22" font-weight="700" fill="#fff">2</text>
+      <text x="-56" y="-48" font-size="17" font-weight="700" fill="#17211d">Атриум</text>
+      <text x="-68" y="-25" font-size="14" fill="#52615a">акустика</text>
+    </g>
+    <g transform="translate(744 356)">
+      <circle r="25" fill="#e0a72f"/>
+      <text x="-8" y="8" font-size="22" font-weight="700" fill="#fff">3</text>
+      <text x="-84" y="58" font-size="17" font-weight="700" fill="#17211d">Роботы</text>
+      <text x="-86" y="82" font-size="14" fill="#52615a">SLAM/лидар</text>
+    </g>
+    <g transform="translate(1018 236)">
+      <circle r="25" fill="#7f56d9"/>
+      <text x="-8" y="8" font-size="22" font-weight="700" fill="#fff">4</text>
+      <text x="40" y="-8" font-size="17" font-weight="700" fill="#17211d">Тесла</text>
+      <text x="40" y="16" font-size="14" fill="#52615a">индукция</text>
+    </g>
+    <g transform="translate(954 503)">
+      <circle r="25" fill="#2f6f63"/>
+      <text x="-8" y="8" font-size="22" font-weight="700" fill="#fff">5</text>
+      <text x="42" y="0" font-size="17" font-weight="700" fill="#17211d">Развилка</text>
+      <text x="42" y="24" font-size="14" fill="#52615a">теория игр</text>
+    </g>
+    <g transform="translate(674 542)">
+      <circle r="25" fill="#c45f28"/>
+      <text x="-8" y="8" font-size="22" font-weight="700" fill="#fff">6</text>
+      <text x="-85" y="58" font-size="17" font-weight="700" fill="#17211d">Спорт</text>
+      <text x="-105" y="82" font-size="14" fill="#52615a">число Фруда</text>
+    </g>
+    <g transform="translate(544 465)">
+      <circle r="25" fill="#4a8a3f"/>
+      <text x="-8" y="8" font-size="22" font-weight="700" fill="#fff">7</text>
+      <text x="-152" y="0" font-size="17" font-weight="700" fill="#17211d">Зелёная зона</text>
+      <text x="-152" y="24" font-size="14" fill="#52615a">вода в деревьях</text>
+    </g>
+    <g transform="translate(307 613)">
+      <circle r="25" fill="#111827"/>
+      <text x="-8" y="8" font-size="22" font-weight="700" fill="#fff">8</text>
+      <text x="-88" y="58" font-size="17" font-weight="700" fill="#17211d">ИТ-инфра</text>
+      <text x="-112" y="82" font-size="14" fill="#52615a">тепло и энтропия</text>
+    </g>
+  </g>
+
+  <g transform="translate(890 110)">
+    <rect width="268" height="82" rx="14" fill="#eef3ef" stroke="#c8d4cb"/>
+    <text x="20" y="32" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#17211d">Физический принцип</text>
+    <text x="20" y="58" font-family="Arial, sans-serif" font-size="14" fill="#52615a">каждая точка = простая установка + QR + голосовой бот</text>
+  </g>
+</svg>

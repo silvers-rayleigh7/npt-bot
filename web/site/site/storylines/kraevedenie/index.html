@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Краеведческий стенд — Тропа</title>
+<link rel="icon" href="/assets/trees.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site-bar/bot.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
+<script>
+// Рендер математики ТОЛЬКО после загрузки шрифтов KaTeX. Иначе KaTeX считает
+// позицию черты корня/дроби по метрикам фолбэк-шрифта → линия ложится поперёк
+// подкоренного (видимое «зачёркивание»), и без ре-рендера не лечится.
+// ignoredClasses:['katex'] — повторный проход не трогает уже отрендеренное.
+(function(){
+  var KX={delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false,ignoredClasses:['katex']};
+  function whenFontsReady(cb){
+    var fams=['KaTeX_Main','KaTeX_Math','KaTeX_Size1','KaTeX_Size2','KaTeX_Size3','KaTeX_Size4','KaTeX_AMS'];
+    if(document.fonts&&document.fonts.load){
+      Promise.all(fams.map(function(f){return document.fonts.load('1em '+f).catch(function(){});}))
+        .then(function(){return document.fonts.ready;}).then(cb,cb);
+    } else { cb(); }
+  }
+  window.tropaMath=function(el){ if(typeof renderMathInElement==='function'){ whenFontsReady(function(){ renderMathInElement(el,KX); }); } };
+  window.addEventListener('load',function(){ window.tropaMath(document.body); });
+})();
+</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip}
+body{max-width:100%;overflow-x:clip}
+/* TROPA design system — палитра дизайн-пака */
+:root{
+  --sand:#DBD4C7;--sage:#B8B5A6;--olive:#7C7F6A;--char:#3E4038;--ink:#1A1A18;
+  --g:#7C7F6A;--gd:#3E4038;--gl:#F4F2EE;--bg:#FFFFFF;--card:#FFFFFF;
+  --tx:#1A1A18;--tm:#6E7163;--bd:#EAE7E0;--r:10px;
+  --serif:"Cormorant Garamond",Georgia,serif;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:-0.01em}
+a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
+.w{max-width:760px;margin:0 auto;padding:0 24px}
+.nav{padding:14px 0;border-bottom:1px solid var(--bd);background:#fff}
+.nav-inner{display:flex;align-items:center;gap:22px}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.3rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);line-height:1;display:flex;align-items:center;gap:9px}
+.nav-logo img{width:22px;height:22px}
+.nav-spacer{flex:1}
+.nav-link{font-size:0.82rem;color:var(--tm);display:flex;align-items:center;line-height:1;letter-spacing:0.01em}
+.nav-link:hover{color:var(--ink);text-decoration:none}
+.nav-icon{display:flex;align-items:center;justify-content:center;color:var(--tm);transition:color 0.15s}
+.nav-icon:hover{color:var(--olive);text-decoration:none}
+.nav-icon i{width:16px;height:16px}
+
+.sg-hero{padding:48px 0 8px;text-align:center}
+.sg-hero img{height:auto;max-height:46px;width:auto;opacity:.8;display:block;margin:0 auto 16px}
+.sg-hero img.sg-icon{max-height:200px;max-width:440px;width:80%;opacity:1;margin:0 auto 4px}
+.sg-kicker{font-size:0.76rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--olive);margin-bottom:10px}
+.sg-hero h1{font-size:2.3rem;font-weight:700;line-height:1.12;margin-bottom:8px}
+.sg-deck{font-family:var(--serif);font-style:italic;font-size:1.3rem;color:var(--tm);line-height:1.3;margin:0 auto 12px;max-width:560px}
+.sg-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:0.8rem}
+.sg-tag{padding:2px 9px;border-radius:20px;background:var(--gl);color:var(--tm)}
+.sg-geo{color:var(--olive);font-weight:600}
+.tabs{display:flex;align-items:center;gap:4px;border-bottom:1px solid var(--bd);margin:26px 0 0;flex-wrap:wrap}
+.tab{font-family:var(--serif);font-size:1.05rem;font-weight:600;padding:9px 16px;color:var(--tm);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);border-bottom-color:var(--olive)}
+.tab-pdf{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--tm);transition:color .15s}
+.tab-pdf:hover{color:var(--olive);text-decoration:none}
+.tab-pdf i{width:15px;height:15px;stroke-width:1.4}
+/* читается как книжная статья */
+.body{padding:26px 0 8px;font-family:Georgia,"PT Serif","Times New Roman",serif;font-size:1.16rem;line-height:1.84;max-width:660px;color:#262521}
+.body p{margin:0 0 1.05em}.body p:first-of-type{font-size:1.22rem;color:#1c1b17}
+.body strong{color:var(--ink);font-weight:600}
+.body h2,.body h3,.body h4{font-family:var(--serif);font-weight:600;color:var(--char);margin:1.6em 0 .5em;font-size:1.4rem;line-height:1.25;text-align:center}
+.body ul,.body ol{margin:1em 0 1em 22px}.body li{margin:.4em 0}
+.body table{border-collapse:collapse;font-size:0.96rem;margin:1.2em 0;display:block;max-width:100%;overflow-x:auto}
+.body img{max-width:100%;height:auto;display:block;margin:0 auto}
+.body figure.fig{margin:2em auto;text-align:center;max-width:560px}
+.body figure.fig img{max-width:88%;max-height:340px;width:auto;height:auto}
+.body figure.fig figcaption{font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--tm);line-height:1.4;margin-top:.7em;max-width:480px;margin-left:auto;margin-right:auto}
+.body th,.body td{border:1px solid var(--bd);padding:7px 14px;text-align:left}
+.body .formula{text-align:center;font-size:1.2rem;margin:1.4em auto;color:var(--char);letter-spacing:.02em}
+.body .katex-display{margin:1.4em 0}
+.divider{margin:48px 0 12px;text-align:center}.divider img{width:170px;opacity:.85}
+.site-url{text-align:center;font-size:0.78rem;letter-spacing:0.16em;color:var(--tm);margin-bottom:28px}
+.back{font-size:0.85rem}
+
+@media(max-width:640px){
+  .w{padding:0 16px}
+  .nav-inner{gap:14px}
+  .nav-logo{font-size:1.12rem;letter-spacing:0.08em;gap:7px}
+  .nav-logo img{width:19px;height:19px}
+  .nav-link{font-size:0.8rem}
+  .nav-icon{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="w nav-inner">
+  <a href="/" class="nav-logo"><img src="/assets/trees.svg" alt="">Тропа</a>
+  <a href="/storylines/" class="nav-link">Сюжеты</a>
+  <a href="/innopolis/" class="nav-link">Маршрут</a>
+  <a href="/skills/" class="nav-link">Скиллы</a>
+  <a href="/bot/" class="nav-link">Бот</a>
+  <a href="/guides/" class="nav-link">Гиды</a>
+  <div class="nav-spacer"></div>
+  <a href="https://github.com/MerkulovDaniil/tropa" class="nav-icon"><i data-lucide="github"></i></a>
+  <a href="https://t.me/zoobr_bot" class="nav-icon"><i data-lucide="send"></i></a>
+</div></nav>
+
+<div class="w">
+  <div class="sg-hero">
+    <img class="sg-icon" src="/assets/icons/kraevedenie.svg" alt="">
+    
+    <div class="sg-kicker">Научная тропа Иннополиса</div>
+    <h1>Краеведческий стенд</h1>
+    <div class="sg-deck" id="sg-deck">У одного села три имени за 400 лет — а первое стёрто. Кто его стёр?</div>
+    <div class="sg-meta">
+      <a class="sg-geo" href="https://yandex.ru/maps/?pt=48.73484,55.75827&z=17&l=map" target="_blank" rel="noopener">📍 на карте</a>
+      <span class="sg-tag">история</span><span class="sg-tag">место</span>
+    </div>
+  </div>
+
+  
+  <div class="tabs">
+    <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
+  </div>
+  
+  <div class="body lvl" data-i="0" style=""><p>Посмотри на дома перед тобой. Это часть Введенской Слободы, и у этого места три имени. Сначала здесь было городище марийцев-язычников — но как они звали свой холм, не знает никто: дописьменная память не дотянулась до нас. С 1556 года место зовётся Басурманской слободой: по указу Ивана Грозного сюда, на правый берег Свияги, переселили стрельцов из Московского княжества и освободили от податей. С 1648 года, когда здесь освятили церковь Введения во храм Пресвятой Богородицы, — Введенская Слобода.</p>
+<p>Первое имя стёрло не злое намерение, а само время: у язычников не было письменности, а устный рассказ за века растерял слова. Место не менялось — менялись люди и то, как они его называли. Холм один, а имён, что на него легли, целых три.</p>
+<figure class="fig"><img src="/assets/figures/kraevedenie-2b.svg" alt="Одно место (нижняя линия), на которое слой за слоем легли три имени. Нижний, самый ранний слой — имя городища марийцев — стёрт: вместо названия «?» в выцветшей пунктирной рамке (письменности не было). Над ним два сохранившихся имени: Басурманская слобода (1556) и Введенская (1648)."><figcaption>Одно место (нижняя линия), на которое слой за слоем легли три имени. Нижний, самый ранний слой — имя городища марийцев — стёрт: вместо названия «?» в выцветшей пунктирной рамке (письменности не было). Над ним два сохранившихся имени: Басурманская слобода (1556) и Введенская (1648).</figcaption></figure></div>
+  
+  <div class="body lvl" data-i="1" style="display:none"><p>У истории этого места три разных свидетеля, и каждый говорит о своём. Документы — царские указы, церковные описи, ревизские сказки — дают точные даты, имена, цифры, но сохраняют лишь то, что когда-то легло на бумагу. Археология говорит о вещах: какие строили дома, чем кормились, что клали в могилы, — а о мотивах и чувствах молчит. Предание — самое живое: память идёт из уст в уста, зато за четыре века неминуемо стирается и обрастает деталями. Поэтому у каждого утверждения о прошлом этого места — своя надёжность: важно не только что рассказано, но и кто из трёх свидетелей это рассказал и насколько ему можно верить.</p>
+<figure class="fig"><img src="/assets/figures/kraevedenie-1.svg" alt="Линия времени места с разрывом-сломом: слева — дописьменная глубь (бронзовый век, ~II тыс. до н.э.), где стоит недатированное городище марийцев («?»); справа — письменная эпоха с реальными годами (слобода 1556, Введенская 1648, каменная церковь 1782–89). Под осью три дорожки-свидетеля: предание — размытая полоса из глуби, тающая к нашим дням; документы — точная узкая линия с порога письменности (1556); археология — отдельные «островки» раскопок только в дописьменной глуби. Видны слепые зоны каждого источника."><figcaption>Линия времени места с разрывом-сломом: слева — дописьменная глубь (бронзовый век, ~II тыс. до н.э.), где стоит недатированное городище марийцев («?»); справа — письменная эпоха с реальными годами (слобода 1556, Введенская 1648, каменная церковь 1782–89). Под осью три дорожки-свидетеля: предание — размытая полоса из глуби, тающая к нашим дням; документы — точная узкая линия с порога письменности (1556); археология — отдельные «островки» раскопок только в дописьменной глуби. Видны слепые зоны каждого источника.</figcaption></figure>
+<h3>Что говорят документы</h3>
+<p>По указу Ивана Грозного в 1556 году на правом берегу Свияги основана Басурманская слобода; сюда перевели стрельцов из Московского княжества с семьями и освободили от податей. После 1584 года, при Борисе Годунове, слободу пополнили земледельцами из тверских и новгородских земель — их поселили на участки, отнятые у татарских мурз, отказавшихся принять православие. В 1648 году освятили деревянную церковь Введения во храм Пресвятой Богородицы, и слобода стала Введенской. А в 1782–1789 годах на средства местной помещицы Е. К. Назимовой здесь построили каменную церковь Введения — она стоит и поныне<sup id="fnref:hram"><a class="footnote-ref" href="#fn:hram">1</a></sup>.</p>
+<h3>Что говорит археология</h3>
+<p>В окрестностях найдены две стоянки приказанской культуры — это вторая половина II тысячелетия до нашей эры, поздний бронзовый век<sup id="fnref:prikazan"><a class="footnote-ref" href="#fn:prikazan">2</a></sup>. Люди жили в полуземлянках, пасли скот и сеяли хлеб, плавили бронзу. От той эпохи остались плоскодонные горшки с сетчатым узором и грунтовые могильники — именно их и находит здесь археолог. А вот на каком языке говорили и каким богам молились, керамика не скажет.</p>
+<h3>Что говорит предание</h3>
+<p>Старики рассказывали: до прихода стрельцов на этом холме стояло городище марийцев-язычников — русские звали их черемисами. Где именно оно стояло, бумаги не сохранили; об этом помнит только устный рассказ, передаваемый из поколения в поколение.</p>
+<h3>Почему предание стирается — и насколько</h3>
+<p>Заметь: предание донесло, что городище было, но потеряло, где оно стояло. Это не случайность, а закон устной памяти. Прикинем грубо. От марийского городища до наших дней прошло около четырёх веков, а одно поколение передаёт память следующему примерно за $25$ лет — значит, рассказ прошёл через $n \approx 16$ передач. Если на каждой передаче теряется доля $p$ деталей, то сохранится доля</p>
+<p>$$ S = (1-p)^{n} $$</p>
+<p>Это, конечно, упрощение: формула считает, как если бы все детали были одинаково хрупкими и терялись с одной и той же скоростью $p$. На деле память избирательна — у разных фактов своё $p$. Крупный, часто повторяемый факт («здесь было городище») передают в каждом поколении, его $p$ мало: при $p = 0{,}05$ через $16$ пересказов уцелеет $0{,}95^{16} \approx 0{,}44$ — почти половина, факт доживает. А хрупкая, редко называемая деталь («вон на том бугре») имеет $p$ большое: при $p = 0{,}2$ останется $0{,}8^{16} \approx 0{,}03$ — почти ничего, деталь осыпается за несколько поколений. Та же разница и определяет, насколько можно верить каждому свидетельству, — это, по сути, прикидка такого $S$.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:hram">
+<p>Каменная церковь Введения во храм Пресвятой Богородицы построена в 1782–1789 годах на средства помещицы Е. К. Назимовой — <a href="https://tatmitropolia.ru/hramy_tatarstana/kazan_eparhiya/zelenodolskoe/?id=73306">Татарстанская митрополия, «Церковь Введения во храм Пресвятой Богородицы в Введенской Слободе»</a>.&#160;<a class="footnote-backref" href="#fnref:hram" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:prikazan">
+<p>Приказанская культура датируется второй половиной II тысячелетия до н. э. (поздний бронзовый век) — <a href="https://ru.wikipedia.org/wiki/Приказанская_культура">Википедия, «Приказанская культура»</a>.&#160;<a class="footnote-backref" href="#fnref:prikazan" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  <div class="body lvl" data-i="2" style="display:none"><p>Устная память стирается не равномерно, а избирательно: переживает то, что повторяют, и теряет то, что повторять незачем. Сам факт существования городища объяснял главное — почему пришлые стрельцы застали холм обжитым, — и потому переходил из уст в уста в каждом поколении. А точное место городища ничего важного не объясняло, его называли редко, и оно осыпалось первым. Так предание работает как фильтр: пропускает несущий смысл и отсеивает подробности.</p>
+<figure class="fig"><img src="/assets/figures/kraevedenie-2.svg" alt="Кривая затухания устной памяти: по горизонтали — поколения от 0 до 16 за 400 лет, по вертикали — доля уцелевших деталей. Верхняя линия — стойкий крупный факт «городище было» (малое $p=0{,}05$, доживает до $\approx 0{,}44$); нижняя — хрупкая деталь «где стояло» (большое $p=0{,}2$, осыпается почти до нуля)."><figcaption>Кривая затухания устной памяти: по горизонтали — поколения от 0 до 16 за 400 лет, по вертикали — доля уцелевших деталей. Верхняя линия — стойкий крупный факт «городище было» (малое $p=0{,}05$, доживает до $\approx 0{,}44$); нижняя — хрупкая деталь «где стояло» (большое $p=0{,}2$, осыпается почти до нуля).</figcaption></figure>
+<p>Здесь и видно, зачем у каждого факта нужно держать в уме свидетеля. Историк не верит источнику на слово — он взвешивает три свидетельства друг против друга. Документ точен в дате, но молчит о язычниках: бумаги вели те, кто пришёл позже. Археология ловит дописьменную эпоху, но даёт вещи без имён. Предание дотягивается дальше всех, но размыто временем. Где три свидетеля сходятся, доверие растёт; где расходятся — историк ищет, кто из них в этом месте сильнее. Ты стоишь ровно на стыке всех трёх: под ногами — слой бронзового века, вокруг — улицы стрелецкой слободы, над ними — каменная церковь XVIII века.</p>
+<h3>Читай ландшафт</h3>
+<p>Многое из этой истории не попало ни в документы, ни в раскопки, но сохранилось в самой земле: в планировке улиц, в очертаниях дворов, в одиноких старых деревьях. По мере движения по тропе такие детали встречаются регулярно, и за каждой стоит своя история. Место помнит больше, чем записано, — надо лишь знать, какого свидетеля о чём спрашивать.</p></div>
+  
+  
+</div>
+
+<script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
+<script defer src="/assets/site-bar/bot.js"></script>
+
+<script>
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
+var TROPA_DECKS = ["У одного села три имени за 400 лет — а первое стёрто. Кто его стёр?", "Откуда мы вообще знаем, что здесь было — и насколько можно верить?", "Почему предание сохранило, что городище было, но забыло, где оно стояло?"];
+
+(function(){
+  var tabs=document.querySelectorAll('.tab'), bodies=document.querySelectorAll('.lvl');
+  var pdfs=TROPA_PDFS, decks=TROPA_DECKS, deckEl=document.getElementById('sg-deck');
+  document.querySelector('.tabs')&&document.querySelector('.tabs').addEventListener('click',function(e){
+    var t=e.target.closest('.tab'); if(!t)return;
+    tabs.forEach(function(x){x.classList.remove('active')}); t.classList.add('active');
+    var i=+t.dataset.i;
+    bodies.forEach(function(b){b.style.display=(+b.dataset.i===i)?'':'none'});
+    if(deckEl){ if(decks[i]){deckEl.textContent=decks[i];deckEl.style.display='';if(window.tropaMath)window.tropaMath(deckEl);} else {deckEl.style.display='none'} }
+    var link=document.getElementById('pdf-link'); if(link&&pdfs[i])link.href=pdfs[i];
+    if(window.tropaMath)window.tropaMath(bodies[i]);
+  });
+})();
+
+</script>
+
+</body>
+</html>

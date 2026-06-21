@@ -1,0 +1,42 @@
+{
+  "university_entrance": {
+    "l1": "01_university_entrance_l1.pdf",
+    "l2": "01_university_entrance_l2.pdf",
+    "l3": "01_university_entrance_l3.pdf"
+  },
+  "atrium_library": {
+    "l1": "02_atrium_library_l1.pdf",
+    "l2": "02_atrium_library_l2.pdf",
+    "l3": "02_atrium_library_l3.pdf"
+  },
+  "robot_path": {
+    "l1": "03_robot_path_l1.pdf",
+    "l2": "03_robot_path_l2.pdf",
+    "l3": "03_robot_path_l3.pdf"
+  },
+  "tesla_marker": {
+    "l1": "04_tesla_marker_l1.pdf",
+    "l2": "04_tesla_marker_l2.pdf",
+    "l3": "04_tesla_marker_l3.pdf"
+  },
+  "boulevard_game": {
+    "l1": "05_boulevard_game_l1.pdf",
+    "l2": "05_boulevard_game_l2.pdf",
+    "l3": "05_boulevard_game_l3.pdf"
+  },
+  "sports_scaling": {
+    "l1": "06_sports_scaling_l1.pdf",
+    "l2": "06_sports_scaling_l2.pdf",
+    "l3": "06_sports_scaling_l3.pdf"
+  },
+  "forest_water_column": {
+    "l1": "07_forest_water_column_l1.pdf",
+    "l2": "07_forest_water_column_l2.pdf",
+    "l3": "07_forest_water_column_l3.pdf"
+  },
+  "data_center_view": {
+    "l1": "08_data_center_view_l1.pdf",
+    "l2": "08_data_center_view_l2.pdf",
+    "l3": "08_data_center_view_l3.pdf"
+  }
+}

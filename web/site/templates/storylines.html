@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Сюжеты — {{ site.title }}{% endblock %}
+{% block styles %}{% raw %}
+.page-hero{padding:52px 0 6px;display:flex;align-items:center;gap:18px}
+.page-hero img{max-height:48px;width:auto;opacity:.8}
+.page-hero h1{font-size:2.1rem;font-weight:700;margin-bottom:2px}
+.page-hero p{color:var(--tm);font-size:0.95rem}
+.sl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px;margin:30px 0 60px}
+/* иллюстрация во всю карточку + агрессивный белый градиент снизу под крупный заголовок */
+.sl-card{display:block;position:relative;aspect-ratio:2/1;border:1px solid #D6CFC1;border-radius:14px;overflow:hidden;background:#fff;transition:border-color .15s;text-decoration:none}
+.sl-card:hover{border-color:var(--olive);text-decoration:none}
+.sl-ic{position:absolute;inset:0;background-position:center 20%;background-size:122%;background-repeat:no-repeat;opacity:.9}
+.sl-veil{position:absolute;inset:0;background:linear-gradient(to top,#ffffff 0%,#ffffff 26%,rgba(255,255,255,.82) 48%,rgba(255,255,255,0) 78%)}
+.sl-title{position:absolute;left:22px;right:22px;bottom:18px;font-family:var(--serif);font-size:1.75rem;font-weight:600;line-height:1.03;color:var(--ink);transition:color .15s}
+.sl-card:hover .sl-title{color:var(--gd)}
+@media(max-width:640px){.sl-grid{grid-template-columns:1fr}}
+{% endraw %}{% endblock %}
+
+{% block content %}
+<div class="w">
+  <div class="page-hero">
+    <img src="/assets/glyphs/mountains.png" alt="">
+    <div>
+      <h1>Сюжеты</h1>
+      <p>Вычитанные научные сюжеты тропы — каждый с тремя уровнями глубины</p>
+    </div>
+  </div>
+  <div class="sl-grid">
+    {% for s in storylines %}
+    <a class="sl-card" href="/storylines/{{ s.slug }}/">
+      <div class="sl-ic" style="background-image:url(/{{ s.icon or 'assets/glyphs/mountains.png' }})"></div>
+      <div class="sl-veil"></div>
+      <span class="sl-title">{{ s.title }}</span>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

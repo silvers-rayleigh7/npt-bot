@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}{{ g.name }} — {{ site.title }}{% endblock %}
+{% block styles %}{% raw %}
+.g-hero{padding:44px 0 6px;text-align:center}
+.g-kicker{font-size:0.76rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--olive);margin-bottom:10px}
+.g-hero h1{font-size:2.1rem;font-weight:700;line-height:1.14;margin-bottom:8px}
+.g-deck{font-family:var(--serif);font-style:italic;font-size:1.25rem;color:var(--tm);line-height:1.3}
+/* двухколоночная раскладка: карта + сайдбар */
+.g-layout{display:grid;grid-template-columns:1fr 300px;gap:34px;margin:30px 0 56px;align-items:start}
+/* ── интерактивная карта-схема ── */
+.gmap-wrap{position:relative;border:1px solid var(--bd);border-radius:14px;background:var(--gl)}
+.gmap-bg{display:block;width:100%;height:auto;border-radius:13px}
+.gpin{position:absolute;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;
+  border:2px solid #fff;background:var(--olive);color:#fff;font-size:0.78rem;font-weight:700;
+  font-family:var(--serif);display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 1px 4px rgba(0,0,0,.28);padding:0;line-height:1;transition:transform .12s,background .12s;z-index:2}
+.gpin:hover,.gpin.on{background:var(--gd);transform:translate(-50%,-50%) scale(1.16);z-index:5}
+.gpin-pop{position:absolute;transform:translate(-50%,calc(-100% - 16px));width:160px;background:#fff;
+  border:1px solid var(--bd);border-radius:10px;box-shadow:0 6px 22px rgba(0,0,0,.16);padding:7px;
+  opacity:0;visibility:hidden;transition:opacity .14s;z-index:10;pointer-events:none}
+.gpin.on .gpin-pop,.gpin:hover .gpin-pop{opacity:1;visibility:visible}
+.gpin-pop img{display:block;width:100%;height:90px;object-fit:cover;border-radius:6px;background:var(--gl)}
+.gpin-pop b{display:block;font-family:var(--serif);font-size:0.86rem;font-weight:600;color:var(--ink);
+  line-height:1.2;margin-top:6px;letter-spacing:0}
+.gmap-note{font-size:0.76rem;color:var(--tm);margin:8px 2px 0;font-style:italic}
+/* ── список точек под картой ── */
+.g-points{list-style:none;margin:22px 0 0;padding:0;columns:2;column-gap:26px}
+.g-points li{break-inside:avoid;margin:0 0 7px;font-size:0.92rem;color:#33322d;line-height:1.4;padding-left:26px;position:relative}
+.g-points li span{position:absolute;left:0;top:0;width:19px;height:19px;border-radius:50%;background:var(--gl);
+  color:var(--olive);font-size:0.72rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+/* ── сайдбар гида ── */
+.g-side{position:sticky;top:20px}
+.g-portrait{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:12px;background:var(--gl);margin-bottom:14px}
+.g-name{font-family:var(--serif);font-size:1.55rem;font-weight:600;line-height:1.08;color:var(--ink)}
+.g-role{color:var(--olive);font-size:0.82rem;font-weight:600;margin:3px 0 14px}
+.g-cred{list-style:none;margin:0 0 14px;padding:0}
+.g-cred li{position:relative;padding-left:18px;margin:0 0 6px;font-size:0.9rem;color:#33322d;line-height:1.4}
+.g-cred li::before{content:"";position:absolute;left:2px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--sage)}
+.g-bio{font-size:0.94rem;line-height:1.6;color:#3a392f;border-top:1px solid var(--bd);padding-top:14px}
+.g-bio p{margin:0 0 .7em}
+.g-contacts{border-top:1px solid var(--bd);margin-top:14px;padding-top:14px;font-size:0.92rem}
+.g-contacts .g-c{display:flex;align-items:center;gap:8px;color:#33322d;margin-bottom:7px}
+.g-contacts .g-c i{width:15px;height:15px;stroke-width:1.6;color:var(--olive)}
+.g-contacts a{color:#33322d}
+.g-social{display:flex;gap:10px;margin-top:10px}
+.g-social a{width:32px;height:32px;border:1px solid var(--bd);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--tm)}
+.g-social a:hover{color:var(--olive);border-color:var(--olive)}
+.g-social i{width:16px;height:16px;stroke-width:1.6}
+@media(max-width:760px){
+  .g-layout{grid-template-columns:1fr;gap:24px}
+  .g-side{position:static;order:-1}
+  .g-portrait{aspect-ratio:3/2}
+  .g-points{columns:1}
+}
+{% endraw %}{% endblock %}
+
+{% block content %}
+<div class="w">
+  <div class="g-hero">
+    <div class="g-kicker">{{ g.region }}</div>
+    <h1>Маршрут {{ g.name_gen or g.name }}, дополнен ИИ</h1>
+    {% if g.route %}<div class="g-deck">{{ g.route.title }} · {{ g.route.duration }} · {{ g.route.points|length }} точек</div>{% endif %}
+  </div>
+
+  <div class="g-layout">
+    <div class="g-main">
+      {% if g.route and g.route.map_image %}
+      <div class="gmap-wrap" id="gmap">
+        <img class="gmap-bg" src="/{{ g.route.map_image }}" alt="Карта маршрута: {{ g.route.title }}">
+        {% for p in g.route.points %}
+        <button class="gpin" style="left:{{ p.x }}%;top:{{ p.y }}%" data-i="{{ loop.index0 }}" aria-label="{{ p.n }}. {{ p.title }}">{{ p.n }}
+          <span class="gpin-pop">{% if p.image %}<img src="/{{ p.image }}" alt="">{% endif %}<b>{{ p.n }}. {{ p.title }}</b></span>
+        </button>
+        {% endfor %}
+      </div>
+      <div class="gmap-note">Карта и иллюстрации точек сгенерированы ИИ — атмосферные, не документальные фото.</div>
+      {% endif %}
+
+      {% if g.route and g.route.points %}
+      <ol class="g-points">
+        {% for p in g.route.points %}<li><span>{{ p.n }}</span>{{ p.title }}</li>{% endfor %}
+      </ol>
+      {% endif %}
+    </div>
+
+    <aside class="g-side">
+      {% if g.portrait %}<img class="g-portrait" src="/{{ g.portrait }}" alt="{{ g.name }}">{% endif %}
+      <div class="g-name">{{ g.name }}</div>
+      {% if g.attested %}<div class="g-role">аттестованный гид</div>{% endif %}
+      {% if g.credentials %}
+      <ul class="g-cred">{% for c in g.credentials %}<li>{{ c }}</li>{% endfor %}</ul>
+      {% endif %}
+      {% if g.bio_html %}<div class="g-bio">{{ g.bio_html|safe }}</div>{% endif %}
+      {% if g.contacts %}
+      <div class="g-contacts">
+        {% if g.contacts.phone %}<div class="g-c"><i data-lucide="phone"></i><a href="tel:{{ g.contacts.phone|replace(' ','')|replace('(','')|replace(')','')|replace('-','') }}">{{ g.contacts.phone }}</a></div>{% endif %}
+        {% if g.contacts.email %}<div class="g-c"><i data-lucide="mail"></i><a href="mailto:{{ g.contacts.email }}">{{ g.contacts.email }}</a></div>{% endif %}
+        {% if g.contacts.socials %}
+        <div class="g-social">
+          {% for s in g.contacts.socials %}<a href="{{ s.url }}" target="_blank" rel="noopener" aria-label="{{ s.type }}"><i data-lucide="{{ s.icon }}"></i></a>{% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+    </aside>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function(){
+  // мобильный тап: показать/скрыть карточку точки (на десктопе работает :hover)
+  var pins = document.querySelectorAll('.gpin');
+  pins.forEach(function(pin){
+    pin.addEventListener('click', function(e){
+      e.preventDefault();
+      var was = pin.classList.contains('on');
+      pins.forEach(function(p){p.classList.remove('on')});
+      if(!was) pin.classList.add('on');
+    });
+  });
+  document.addEventListener('click', function(e){
+    if(!e.target.closest('.gpin')) pins.forEach(function(p){p.classList.remove('on')});
+  });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Обсерватория — Тропа</title>
+<link rel="icon" href="/assets/trees.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site-bar/bot.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
+<script>
+// Рендер математики ТОЛЬКО после загрузки шрифтов KaTeX. Иначе KaTeX считает
+// позицию черты корня/дроби по метрикам фолбэк-шрифта → линия ложится поперёк
+// подкоренного (видимое «зачёркивание»), и без ре-рендера не лечится.
+// ignoredClasses:['katex'] — повторный проход не трогает уже отрендеренное.
+(function(){
+  var KX={delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false,ignoredClasses:['katex']};
+  function whenFontsReady(cb){
+    var fams=['KaTeX_Main','KaTeX_Math','KaTeX_Size1','KaTeX_Size2','KaTeX_Size3','KaTeX_Size4','KaTeX_AMS'];
+    if(document.fonts&&document.fonts.load){
+      Promise.all(fams.map(function(f){return document.fonts.load('1em '+f).catch(function(){});}))
+        .then(function(){return document.fonts.ready;}).then(cb,cb);
+    } else { cb(); }
+  }
+  window.tropaMath=function(el){ if(typeof renderMathInElement==='function'){ whenFontsReady(function(){ renderMathInElement(el,KX); }); } };
+  window.addEventListener('load',function(){ window.tropaMath(document.body); });
+})();
+</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip}
+body{max-width:100%;overflow-x:clip}
+/* TROPA design system — палитра дизайн-пака */
+:root{
+  --sand:#DBD4C7;--sage:#B8B5A6;--olive:#7C7F6A;--char:#3E4038;--ink:#1A1A18;
+  --g:#7C7F6A;--gd:#3E4038;--gl:#F4F2EE;--bg:#FFFFFF;--card:#FFFFFF;
+  --tx:#1A1A18;--tm:#6E7163;--bd:#EAE7E0;--r:10px;
+  --serif:"Cormorant Garamond",Georgia,serif;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:-0.01em}
+a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
+.w{max-width:760px;margin:0 auto;padding:0 24px}
+.nav{padding:14px 0;border-bottom:1px solid var(--bd);background:#fff}
+.nav-inner{display:flex;align-items:center;gap:22px}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.3rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);line-height:1;display:flex;align-items:center;gap:9px}
+.nav-logo img{width:22px;height:22px}
+.nav-spacer{flex:1}
+.nav-link{font-size:0.82rem;color:var(--tm);display:flex;align-items:center;line-height:1;letter-spacing:0.01em}
+.nav-link:hover{color:var(--ink);text-decoration:none}
+.nav-icon{display:flex;align-items:center;justify-content:center;color:var(--tm);transition:color 0.15s}
+.nav-icon:hover{color:var(--olive);text-decoration:none}
+.nav-icon i{width:16px;height:16px}
+
+.sg-hero{padding:48px 0 8px;text-align:center}
+.sg-hero img{height:auto;max-height:46px;width:auto;opacity:.8;display:block;margin:0 auto 16px}
+.sg-hero img.sg-icon{max-height:200px;max-width:440px;width:80%;opacity:1;margin:0 auto 4px}
+.sg-kicker{font-size:0.76rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--olive);margin-bottom:10px}
+.sg-hero h1{font-size:2.3rem;font-weight:700;line-height:1.12;margin-bottom:8px}
+.sg-deck{font-family:var(--serif);font-style:italic;font-size:1.3rem;color:var(--tm);line-height:1.3;margin:0 auto 12px;max-width:560px}
+.sg-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:0.8rem}
+.sg-tag{padding:2px 9px;border-radius:20px;background:var(--gl);color:var(--tm)}
+.sg-geo{color:var(--olive);font-weight:600}
+.tabs{display:flex;align-items:center;gap:4px;border-bottom:1px solid var(--bd);margin:26px 0 0;flex-wrap:wrap}
+.tab{font-family:var(--serif);font-size:1.05rem;font-weight:600;padding:9px 16px;color:var(--tm);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);border-bottom-color:var(--olive)}
+.tab-pdf{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--tm);transition:color .15s}
+.tab-pdf:hover{color:var(--olive);text-decoration:none}
+.tab-pdf i{width:15px;height:15px;stroke-width:1.4}
+/* читается как книжная статья */
+.body{padding:26px 0 8px;font-family:Georgia,"PT Serif","Times New Roman",serif;font-size:1.16rem;line-height:1.84;max-width:660px;color:#262521}
+.body p{margin:0 0 1.05em}.body p:first-of-type{font-size:1.22rem;color:#1c1b17}
+.body strong{color:var(--ink);font-weight:600}
+.body h2,.body h3,.body h4{font-family:var(--serif);font-weight:600;color:var(--char);margin:1.6em 0 .5em;font-size:1.4rem;line-height:1.25;text-align:center}
+.body ul,.body ol{margin:1em 0 1em 22px}.body li{margin:.4em 0}
+.body table{border-collapse:collapse;font-size:0.96rem;margin:1.2em 0;display:block;max-width:100%;overflow-x:auto}
+.body img{max-width:100%;height:auto;display:block;margin:0 auto}
+.body figure.fig{margin:2em auto;text-align:center;max-width:560px}
+.body figure.fig img{max-width:88%;max-height:340px;width:auto;height:auto}
+.body figure.fig figcaption{font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--tm);line-height:1.4;margin-top:.7em;max-width:480px;margin-left:auto;margin-right:auto}
+.body th,.body td{border:1px solid var(--bd);padding:7px 14px;text-align:left}
+.body .formula{text-align:center;font-size:1.2rem;margin:1.4em auto;color:var(--char);letter-spacing:.02em}
+.body .katex-display{margin:1.4em 0}
+.divider{margin:48px 0 12px;text-align:center}.divider img{width:170px;opacity:.85}
+.site-url{text-align:center;font-size:0.78rem;letter-spacing:0.16em;color:var(--tm);margin-bottom:28px}
+.back{font-size:0.85rem}
+
+@media(max-width:640px){
+  .w{padding:0 16px}
+  .nav-inner{gap:14px}
+  .nav-logo{font-size:1.12rem;letter-spacing:0.08em;gap:7px}
+  .nav-logo img{width:19px;height:19px}
+  .nav-link{font-size:0.8rem}
+  .nav-icon{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="w nav-inner">
+  <a href="/" class="nav-logo"><img src="/assets/trees.svg" alt="">Тропа</a>
+  <a href="/storylines/" class="nav-link">Сюжеты</a>
+  <a href="/innopolis/" class="nav-link">Маршрут</a>
+  <a href="/skills/" class="nav-link">Скиллы</a>
+  <a href="/bot/" class="nav-link">Бот</a>
+  <a href="/guides/" class="nav-link">Гиды</a>
+  <div class="nav-spacer"></div>
+  <a href="https://github.com/MerkulovDaniil/tropa" class="nav-icon"><i data-lucide="github"></i></a>
+  <a href="https://t.me/zoobr_bot" class="nav-icon"><i data-lucide="send"></i></a>
+</div></nav>
+
+<div class="w">
+  <div class="sg-hero">
+    <img class="sg-icon" src="/assets/icons/observatoriya.svg" alt="">
+    
+    <div class="sg-kicker">Научная тропа Иннополиса</div>
+    <h1>Обсерватория</h1>
+    <div class="sg-deck" id="sg-deck">Почему с высоты видно дальше?</div>
+    <div class="sg-meta">
+      
+      <span class="sg-tag">астрономия</span><span class="sg-tag">геометрия</span>
+    </div>
+  </div>
+
+  
+  <div class="tabs">
+    <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
+  </div>
+  
+  <div class="body lvl" data-i="0" style=""><figure class="fig"><img src="/assets/figures/observatoriya-1.svg" alt="Горизонт — касательная к шару Земли: радиус в точке касания перпендикулярен лучу зрения."><figcaption>Горизонт — касательная к шару Земли: радиус в точке касания перпендикулярен лучу зрения.</figcaption></figure>
+<p>Почему с балкона девятого этажа видно дальше, чем со двора, а с самолёта — дальше, чем с балкона? Земля — шарообразная, и её поверхность изгибается. Чем выше глаз наблюдателя, тем больше удалённых её участков остаётся в пределах прямой видимости; всё, что лежит дальше, скрыто за выпуклостью шара.</p>
+<p>Эта граница видимости и называется <em>горизонтом</em>. Со ста семнадцати метров над окружающей равниной она проходит примерно в 38 километрах от точки наблюдения — именно это, геометрически идеальное, расстояние выгравировано на шкале топоскопа. В живом воздухе видно немного дальше, около 42 километров; откуда берётся прибавка — на уровне «Глубже».</p>
+<h3>Откуда берётся 38 километров</h3>
+<p>Сначала представим Землю как идеальный шар, а наблюдение — как геометрически «чистую» задачу: никакие препятствия, атмосфера или искажения света не мешают, а видимость определяется только формой поверхности.</p>
+<p><strong>Геометрия задачи.</strong> Наблюдатель находится на высоте $h$ над поверхностью. Самая дальняя видимая точка лежит там, где поверхность Земли «уходит из-под взгляда» — то есть в точке касания. Соединим три точки: центр Земли, точку касания и точку наблюдателя. Получается треугольник со сторонами $R$, $d$ и $R + h$. Радиус всегда перпендикулярен касательной — значит, треугольник прямоугольный, и прямой угол приходится на точку касания.</p>
+<p><strong>Расчёт.</strong> По теореме Пифагора</p>
+<p>$$ d^2 = (R + h)^2 - R^2 = 2Rh + h^2. $$</p>
+<p>При $h$ порядка сотен метров и $R = 6371$ км слагаемое $h^2$ на много порядков меньше произведения $2Rh$, и им можно пренебречь. После подстановки радиуса и приведения единиц остаётся удобная формула (здесь $d$ в километрах, $h$ в метрах):</p>
+<p>$$ d \approx 3{,}57\,\sqrt{h}. $$</p>
+<p>При $h = 117$ м (высота точки наблюдения над окружающей равниной, на которой расположен Приют №5) она даёт $d \approx 38{,}6$ км.</p>
+<p><strong>Поправка на воздух.</strong> В реальности видимость заметно превышает геометрическую: эмпирический коэффициент ближе к 3,86, и те же 117 метров дают уже около 42 километров.<sup id="fnref:horizon"><a class="footnote-ref" href="#fn:horizon">1</a></sup> Воздух у поверхности плотнее, чем в верхних слоях; показатель преломления плавно убывает с высотой, и горизонтальный световой луч в таком градиенте слабо искривляется вниз. Геометрически это означает, что луч огибает не реальную Землю, а воображаемый шар большего радиуса. Эффект называется <em>атмосферной рефракцией</em> и меняется с температурой и давлением воздуха.</p>
+<p><strong>Где работает та же формула.</strong> Через $\sqrt{2Rh}$ рассчитывают радиогоризонт антенн связи и радиолокаторов, дальность видимости огней маяков с моря, расстояние, на котором с борта самолёта на крейсерской высоте десять километров земная поверхность ещё различима — около 360 километров.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:horizon">
+<p>Геометрический коэффициент 3,57 и эмпирический 3,86 (при $h$ в метрах и $d$ в километрах), а также модель эффективного радиуса $\tfrac{7}{6}R$ — <a href="https://en.wikipedia.org/wiki/Horizon">Horizon. Distance to the horizon</a>.&#160;<a class="footnote-backref" href="#fnref:horizon" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  <div class="body lvl" data-i="1" style="display:none"><p>Можно ли измерить угол на небе, не имея при себе никакого прибора? Можно. Кулак вытянутой руки закрывает примерно десять градусов небесной сферы; пропорции тела устроены так, что это соотношение у разных людей почти одинаковое.</p>
+<p><strong>Что делать.</strong> Найди Полярную звезду над северной частью горизонта. Поставь основание кулака на линию горизонта; подними второй кулак над первым, третий — над вторым, и так далее, пока не дойдёшь до самой звезды. Число кулаков в столбце, умноженное на десять градусов, и есть высота Полярной над горизонтом — она же широта места:</p>
+<p>$$ \varphi \approx 10^\circ \times N. $$</p>
+<p>На этой широте в столбце помещается ровно пять с половиной кулаков, $N = 5{,}5$, и формула даёт $\varphi \approx 55^\circ$ — широту Иннополиса.</p>
+<p><strong>Что это число означает.</strong> Оно совпадает с географической широтой места наблюдения, и совпадение не случайно: высота Полярной над горизонтом и широта наблюдателя — один и тот же угол, измеренный двумя разными способами. Подробности — ниже.</p>
+<p>Метод позволяет определить широту любой точки в северном полушарии без приборов и карт; им пользовались мореплаватели за столетия до появления секстанта.</p>
+<h3>Тот же треугольник, повёрнутый</h3>
+<p>Прямоугольный треугольник с радиусом Земли и касательной к её поверхности описывал расстояние до горизонта. Тот же треугольник, повёрнутый и наложенный на ночное небо, объясняет, почему высота Полярной звезды над горизонтом совпадает с географической широтой места.</p>
+<figure class="fig"><img src="/assets/figures/observatoriya-2.svg" alt="Широта равна высоте Полярной: угол $\varphi$ между плоскостью экватора и радиусом в точку наблюдателя равен высоте Полярной над горизонтом. Направление на далёкую звезду параллельно земной оси."><figcaption>Широта равна высоте Полярной: угол $\varphi$ между плоскостью экватора и радиусом в точку наблюдателя равен высоте Полярной над горизонтом. Направление на далёкую звезду параллельно земной оси.</figcaption></figure>
+<p><strong>Что такое широта.</strong> Географическая широта $\varphi$ — это угол между плоскостью земного экватора и направлением из центра Земли в точку стояния наблюдателя.</p>
+<p><strong>Что такое направление на Полярную.</strong> Ось вращения Земли указывает почти точно на Полярную звезду. Расстояние до неё больше радиуса Земли в сотни миллиардов раз, поэтому направление на Полярную из любой точки поверхности можно считать параллельным земной оси.</p>
+<p><strong>Геометрия совпадения.</strong> Местная вертикаль в точке наблюдения совпадает с радиусом, проведённым из центра Земли в эту точку. Угол между местной вертикалью и направлением на Полярную равен, следовательно, углу между земной осью и тем же радиусом, то есть $90^\circ - \varphi$. Высота Полярной над горизонтом по определению равна $90^\circ$ за вычетом её углового отклонения от вертикали, и в итоге даёт ровно $\varphi$.</p>
+<p><strong>Одна геометрия — две задачи навигации.</strong> Прямоугольный треугольник с радиусом Земли и касательной к её поверхности решает обе задачи определения положения по широте: днём по высоте наблюдателя над равниной он даёт расстояние до горизонта, ночью по высоте Полярной над линией горизонта — географическую широту.</p>
+<p>Так определяется только одна из двух координат. Вторая, долгота, требует одновременного знания местного и опорного времени и потому веками оставалась нерешённой задачей мореплавания. Её решили в XVIII веке морским хронометром Гаррисона — об этом за QR.</p></div>
+  
+  <div class="body lvl" data-i="2" style="display:none"><p><strong>Почему реально видно дальше.</strong> Видимость в спокойной атмосфере примерно на восемь процентов превышает чисто геометрическую оценку. Причина — атмосферная рефракция. Воздух у поверхности Земли плотнее, чем в верхних слоях; показатель преломления с высотой плавно убывает, и горизонтальный световой луч в таком градиенте слабо искривляется вниз. Геометрически это эквивалентно тому, что свет распространяется вдоль не реальной Земли, а воображаемого шара большего радиуса. В стандартной модели атмосферы этот эффективный радиус оценивают как</p>
+<p>$$ R' = \tfrac{7}{6}\,R, $$</p>
+<p>и предел видимости растёт в $\sqrt{7/6} \approx 1{,}08$ раза — отсюда коэффициент около 3,86 вместо геометрических 3,57.</p>
+<p><strong>Когда поправка перестаёт быть малой.</strong> В обычных условиях, когда температура воздуха плавно убывает с высотой, рефракция близка к стандартной — те самые восемь процентов добавки к геометрической дальности. Картина меняется при температурной инверсии: если у поверхности лежит слой холодного воздуха, а над ним — более тёплый, градиент плотности усиливается и сильнее загибает горизонтальный луч вниз. Иногда настолько, что наблюдатель видит над горизонтом предметы, уже скрытые за ним геометрически. В навигационной литературе это явление называют <em>верхним миражом</em>, или «поднятыми кораблями».</p>
+<p>На Луне, у которой атмосферы практически нет, рефракционной поправки тоже нет; видимое расстояние до горизонта совпадает с чисто геометрическим. Но сам коэффициент уже другой: радиус Луны около 1737 км, и формула $\sqrt{2Rh}$ даёт $d \approx 1{,}86\,\sqrt{h}$. С высоты человеческого роста — возьмём глаз на $h = 1{,}6$ м — горизонт на Земле лежит примерно в 4,5 километра ($3{,}57\,\sqrt{1{,}6}$), а на Луне всего в 2,4 километра ($1{,}86\,\sqrt{1{,}6}$): вдвое ближе. Геометрия та же, радиус меньше.</p>
+<table>
+<thead>
+<tr>
+<th>Тело</th>
+<th>Радиус $R$, км</th>
+<th>Коэффициент $k$ в $d=k\sqrt{h}$</th>
+<th>Горизонт с $h=1{,}6$ м</th>
+<th>Рефракция</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Земля</td>
+<td>6371</td>
+<td>3,57</td>
+<td>≈ 4,5 км</td>
+<td>+8 %</td>
+</tr>
+<tr>
+<td>Луна</td>
+<td>1737</td>
+<td>1,86</td>
+<td>≈ 2,4 км</td>
+<td>нет</td>
+</tr>
+</tbody>
+</table>
+<p>Коэффициент $k \propto \sqrt{R}$, поэтому их отношение $3{,}57 / 1{,}86 \approx 1{,}9$ совпадает с корнем из отношения радиусов $\sqrt{6371/1737} \approx 1{,}9$: всё расстояние до горизонта определяет один радиус планеты.<sup id="fnref:horizon3"><a class="footnote-ref" href="#fn:horizon3">1</a></sup></p>
+<h3>Тот же треугольник измеряет всю планету</h3>
+<p>Те же элементы — шар радиуса $R$, радиус, проведённый в точку наблюдения, и касательная к шару — на стенде уже дали две координаты: расстояние до горизонта днём и широту по Полярной ночью. Но из той же геометрии добывается и величина самого шара. Если в двух точках одного меридиана одновременно измерить угол между местной вертикалью и направлением на одну звезду (или на полуденное Солнце), разность этих углов равна угловому расстоянию между точками, видимому из центра планеты. Зная расстояние между точками по земле, получаешь длину всего меридиана — а с ней и радиус Земли.</p>
+<p><strong>Как это сделали впервые.</strong> Около 240 года до нашей эры Эратосфен Киренский заметил, что в день летнего солнцестояния в Сиене (современный Асуан) полуденное Солнце стоит в зените и освещает дно глубоких колодцев. В Александрии, севернее на том же меридиане, в тот же час Солнце отклонялось от вертикали на угол, который Эратосфен измерил по тени гномона: около $7^\circ 12'$, или одна пятидесятая полной окружности. Расстояние между городами он взял из дорожных измерений — и получил длину меридиана. Насколько точен был результат, сказать трудно: древняя мера длины, стадий, известна неоднозначно, и в зависимости от её значения погрешность колеблется от единиц процентов до заметно большей.<sup id="fnref:erat"><a class="footnote-ref" href="#fn:erat">2</a></sup></p>
+<h3>Что наука уточняет до сих пор</h3>
+<p><strong>Геоид вместо шара.</strong> Сегодня ту же координату — положение точки — снимают по сигналам спутниковых группировок (GPS, ГЛОНАСС, Galileo, BeiDou) с точностью от метров до единиц миллиметров для опорных пунктов. И чем точнее измеряют, тем яснее: Земля — не шар. Реальная её фигура отличается и от математического шара, и от эллипсоида вращения. Усреднённое представление о её форме называют <em>геоидом</em>: это поверхность постоянного потенциала силы тяжести, совпадающая со средним уровнем океанов в отсутствие приливов, ветров и течений. Геоид отклоняется от опорного эллипсоида на десятки метров — вверх над избытками массы (горные системы, плотные блоки коры) и вниз над дефицитами (океанические впадины, разрежённые области мантии). Карту этих отклонений строят по измерениям спутниковых миссий GRACE и GOCE, регистрирующих микроскопические возмущения собственного орбитального движения. Обратная задача — однозначная реконструкция распределения масс в недрах Земли по гравитационному полю на её поверхности — математически некорректна и остаётся одним из активных направлений геофизики.</p>
+<p><strong>И сама опора непостоянна.</strong> Полярная звезда занимает положение вблизи северного полюса мира лишь временно. Земная ось совершает <em>прецессию</em> — медленно описывает в пространстве конус с угловым радиусом около $23{,}5^\circ$ и периодом примерно 25 800 лет, под действием лунно-солнечного притяжения к экваториальному вздутию планеты.<sup id="fnref:precess"><a class="footnote-ref" href="#fn:precess">3</a></sup> В эпоху пирамид Гизы (около 2700 года до нашей эры) полярной звездой была Тубан в созвездии Дракона; через несколько тысячелетий её место займёт Альраи (γ Цефея), а позже — Денеб и Вега.<sup id="fnref:polestar"><a class="footnote-ref" href="#fn:polestar">4</a></sup> Так что приём со стенда — широта по Полярной — верен не навсегда: само совпадение оси вращения с яркой звездой северного неба, на котором держится эта навигация, в исторических масштабах оказывается скорее исключением, чем правилом.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:horizon3">
+<p>Геометрический коэффициент 3,57 и эмпирический 3,86 (при $h$ в метрах и $d$ в километрах), а также модель эффективного радиуса $\tfrac{7}{6}R$ — <a href="https://en.wikipedia.org/wiki/Horizon">Horizon. Distance to the horizon</a>.&#160;<a class="footnote-backref" href="#fnref:horizon3" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:erat">
+<p>Метод, угол $\approx 7^\circ 12' = 1/50$ окружности и неопределённость оценки из-за длины стадия — <a href="https://ru.wikipedia.org/wiki/Эратосфен">Эратосфен</a>.&#160;<a class="footnote-backref" href="#fnref:erat" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:precess">
+<p>Конус с угловым радиусом ≈ 23,5° и период ≈ 25 800 лет — <a href="https://ru.wikipedia.org/wiki/Прецессия">Прецессия</a>.&#160;<a class="footnote-backref" href="#fnref:precess" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:polestar">
+<p>Тубан 5000 лет назад, далее Альраи (γ Цефея), Денеб и Вега — <a href="https://ru.wikipedia.org/wiki/Полярная_звезда">Полярная звезда</a>.&#160;<a class="footnote-backref" href="#fnref:polestar" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  
+</div>
+
+<script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
+<script defer src="/assets/site-bar/bot.js"></script>
+
+<script>
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
+var TROPA_DECKS = ["Почему с высоты видно дальше?", "Угол на небе без приборов", "Идеальный шар — только первое приближение"];
+
+(function(){
+  var tabs=document.querySelectorAll('.tab'), bodies=document.querySelectorAll('.lvl');
+  var pdfs=TROPA_PDFS, decks=TROPA_DECKS, deckEl=document.getElementById('sg-deck');
+  document.querySelector('.tabs')&&document.querySelector('.tabs').addEventListener('click',function(e){
+    var t=e.target.closest('.tab'); if(!t)return;
+    tabs.forEach(function(x){x.classList.remove('active')}); t.classList.add('active');
+    var i=+t.dataset.i;
+    bodies.forEach(function(b){b.style.display=(+b.dataset.i===i)?'':'none'});
+    if(deckEl){ if(decks[i]){deckEl.textContent=decks[i];deckEl.style.display='';if(window.tropaMath)window.tropaMath(deckEl);} else {deckEl.style.display='none'} }
+    var link=document.getElementById('pdf-link'); if(link&&pdfs[i])link.href=pdfs[i];
+    if(window.tropaMath)window.tropaMath(bodies[i]);
+  });
+})();
+
+</script>
+
+</body>
+</html>

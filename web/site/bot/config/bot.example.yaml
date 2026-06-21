@@ -1,0 +1,56 @@
+# Главный конфиг бота "Научный Гид".
+# Скопируй в bot.yaml и заполни секреты.
+
+telegram:
+  bot_token: ${TELEGRAM_BOT_TOKEN}   # @BotFather → токен
+  allowed_users: []                   # пустой список = бот открыт всем; иначе список user_id
+
+llm:
+  provider: openrouter
+  base_url: https://openrouter.ai/api/v1
+  model_source_url: https://shir-man.com/api/free-llm/top-models
+  generate_poi_narratives: false      # live-trigger говорит curated YAML сразу; LLM нужен для voice Q&A
+  timeout_seconds: 25
+  voice_answer_timeout_seconds: 7
+  api_key: ${OPENROUTER_API_KEY}
+  app_title: Innopolis Science Trail
+  site_url: https://github.com/MerkulovDaniil/tropa
+  max_tokens: 2000
+  temperature: 0.4                    # умеренно креативно, но не галлюционирует формулы
+
+stt:
+  provider: groq                      # бесплатный whisper-large-v3 на Groq
+  model: whisper-large-v3
+  api_key: ${GROQ_API_KEY}
+  language: ru
+
+tts:
+  provider: edge_tts                  # основной голос для MVP; Silero оставлен как опция
+  silero:
+    model_id: v4_ru                   # 48 kHz, лучшая русская модель Silero
+    speaker: eugene                   # варианты: aidar, baya, kseniya, xenia, eugene, random
+    sample_rate: 48000
+    cache_dir: ../logs/tts_cache
+  fallback:                           # если silero упал — переключаемся на edge-tts
+    provider: edge_tts
+    voice: ru-RU-DmitryNeural         # ru-RU-DmitryNeural (М) / ru-RU-SvetlanaNeural (Ж)
+    rate: "-5%"
+    volume: "+0%"
+
+location:
+  cooldown_seconds: 900               # после срабатывания POI — 15 мин не триггерим тот же
+  default_trigger_radius_m: 80        # если в poi.yaml не задан персональный радиус
+  hysteresis_m: 30                    # после ухода >hysteresis_m POI снова может сработать
+  min_accuracy_m: 50                  # игнорируем live-точки с горизонтальной ошибкой >50м
+  here_max_distance_m: 400            # /here отвечает, если ближайшая POI не дальше этого порога
+
+scenarios:
+  poi_file: poi.innopolis.yaml        # точки + сюжеты; путь относителен config/bot.yaml
+  style_file: style.md                # tone of voice Гасникова (system prompt)
+  audio_max_seconds: 120              # обрезаем нарратив если слишком длинно
+  default_levels: ["L1"]              # по умолчанию шлём только "для любознательных", L2/L3 по запросу
+
+logging:
+  dir: ../logs                        # путь относителен config/bot.yaml
+  level: INFO
+  per_user_history: true              # храним кому что отдавали — для аналитики и dedup

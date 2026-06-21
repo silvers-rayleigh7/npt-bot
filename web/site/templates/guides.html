@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Гиды — {{ site.title }}{% endblock %}
+{% block styles %}{% raw %}
+.page-hero{padding:52px 0 6px;display:flex;align-items:center;gap:18px}
+.page-hero img{max-height:48px;width:auto;opacity:.8}
+.page-hero h1{font-size:2.1rem;font-weight:700;margin-bottom:2px}
+.page-hero p{color:var(--tm);font-size:0.95rem}
+.gd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;margin:30px 0 60px}
+.gd-card{display:block;border:1px solid #D6CFC1;border-radius:14px;overflow:hidden;background:#fff;transition:border-color .15s;text-decoration:none}
+.gd-card:hover{border-color:var(--olive);text-decoration:none}
+.gd-photo{aspect-ratio:4/3;background:var(--gl);background-size:cover;background-position:center top}
+.gd-body{padding:14px 16px 16px}
+.gd-name{font-family:var(--serif);font-size:1.4rem;font-weight:600;line-height:1.1;color:var(--ink)}
+.gd-card:hover .gd-name{color:var(--gd)}
+.gd-region{display:flex;align-items:center;gap:5px;color:var(--tm);font-size:0.85rem;margin-top:4px}
+.gd-region i{width:13px;height:13px;stroke-width:1.6}
+@media(max-width:640px){.gd-grid{grid-template-columns:1fr 1fr;gap:12px}.gd-name{font-size:1.2rem}}
+{% endraw %}{% endblock %}
+
+{% block content %}
+<div class="w">
+  <div class="page-hero">
+    <img src="/assets/glyphs/mountains.png" alt="">
+    <div>
+      <h1>Гиды</h1>
+      <p>Аттестованные экскурсоводы и их авторские маршруты — дополнены ИИ</p>
+    </div>
+  </div>
+  <div class="gd-grid">
+    {% for g in guides %}
+    <a class="gd-card" href="/guides/{{ g.slug }}/">
+      <div class="gd-photo" style="background-image:url(/{{ g.portrait }})"></div>
+      <div class="gd-body">
+        <div class="gd-name">{{ g.name }}</div>
+        <div class="gd-region"><i data-lucide="map-pin"></i>{{ g.region }}</div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

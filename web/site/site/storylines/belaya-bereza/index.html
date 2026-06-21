@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Белая берёза — Тропа</title>
+<link rel="icon" href="/assets/trees.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site-bar/bot.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
+<script>
+// Рендер математики ТОЛЬКО после загрузки шрифтов KaTeX. Иначе KaTeX считает
+// позицию черты корня/дроби по метрикам фолбэк-шрифта → линия ложится поперёк
+// подкоренного (видимое «зачёркивание»), и без ре-рендера не лечится.
+// ignoredClasses:['katex'] — повторный проход не трогает уже отрендеренное.
+(function(){
+  var KX={delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false,ignoredClasses:['katex']};
+  function whenFontsReady(cb){
+    var fams=['KaTeX_Main','KaTeX_Math','KaTeX_Size1','KaTeX_Size2','KaTeX_Size3','KaTeX_Size4','KaTeX_AMS'];
+    if(document.fonts&&document.fonts.load){
+      Promise.all(fams.map(function(f){return document.fonts.load('1em '+f).catch(function(){});}))
+        .then(function(){return document.fonts.ready;}).then(cb,cb);
+    } else { cb(); }
+  }
+  window.tropaMath=function(el){ if(typeof renderMathInElement==='function'){ whenFontsReady(function(){ renderMathInElement(el,KX); }); } };
+  window.addEventListener('load',function(){ window.tropaMath(document.body); });
+})();
+</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip}
+body{max-width:100%;overflow-x:clip}
+/* TROPA design system — палитра дизайн-пака */
+:root{
+  --sand:#DBD4C7;--sage:#B8B5A6;--olive:#7C7F6A;--char:#3E4038;--ink:#1A1A18;
+  --g:#7C7F6A;--gd:#3E4038;--gl:#F4F2EE;--bg:#FFFFFF;--card:#FFFFFF;
+  --tx:#1A1A18;--tm:#6E7163;--bd:#EAE7E0;--r:10px;
+  --serif:"Cormorant Garamond",Georgia,serif;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:-0.01em}
+a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
+.w{max-width:760px;margin:0 auto;padding:0 24px}
+.nav{padding:14px 0;border-bottom:1px solid var(--bd);background:#fff}
+.nav-inner{display:flex;align-items:center;gap:22px}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.3rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);line-height:1;display:flex;align-items:center;gap:9px}
+.nav-logo img{width:22px;height:22px}
+.nav-spacer{flex:1}
+.nav-link{font-size:0.82rem;color:var(--tm);display:flex;align-items:center;line-height:1;letter-spacing:0.01em}
+.nav-link:hover{color:var(--ink);text-decoration:none}
+.nav-icon{display:flex;align-items:center;justify-content:center;color:var(--tm);transition:color 0.15s}
+.nav-icon:hover{color:var(--olive);text-decoration:none}
+.nav-icon i{width:16px;height:16px}
+
+.sg-hero{padding:48px 0 8px;text-align:center}
+.sg-hero img{height:auto;max-height:46px;width:auto;opacity:.8;display:block;margin:0 auto 16px}
+.sg-hero img.sg-icon{max-height:200px;max-width:440px;width:80%;opacity:1;margin:0 auto 4px}
+.sg-kicker{font-size:0.76rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--olive);margin-bottom:10px}
+.sg-hero h1{font-size:2.3rem;font-weight:700;line-height:1.12;margin-bottom:8px}
+.sg-deck{font-family:var(--serif);font-style:italic;font-size:1.3rem;color:var(--tm);line-height:1.3;margin:0 auto 12px;max-width:560px}
+.sg-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:0.8rem}
+.sg-tag{padding:2px 9px;border-radius:20px;background:var(--gl);color:var(--tm)}
+.sg-geo{color:var(--olive);font-weight:600}
+.tabs{display:flex;align-items:center;gap:4px;border-bottom:1px solid var(--bd);margin:26px 0 0;flex-wrap:wrap}
+.tab{font-family:var(--serif);font-size:1.05rem;font-weight:600;padding:9px 16px;color:var(--tm);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);border-bottom-color:var(--olive)}
+.tab-pdf{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--tm);transition:color .15s}
+.tab-pdf:hover{color:var(--olive);text-decoration:none}
+.tab-pdf i{width:15px;height:15px;stroke-width:1.4}
+/* читается как книжная статья */
+.body{padding:26px 0 8px;font-family:Georgia,"PT Serif","Times New Roman",serif;font-size:1.16rem;line-height:1.84;max-width:660px;color:#262521}
+.body p{margin:0 0 1.05em}.body p:first-of-type{font-size:1.22rem;color:#1c1b17}
+.body strong{color:var(--ink);font-weight:600}
+.body h2,.body h3,.body h4{font-family:var(--serif);font-weight:600;color:var(--char);margin:1.6em 0 .5em;font-size:1.4rem;line-height:1.25;text-align:center}
+.body ul,.body ol{margin:1em 0 1em 22px}.body li{margin:.4em 0}
+.body table{border-collapse:collapse;font-size:0.96rem;margin:1.2em 0;display:block;max-width:100%;overflow-x:auto}
+.body img{max-width:100%;height:auto;display:block;margin:0 auto}
+.body figure.fig{margin:2em auto;text-align:center;max-width:560px}
+.body figure.fig img{max-width:88%;max-height:340px;width:auto;height:auto}
+.body figure.fig figcaption{font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--tm);line-height:1.4;margin-top:.7em;max-width:480px;margin-left:auto;margin-right:auto}
+.body th,.body td{border:1px solid var(--bd);padding:7px 14px;text-align:left}
+.body .formula{text-align:center;font-size:1.2rem;margin:1.4em auto;color:var(--char);letter-spacing:.02em}
+.body .katex-display{margin:1.4em 0}
+.divider{margin:48px 0 12px;text-align:center}.divider img{width:170px;opacity:.85}
+.site-url{text-align:center;font-size:0.78rem;letter-spacing:0.16em;color:var(--tm);margin-bottom:28px}
+.back{font-size:0.85rem}
+
+@media(max-width:640px){
+  .w{padding:0 16px}
+  .nav-inner{gap:14px}
+  .nav-logo{font-size:1.12rem;letter-spacing:0.08em;gap:7px}
+  .nav-logo img{width:19px;height:19px}
+  .nav-link{font-size:0.8rem}
+  .nav-icon{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="w nav-inner">
+  <a href="/" class="nav-logo"><img src="/assets/trees.svg" alt="">Тропа</a>
+  <a href="/storylines/" class="nav-link">Сюжеты</a>
+  <a href="/innopolis/" class="nav-link">Маршрут</a>
+  <a href="/skills/" class="nav-link">Скиллы</a>
+  <a href="/bot/" class="nav-link">Бот</a>
+  <a href="/guides/" class="nav-link">Гиды</a>
+  <div class="nav-spacer"></div>
+  <a href="https://github.com/MerkulovDaniil/tropa" class="nav-icon"><i data-lucide="github"></i></a>
+  <a href="https://t.me/zoobr_bot" class="nav-icon"><i data-lucide="send"></i></a>
+</div></nav>
+
+<div class="w">
+  <div class="sg-hero">
+    <img class="sg-icon" src="/assets/icons/belaya-bereza.svg" alt="">
+    
+    <div class="sg-kicker">Научная тропа Иннополиса</div>
+    <h1>Белая берёза</h1>
+    <div class="sg-deck" id="sg-deck">Почему берёза белая, а дуб — нет?</div>
+    <div class="sg-meta">
+      <a class="sg-geo" href="https://yandex.ru/maps/?pt=48.73125,55.75141&z=17&l=map" target="_blank" rel="noopener">📍 на карте</a>
+      <span class="sg-tag">биология</span><span class="sg-tag">оптика</span>
+    </div>
+  </div>
+
+  
+  <div class="tabs">
+    <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
+  </div>
+  
+  <div class="body lvl" data-i="0" style=""><p>Выйди в жару в чёрной футболке — нагреешься быстрее, чем в белой. Светлая ткань возвращает большую часть света обратно, чёрная вбирает его почти целиком и оттого копит тепло. То же самое можно почувствовать прямо здесь.</p>
+<p>Приложи ладонь к белой пластине, потом к тёмной рядом — за несколько секунд разница температур становится отчётливой.</p>
+<p>Светлая поверхность возвращает большую часть лучей, тёмная вбирает их почти полностью и быстро греется. Кора берёзы светлее, чем у большинства деревьев средней полосы, и под прямыми лучами остаётся заметно прохладнее дубовой или сосновой.</p>
+<figure class="fig"><img src="/assets/figures/belaya-bereza-1.svg" alt="Светлая кора отбрасывает большую часть солнечных лучей и греется слабее; тёмная поглощает их и нагревается."><figcaption>Светлая кора отбрасывает большую часть солнечных лучей и греется слабее; тёмная поглощает их и нагревается.</figcaption></figure>
+<p>Тонкий светлый слой на наружной стороне рельефного среза — это внешняя кора. Она и работает экраном: отражает свет и защищает живые ткани под собой.</p>
+<p>Вот и ответ. Берёза белая потому, что светлая кора отражает солнце и бережёт ствол от перегрева и резких зимних колебаний тепла. Дуб решает ту же задачу иначе — прячет живые ткани под толстой корой, и отражать свет ему уже незачем. Берёза ставит экран снаружи, дуб — изнутри.</p></div>
+  
+  <div class="body lvl" data-i="1" style="display:none"><p>Светлая кора бережёт берёзу не только в летний зной — зимой её роль виднее всего. В морозный солнечный день солнце стоит низко: горизонтальную землю оно почти не греет, зато по вертикальному стволу бьёт под прямым углом, в полную силу, да ещё снег под деревом добавляет отражённый поток снизу. Вот и выходит парадокс: тёмный ствол рискует перегреться именно зимой, а не в летний полдень<sup id="fnref:sunscald"><a class="footnote-ref" href="#fn:sunscald">1</a></sup>. За такой день он сильно нагревается, а к ночи быстро стынет. От резких скачков температуры кора растрескивается, и вместе с ней страдает камбий — тонкий слой живых клеток, за счёт которого нарастает древесина. Светлая кора отражает большую часть лучей и греется слабее, поэтому суточные качели тепла внутри ствола сглажены.</p>
+<figure class="fig"><img src="/assets/figures/belaya-bereza-3.svg" alt="Зимой тёмный ствол греется с двух сторон: прямым низким солнцем сверху и светом, отражённым от снега, снизу — и тёмная кора поглощает оба потока, рискуя перегреться."><figcaption>Зимой тёмный ствол греется с двух сторон: прямым низким солнцем сверху и светом, отражённым от снега, снизу — и тёмная кора поглощает оба потока, рискуя перегреться.</figcaption></figure>
+<p>Насколько именно нагреется ствол, решает альбедо — доля отражённого света. Из падающего потока $P$ на нагрев идёт лишь то, что не отразилось:</p>
+<p>$$ P_{\text{нагрев}} = (1 - \alpha)\,P $$</p>
+<p>У светлой берёзовой коры альбедо в видимом свете оценочно около $\alpha \approx 0{,}5$, у тёмной коры — порядка $\alpha \approx 0{,}1$<sup id="fnref:alb"><a class="footnote-ref" href="#fn:alb">2</a></sup>. Подставим: тёмный ствол пускает на нагрев $1 - 0{,}1 = 0{,}9$, почти весь падающий поток, а светлый — лишь половину падающего света ($0{,}5\,P$), почти вдвое меньше, чем уходит на нагрев тёмной коры. Та самая половина солнца, что для тёмной коры обернулась бы лишним теплом, у берёзы просто уходит обратно в небо.</p>
+<h3>Где работает тот же закон?</h3>
+<p>Жители Средиземноморья белят крыши и стены, чтобы дома не раскалялись летом. Высокогорные ледники со светлой поверхностью тают медленнее тёмных скал и держатся дольше. И кора, и побелённая крыша, и ледник работают одинаково: что отражено — то не греет.</p>
+<p>А сам белый цвет коре даёт бетулин — смолистое вещество, что заполняет полости пробковых клеток наружного слоя бересты и красит её в белое<sup id="fnref:bet2"><a class="footnote-ref" href="#fn:bet2">3</a></sup>.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:sunscald">
+<p>Зимний солнечный ожог коры (sunscald, southwest winter injury): в ясный морозный день солнце нагревает тёмную южную/юго-западную сторону ствола настолько, что дремлющие клетки под корой пробуждаются и теряют морозостойкость, а с заходом солнца температура резко падает и убивает их — кора растрескивается, страдает камбий. Эффекту особенно подвержены деревья с тонкой тёмной корой (<a href="https://extension.usu.edu/forestry/publications/utah-forest-facts/021-sunscald-injury-or-southwest-winter-injury-on-deciduous-trees">Utah State University Forestry Extension, «Sunscald Injury or Southwest Winter Injury on Deciduous Trees»</a>).&#160;<a class="footnote-backref" href="#fnref:sunscald" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:alb">
+<p>Значения оценочные. Кора берёзы — одна из самых светлых среди деревьев умеренной зоны: измерения отражательной способности коры в видимом диапазоне дают для берёзы порядка 0,4–0,5, тогда как у тёмнокорых видов (дуб, осина и др.) — заметно ниже (<a href="https://onlinelibrary.wiley.com/doi/full/10.1002/ece3.8718">Juola et al., «A spectral analysis of stem bark for boreal and temperate tree species», Ecology and Evolution, 2022</a>). Для оценки нагрева берём $\alpha$ берёзы $\approx 0{,}5$, тёмной коры $\approx 0{,}1$.&#160;<a class="footnote-backref" href="#fnref:alb" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:bet2">
+<p>Бетулин — белое смолистое вещество (тритерпеновый спирт), которое заполняет полости пробковых клеток бересты и придаёт ей белую окраску (<a href="https://ru.wikipedia.org/wiki/Бетулин">Википедия, «Бетулин»</a>).&#160;<a class="footnote-backref" href="#fnref:bet2" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  <div class="body lvl" data-i="2" style="display:none"><p>Светлая кора выигрывает только там, где сходятся три условия: яркое солнце, отражающий снег и большие суточные колебания температуры. Стоит исчезнуть хотя бы одному — и выгода пропадает. Во влажных тропиках и в тени густого подлеска отражать почти нечего и беречься не от чего, поэтому белизна там не закрепляется: почти все светлокорые берёзы растут в умеренной и северной зонах, и лишь немногие виды добрались до субтропиков и тропических гор Азии.</p>
+<p>По шкале альбедо от 0 до 1 свежий снег держит около 0,9<sup id="fnref:snow"><a class="footnote-ref" href="#fn:snow">1</a></sup> (возвращает почти весь падающий свет), сухой асфальт — порядка 0,1, а берёзовая кора со своими примерно 0,5 стоит посередине: отражает заметно больше тёмной коры и асфальта, но снега не достигает.</p>
+<figure class="fig"><img src="/assets/figures/belaya-bereza-2.svg" alt="Берёзовая кора (около 0,5) отражает заметно больше тёмной коры и асфальта (оба около 0,1), но до снега (0,9) ей далеко."><figcaption>Берёзовая кора (около 0,5) отражает заметно больше тёмной коры и асфальта (оба около 0,1), но до снега (0,9) ей далеко.</figcaption></figure>
+<p>То же правило $(1-\alpha)\,P$, что грело ствол берёзы, работает и для целой планеты — только потоки тут вселенские. Светлые ледники и снега Земли отражают солнце обратно в космос, тёмные океан и тайга его копят. Стоит льдам подтаять — обнажившаяся тёмная поверхность поглощает больше тепла, теплеет ещё сильнее, и тает ещё больше льда: альбедо запускает само себя по кругу. Потому спутники без устали мерят отражательную способность льдов, пустынь и лесов — из этих долей складывается ответ, сколько солнечной энергии планета удержит, а сколько вернёт небу.</p>
+<h3>Почему дуб и ель остаются тёмными?</h3>
+<p>Дубы, ели и клёны живут в тех же северных широтах, с тем же солнцем и морозами, но защищаются иначе: толстой корой и большим запасом живых тканей внутри ствола. Закон отражения один для любой поверхности — просто разные деревья выбрали разные стратегии: берёза держит экран снаружи, дуб прячет живое в глубину.</p>
+<h3>Как это измеряют?</h3>
+<p>Альбедо определяют фотометром: прибор сравнивает падающий и отражённый световые потоки. Температуру коры на солнце и в тени фиксируют термопарами, заведёнными под её внешний слой.</p>
+<h3>Открытый вопрос</h3>
+<p>Зимы теплеют, суточные перепады смягчаются — и три условия, что когда-то закрепили белую кору, понемногу слабеют. Сохранит ли берёза своё преимущество, когда отступит причина, его породившая?</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:snow">
+<p>Альбедо чистого снега — около 0,9 (<a href="https://ru.wikipedia.org/wiki/Альбедо">Википедия, «Альбедо»</a>).&#160;<a class="footnote-backref" href="#fnref:snow" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  
+</div>
+
+<script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
+<script defer src="/assets/site-bar/bot.js"></script>
+
+<script>
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
+var TROPA_DECKS = ["Почему берёза белая, а дуб — нет?", "Почему светлый цвет важен даже в мороз?", "Где белизна перестаёт быть преимуществом?"];
+
+(function(){
+  var tabs=document.querySelectorAll('.tab'), bodies=document.querySelectorAll('.lvl');
+  var pdfs=TROPA_PDFS, decks=TROPA_DECKS, deckEl=document.getElementById('sg-deck');
+  document.querySelector('.tabs')&&document.querySelector('.tabs').addEventListener('click',function(e){
+    var t=e.target.closest('.tab'); if(!t)return;
+    tabs.forEach(function(x){x.classList.remove('active')}); t.classList.add('active');
+    var i=+t.dataset.i;
+    bodies.forEach(function(b){b.style.display=(+b.dataset.i===i)?'':'none'});
+    if(deckEl){ if(decks[i]){deckEl.textContent=decks[i];deckEl.style.display='';if(window.tropaMath)window.tropaMath(deckEl);} else {deckEl.style.display='none'} }
+    var link=document.getElementById('pdf-link'); if(link&&pdfs[i])link.href=pdfs[i];
+    if(window.tropaMath)window.tropaMath(bodies[i]);
+  });
+})();
+
+</script>
+
+</body>
+</html>

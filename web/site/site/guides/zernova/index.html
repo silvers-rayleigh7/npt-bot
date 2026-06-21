@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Елена Зернова — Тропа</title>
+<link rel="icon" href="/assets/trees.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site-bar/bot.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
+<script>
+// Рендер математики ТОЛЬКО после загрузки шрифтов KaTeX. Иначе KaTeX считает
+// позицию черты корня/дроби по метрикам фолбэк-шрифта → линия ложится поперёк
+// подкоренного (видимое «зачёркивание»), и без ре-рендера не лечится.
+// ignoredClasses:['katex'] — повторный проход не трогает уже отрендеренное.
+(function(){
+  var KX={delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false,ignoredClasses:['katex']};
+  function whenFontsReady(cb){
+    var fams=['KaTeX_Main','KaTeX_Math','KaTeX_Size1','KaTeX_Size2','KaTeX_Size3','KaTeX_Size4','KaTeX_AMS'];
+    if(document.fonts&&document.fonts.load){
+      Promise.all(fams.map(function(f){return document.fonts.load('1em '+f).catch(function(){});}))
+        .then(function(){return document.fonts.ready;}).then(cb,cb);
+    } else { cb(); }
+  }
+  window.tropaMath=function(el){ if(typeof renderMathInElement==='function'){ whenFontsReady(function(){ renderMathInElement(el,KX); }); } };
+  window.addEventListener('load',function(){ window.tropaMath(document.body); });
+})();
+</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip}
+body{max-width:100%;overflow-x:clip}
+/* TROPA design system — палитра дизайн-пака */
+:root{
+  --sand:#DBD4C7;--sage:#B8B5A6;--olive:#7C7F6A;--char:#3E4038;--ink:#1A1A18;
+  --g:#7C7F6A;--gd:#3E4038;--gl:#F4F2EE;--bg:#FFFFFF;--card:#FFFFFF;
+  --tx:#1A1A18;--tm:#6E7163;--bd:#EAE7E0;--r:10px;
+  --serif:"Cormorant Garamond",Georgia,serif;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:-0.01em}
+a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
+.w{max-width:760px;margin:0 auto;padding:0 24px}
+.nav{padding:14px 0;border-bottom:1px solid var(--bd);background:#fff}
+.nav-inner{display:flex;align-items:center;gap:22px}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.3rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);line-height:1;display:flex;align-items:center;gap:9px}
+.nav-logo img{width:22px;height:22px}
+.nav-spacer{flex:1}
+.nav-link{font-size:0.82rem;color:var(--tm);display:flex;align-items:center;line-height:1;letter-spacing:0.01em}
+.nav-link:hover{color:var(--ink);text-decoration:none}
+.nav-icon{display:flex;align-items:center;justify-content:center;color:var(--tm);transition:color 0.15s}
+.nav-icon:hover{color:var(--olive);text-decoration:none}
+.nav-icon i{width:16px;height:16px}
+
+.g-hero{padding:44px 0 6px;text-align:center}
+.g-kicker{font-size:0.76rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--olive);margin-bottom:10px}
+.g-hero h1{font-size:2.1rem;font-weight:700;line-height:1.14;margin-bottom:8px}
+.g-deck{font-family:var(--serif);font-style:italic;font-size:1.25rem;color:var(--tm);line-height:1.3}
+/* двухколоночная раскладка: карта + сайдбар */
+.g-layout{display:grid;grid-template-columns:1fr 300px;gap:34px;margin:30px 0 56px;align-items:start}
+/* ── интерактивная карта-схема ── */
+.gmap-wrap{position:relative;border:1px solid var(--bd);border-radius:14px;background:var(--gl)}
+.gmap-bg{display:block;width:100%;height:auto;border-radius:13px}
+.gpin{position:absolute;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;
+  border:2px solid #fff;background:var(--olive);color:#fff;font-size:0.78rem;font-weight:700;
+  font-family:var(--serif);display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 1px 4px rgba(0,0,0,.28);padding:0;line-height:1;transition:transform .12s,background .12s;z-index:2}
+.gpin:hover,.gpin.on{background:var(--gd);transform:translate(-50%,-50%) scale(1.16);z-index:5}
+.gpin-pop{position:absolute;transform:translate(-50%,calc(-100% - 16px));width:160px;background:#fff;
+  border:1px solid var(--bd);border-radius:10px;box-shadow:0 6px 22px rgba(0,0,0,.16);padding:7px;
+  opacity:0;visibility:hidden;transition:opacity .14s;z-index:10;pointer-events:none}
+.gpin.on .gpin-pop,.gpin:hover .gpin-pop{opacity:1;visibility:visible}
+.gpin-pop img{display:block;width:100%;height:90px;object-fit:cover;border-radius:6px;background:var(--gl)}
+.gpin-pop b{display:block;font-family:var(--serif);font-size:0.86rem;font-weight:600;color:var(--ink);
+  line-height:1.2;margin-top:6px;letter-spacing:0}
+.gmap-note{font-size:0.76rem;color:var(--tm);margin:8px 2px 0;font-style:italic}
+/* ── список точек под картой ── */
+.g-points{list-style:none;margin:22px 0 0;padding:0;columns:2;column-gap:26px}
+.g-points li{break-inside:avoid;margin:0 0 7px;font-size:0.92rem;color:#33322d;line-height:1.4;padding-left:26px;position:relative}
+.g-points li span{position:absolute;left:0;top:0;width:19px;height:19px;border-radius:50%;background:var(--gl);
+  color:var(--olive);font-size:0.72rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+/* ── сайдбар гида ── */
+.g-side{position:sticky;top:20px}
+.g-portrait{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:12px;background:var(--gl);margin-bottom:14px}
+.g-name{font-family:var(--serif);font-size:1.55rem;font-weight:600;line-height:1.08;color:var(--ink)}
+.g-role{color:var(--olive);font-size:0.82rem;font-weight:600;margin:3px 0 14px}
+.g-cred{list-style:none;margin:0 0 14px;padding:0}
+.g-cred li{position:relative;padding-left:18px;margin:0 0 6px;font-size:0.9rem;color:#33322d;line-height:1.4}
+.g-cred li::before{content:"";position:absolute;left:2px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--sage)}
+.g-bio{font-size:0.94rem;line-height:1.6;color:#3a392f;border-top:1px solid var(--bd);padding-top:14px}
+.g-bio p{margin:0 0 .7em}
+.g-contacts{border-top:1px solid var(--bd);margin-top:14px;padding-top:14px;font-size:0.92rem}
+.g-contacts .g-c{display:flex;align-items:center;gap:8px;color:#33322d;margin-bottom:7px}
+.g-contacts .g-c i{width:15px;height:15px;stroke-width:1.6;color:var(--olive)}
+.g-contacts a{color:#33322d}
+.g-social{display:flex;gap:10px;margin-top:10px}
+.g-social a{width:32px;height:32px;border:1px solid var(--bd);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--tm)}
+.g-social a:hover{color:var(--olive);border-color:var(--olive)}
+.g-social i{width:16px;height:16px;stroke-width:1.6}
+@media(max-width:760px){
+  .g-layout{grid-template-columns:1fr;gap:24px}
+  .g-side{position:static;order:-1}
+  .g-portrait{aspect-ratio:3/2}
+  .g-points{columns:1}
+}
+
+@media(max-width:640px){
+  .w{padding:0 16px}
+  .nav-inner{gap:14px}
+  .nav-logo{font-size:1.12rem;letter-spacing:0.08em;gap:7px}
+  .nav-logo img{width:19px;height:19px}
+  .nav-link{font-size:0.8rem}
+  .nav-icon{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="w nav-inner">
+  <a href="/" class="nav-logo"><img src="/assets/trees.svg" alt="">Тропа</a>
+  <a href="/storylines/" class="nav-link">Сюжеты</a>
+  <a href="/innopolis/" class="nav-link">Маршрут</a>
+  <a href="/skills/" class="nav-link">Скиллы</a>
+  <a href="/bot/" class="nav-link">Бот</a>
+  <a href="/guides/" class="nav-link">Гиды</a>
+  <div class="nav-spacer"></div>
+  <a href="https://github.com/MerkulovDaniil/tropa" class="nav-icon"><i data-lucide="github"></i></a>
+  <a href="https://t.me/zoobr_bot" class="nav-icon"><i data-lucide="send"></i></a>
+</div></nav>
+
+<div class="w">
+  <div class="g-hero">
+    <div class="g-kicker">Калининградская область</div>
+    <h1>Маршрут Елены, дополнен ИИ</h1>
+    <div class="g-deck">Пешеходный Светлогорск · 2,5–3 часа · 20 точек</div>
+  </div>
+
+  <div class="g-layout">
+    <div class="g-main">
+      
+      <div class="gmap-wrap" id="gmap">
+        <img class="gmap-bg" src="/assets/guides/zernova/map-nano.jpg" alt="Карта маршрута: Пешеходный Светлогорск">
+        
+        <button class="gpin" style="left:48%;top:88%" data-i="0" aria-label="1. Ж/д вокзал Светлогорск-2 (старт)">1
+          <span class="gpin-pop"><img src="/assets/guides/zernova/points/01.jpg" alt=""><b>1. Ж/д вокзал Светлогорск-2 (старт)</b></span>
+        </button>
+        
+        <button class="gpin" style="left:42%;top:84%" data-i="1" aria-label="2. Скульптура «Царевна-лягушка»">2
+          <span class="gpin-pop"><img src="/assets/guides/zernova/points/02.jpg" alt=""><b>2. Скульптура «Царевна-лягушка»</b></span>
+        </button>
+        
+        <button class="gpin" style="left:36%;top:79%" data-i="2" aria-label="3. «Дюнный дом» на улице Пушкина">3
+          <span class="gpin-pop"><img src="/assets/guides/zernova/points/03.jpg" alt=""><b>3. «Дюнный дом» на улице Пушкина</b></span>
+        </button>
+        
+        <button class="gpin" style="left:31%;top:74%" data-i="3" aria-label="4. Дом казначея Карла Кюна">4
+          <span class="gpin-pop"><img src="/assets/guides/zernova/points/04.jpg" alt=""><b>4. Дом казначея Карла Кюна</b></span>
+        </button>
+        
+        <button class="gpin" style="left:27%;top:68%" data-i="4" aria-label="5. Макет средневекового Кёнигсберга">5
+          <span class="gpin-pop"><img src="/assets/guides/zernova/points/05.jpg" alt=""><b>5. Макет средневекового Кёнигсберга</b></span>
+        </button>
+        
+        <button class="gpin" style="left:26%;top:61%" data-i="5" aria-label="6. Улица Ленина (бывшая пляжная Раушена)">6
+          <span class="gpin-pop"><img src="/assets/guides/zernova/points/06.jpg" alt=""><b>6. Улица Ленина (бывшая пляжная Раушена)</b></span>
+        </button>
+        
+        <button class="gpin" style="left:31%;top:56%" data-i="6" aria-label="7. Дом бургомистра Раушена">7
+          <span class="gpin-pop"><img src="/assets/guides/zernova/points/07.jpg" alt=""><b>7. Дом бургомистра Раушена</b></span>
+        </button>
+        
+        <button class="gpin" style="left:37%;top:53%" data-i="7" aria-label="8. Курхаус и знак Томасу Манну">8
+          <span class="gpin-pop"><img src="/assets/guides/zernova/points/08.jpg" alt=""><b>8. Курхаус и знак Томасу Манну</b></span>
+        </button>
+        
+        <button class="gpin" style="left:43%;top:49%" data-i="8" aria-label="9. Серпантинный спуск">9
+          <span class="gpin-pop"><img src="/assets/guides/zernova/points/09.jpg" alt=""><b>9. Серпантинный спуск</b></span>
+        </button>
+        
+        <button class="gpin" style="left:45%;top:43%" data-i="9" aria-label="10. Вилла «Хильдегардт»">10
+          <span class="gpin-pop"><img src="/assets/guides/zernova/points/10.jpg" alt=""><b>10. Вилла «Хильдегардт»</b></span>
+        </button>
+        
+        <button class="gpin" style="left:40%;top:39%" data-i="10" aria-label="11. Водонапорная башня с солнечными часами">11
+          <span class="gpin-pop"><img src="/assets/guides/zernova/points/11.jpg" alt=""><b>11. Водонапорная башня с солнечными часами</b></span>
+        </button>
+        
+        <button class="gpin" style="left:35%;top:35%" data-i="11" aria-label="12. Скульптура «Улитка»">12
+          <span class="gpin-pop"><img src="/assets/guides/zernova/points/12.jpg" alt=""><b>12. Скульптура «Улитка»</b></span>
+        </button>
+        
+        <button class="gpin" style="left:38%;top:30%" data-i="12" aria-label="13. Лиственничный парк">13
+          <span class="gpin-pop"><img src="/assets/guides/zernova/points/13.jpg" alt=""><b>13. Лиственничный парк</b></span>
+        </button>
+        
+        <button class="gpin" style="left:44%;top:27%" data-i="13" aria-label="14. «Несущая воду» Германа Брахерта">14
+          <span class="gpin-pop"><img src="/assets/guides/zernova/points/14.jpg" alt=""><b>14. «Несущая воду» Германа Брахерта</b></span>
+        </button>
+        
+        <button class="gpin" style="left:49%;top:23%" data-i="14" aria-label="15. Центральная площадь, янтарное сердце Варвары">15
+          <span class="gpin-pop"><img src="/assets/guides/zernova/points/15.jpg" alt=""><b>15. Центральная площадь, янтарное сердце Варвары</b></span>
+        </button>
+        
+        <button class="gpin" style="left:56%;top:27%" data-i="15" aria-label="16. Органный зал А. Макарова">16
+          <span class="gpin-pop"><img src="/assets/guides/zernova/points/16.jpg" alt=""><b>16. Органный зал А. Макарова</b></span>
+        </button>
+        
+        <button class="gpin" style="left:63%;top:31%" data-i="16" aria-label="17. «Домик гномика»">17
+          <span class="gpin-pop"><img src="/assets/guides/zernova/points/17.jpg" alt=""><b>17. «Домик гномика»</b></span>
+        </button>
+        
+        <button class="gpin" style="left:69%;top:27%" data-i="17" aria-label="18. Театр эстрады «Янтарь-холл»">18
+          <span class="gpin-pop"><img src="/assets/guides/zernova/points/18.jpg" alt=""><b>18. Театр эстрады «Янтарь-холл»</b></span>
+        </button>
+        
+        <button class="gpin" style="left:75%;top:23%" data-i="18" aria-label="19. Парк «Времена года»">19
+          <span class="gpin-pop"><img src="/assets/guides/zernova/points/19.jpg" alt=""><b>19. Парк «Времена года»</b></span>
+        </button>
+        
+        <button class="gpin" style="left:81%;top:20%" data-i="19" aria-label="20. Лифтовая группа и клифы с видом на Балтику">20
+          <span class="gpin-pop"><img src="/assets/guides/zernova/points/20.jpg" alt=""><b>20. Лифтовая группа и клифы с видом на Балтику</b></span>
+        </button>
+        
+      </div>
+      <div class="gmap-note">Карта и иллюстрации точек сгенерированы ИИ — атмосферные, не документальные фото.</div>
+      
+
+      
+      <ol class="g-points">
+        <li><span>1</span>Ж/д вокзал Светлогорск-2 (старт)</li><li><span>2</span>Скульптура «Царевна-лягушка»</li><li><span>3</span>«Дюнный дом» на улице Пушкина</li><li><span>4</span>Дом казначея Карла Кюна</li><li><span>5</span>Макет средневекового Кёнигсберга</li><li><span>6</span>Улица Ленина (бывшая пляжная Раушена)</li><li><span>7</span>Дом бургомистра Раушена</li><li><span>8</span>Курхаус и знак Томасу Манну</li><li><span>9</span>Серпантинный спуск</li><li><span>10</span>Вилла «Хильдегардт»</li><li><span>11</span>Водонапорная башня с солнечными часами</li><li><span>12</span>Скульптура «Улитка»</li><li><span>13</span>Лиственничный парк</li><li><span>14</span>«Несущая воду» Германа Брахерта</li><li><span>15</span>Центральная площадь, янтарное сердце Варвары</li><li><span>16</span>Органный зал А. Макарова</li><li><span>17</span>«Домик гномика»</li><li><span>18</span>Театр эстрады «Янтарь-холл»</li><li><span>19</span>Парк «Времена года»</li><li><span>20</span>Лифтовая группа и клифы с видом на Балтику</li>
+      </ol>
+      
+    </div>
+
+    <aside class="g-side">
+      <img class="g-portrait" src="/assets/guides/zernova/portrait.jpg" alt="Елена Зернова">
+      <div class="g-name">Елена Зернова</div>
+      <div class="g-role">аттестованный гид</div>
+      
+      <ul class="g-cred"><li>Коренная калининградка в третьем поколении</li><li>Аттестована при Правительстве Калининградской области</li><li>Переводчик с немецкого — письменный и устный</li><li>6 лет практики: индивидуальные, групповые и детские экскурсии</li></ul>
+      
+      <div class="g-bio"><p>Уже 6 лет показываю этот край так, что его не просто смотрят — его проживают.
+Без шаблонов, зато с атмосферой, деталями и историями, которые остаются с вами.</p>
+<p>Пешком и на своём авто — для тех, кто любит камерность. Автобусные группы —
+моя маленькая сцена, где оживает прошлое. Легко вовлекаю детей и удерживаю
+внимание взрослых, даже тех, кто «не любит экскурсии».</p>
+<p>Помимо Светлогорска провожу обзорную по Калининграду (3,5–4 часа) — остров Канта,
+Рыбная деревня, Музей янтаря — и составляю индивидуальные туры по вашим пожеланиям.</p></div>
+      
+      <div class="g-contacts">
+        <div class="g-c"><i data-lucide="phone"></i><a href="tel:+79062106028">+7 906 210-60-28</a></div>
+        
+        
+      </div>
+      
+    </aside>
+  </div>
+</div>
+
+<script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
+<script defer src="/assets/site-bar/bot.js"></script>
+
+<script>
+(function(){
+  // мобильный тап: показать/скрыть карточку точки (на десктопе работает :hover)
+  var pins = document.querySelectorAll('.gpin');
+  pins.forEach(function(pin){
+    pin.addEventListener('click', function(e){
+      e.preventDefault();
+      var was = pin.classList.contains('on');
+      pins.forEach(function(p){p.classList.remove('on')});
+      if(!was) pin.classList.add('on');
+    });
+  });
+  document.addEventListener('click', function(e){
+    if(!e.target.closest('.gpin')) pins.forEach(function(p){p.classList.remove('on')});
+  });
+})();
+</script>
+
+</body>
+</html>

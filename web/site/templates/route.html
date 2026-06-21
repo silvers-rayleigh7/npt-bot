@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %}{{ route.name }} — {{ site.title }}{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+{% endblock %}
+{% block styles %}{% raw %}
+.route-hero{padding:48px 0 32px}
+.route-hero h1{font-size:1.8rem;font-weight:700;margin-bottom:4px}
+.route-meta{font-size:0.88rem;color:var(--tm)}
+#map{width:100%;height:380px;border-radius:var(--r);border:1px solid var(--bd);margin:24px 0}
+.poi{padding:28px 0;border-bottom:1px solid var(--bd)}
+.poi:last-child{border-bottom:none}
+.poi-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:10px}
+.poi-n{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--gd);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.poi-title{flex:1;min-width:0}
+.poi-name{font-size:1rem;font-weight:600;line-height:1.3}
+.poi-code{font-family:ui-monospace,monospace;font-size:0.74rem;color:#aab5af;font-weight:400;margin-left:8px}
+.poi-topic{font-size:0.82rem;color:var(--tm);margin-top:1px}
+.poi-links{display:flex;gap:14px;margin-top:10px;font-size:0.82rem}
+.poi-links a{color:var(--g);font-weight:500}
+.poi-play{flex-shrink:0;background:none;border:none;cursor:pointer;color:var(--tm);padding:4px;border-radius:6px}
+.poi-play:hover{color:var(--g);background:var(--gl)}
+.poi-play.playing{color:var(--g)}
+.poi-tabs{display:flex;align-items:center;gap:0;border-bottom:1px solid var(--bd);margin-bottom:14px}
+.poi-tab{padding:6px 14px;font-size:0.8rem;font-weight:500;color:var(--tm);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.poi-tab:hover{color:var(--gd)}
+.poi-tab.active{color:var(--gd);border-bottom-color:var(--g);font-weight:600}
+.poi-dl{margin-left:auto;color:#aab5af;padding:4px 8px;display:flex;align-items:center}
+.poi-dl:hover{color:var(--g);text-decoration:none}
+.poi-content{font-size:0.9rem;line-height:1.75;color:#2a3630;max-width:680px}
+.poi-content p{margin:0 0 8px}.poi-content p:last-child{margin-bottom:0}
+.poi-content h3{font-family:var(--serif);font-size:1.05rem;font-weight:600;color:var(--char);margin:14px 0 5px}
+.poi-content strong{color:var(--gd);font-weight:600}
+.poi-foot{margin-top:12px;font-size:0.75rem;color:#8a9690}
+.poi-foot span::after{content:' \00b7 '}.poi-foot span:last-child::after{content:''}
+.poi-diagram{margin:8px 0 12px;text-align:center}
+.poi-diagram img{max-width:100%;height:auto;max-height:160px}
+@media(max-width:640px){#map{height:260px}.poi-head{gap:10px}}
+{% endraw %}{% endblock %}
+
+{% block content %}
+<div class="w">
+  <div class="route-hero">
+    <h1>{{ route.name }}</h1>
+    <div class="route-meta">{{ route.city }} &middot; {{ route.distance_km }} км &middot; {{ route.points }} точек &middot; {{ route.time_min }} мин</div>
+  </div>
+  <div id="map"></div>
+  <div id="trail">
+    {% for p in route.poi %}
+    <div class="poi" data-idx="{{ loop.index0 }}">
+      <div class="poi-head">
+        <div class="poi-n">{{ p.n }}</div>
+        <div class="poi-title">
+          <div class="poi-name"><a href="/storylines/{{ p.slug }}/">{{ p.name }}</a></div>
+          <div class="poi-topic">{{ p.topic }}</div>
+        </div>
+      </div>
+      {% if p.levels %}
+      <div class="poi-tabs">
+        {% for lv in p.levels %}<button class="poi-tab {{ 'active' if loop.first }}" data-html="{{ lv.html | e }}">{{ lv.label }}</button>{% endfor %}
+      </div>
+      <div class="poi-content">{{ p.levels[0].html }}</div>
+      {% endif %}
+      <div class="poi-links">
+        {% if p.location %}<a href="{{ p.location }}" target="_blank" rel="noopener">📍 на карте</a>{% endif %}
+        <a href="/storylines/{{ p.slug }}/">открыть сюжет →</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+{% raw %}
+(function(){
+{% endraw %}
+  var pois = {{ poi_json }};
+  var trailPath = {{ path_json }};
+{% raw %}
+{% endraw %}
+  var map = L.map('map',{scrollWheelZoom:false,attributionControl:false}).setView({{ route.map_center }},{{ route.map_zoom }});
+{% raw %}
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
+  var coords=[];
+  // реальная пешая тропа (геометрия вдоль троп OSM); прямые — только фолбэк
+  if(trailPath && trailPath.length){
+    L.polyline(trailPath,{color:'#2f6f63',weight:4,opacity:0.85}).addTo(map);
+  }
+  pois.forEach(function(p,i){
+    coords.push([p.lat,p.lon]);
+    var icon=L.divIcon({className:'',html:'<div style="width:28px;height:28px;border-radius:50%;background:#1a4a41;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.25)">'+p.n+'</div>',iconSize:[28,28],iconAnchor:[14,14]});
+    L.marker([p.lat,p.lon],{icon:icon}).addTo(map).on('click',function(){document.querySelectorAll('.poi')[i].scrollIntoView({behavior:'smooth',block:'center'})});
+  });
+  map.fitBounds(L.latLngBounds(trailPath && trailPath.length ? trailPath : coords).pad(0.1));
+
+  var audio=null,playingBtn=null;
+  document.getElementById('trail').addEventListener('click',function(e){
+    var tab=e.target.closest('.poi-tab');
+    var play=e.target.closest('.poi-play');
+    if(tab){
+      var poi=tab.closest('.poi');
+      poi.querySelectorAll('.poi-tab').forEach(function(t){t.classList.remove('active')});
+      tab.classList.add('active');
+      var content=poi.querySelector('.poi-content');
+      content.innerHTML=tab.dataset.html;
+      if(typeof renderMathInElement==='function')renderMathInElement(content,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});
+    }
+    if(play){
+      var poi=play.closest('.poi');
+      var src=play.dataset.audioL1;
+      function setIcon(btn,name){btn.innerHTML='<i data-lucide="'+name+'" style="width:22px;height:22px"></i>';lucide.createIcons({attrs:{'stroke-width':1}})}
+      if(audio&&playingBtn===play){audio.pause();audio=null;play.classList.remove('playing');setIcon(play,'play-circle');playingBtn=null;return}
+      if(audio){audio.pause();if(playingBtn){playingBtn.classList.remove('playing');setIcon(playingBtn,'play-circle')}}
+      audio=new Audio(src);playingBtn=play;play.classList.add('playing');setIcon(play,'pause-circle');
+      audio.play();
+      audio.onended=function(){play.classList.remove('playing');setIcon(play,'play-circle');playingBtn=null;audio=null};
+    }
+  });
+})();
+{% endraw %}
+</script>
+{% endblock %}

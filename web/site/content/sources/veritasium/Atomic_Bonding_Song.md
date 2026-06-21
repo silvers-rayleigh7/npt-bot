@@ -1,0 +1,6 @@
+# Atomic Bonding Song
+
+Источник: https://www.youtube.com/watch?v=ljvX-RMv_lw
+Канал: Veritasium
+
+[Music] in my outer electron shell lies an electron all by itself [Music] iul through [Music] [Laughter] [Music] oxidation I have always felt [Music] incomplete one electron shy of 18 I the highest electron affinity if we exchange this electron we both achieve noble gas configuration and will release energy as ions you'll see made by metals and non metals I'm positive I'm negative of for of Attraction creates this B made by metals and [Music] nonmetals ionic bond coent bonds metallic these are the bonds of [Music] chemistry the octed rule says atoms like eight electrons in their outermost State I'll share mine with you I'll share with you if we both share these six electrons we both achieve noble gas configuration and will release energy Veil and be a electro negativity is similar for non metals and so we share this Bond of electron electr negativity ionic bonds coent bonds metallic these are the bonds of chemistry free electrons all around Mutual attractive forces Bound in this way I will stay TST with [Music] [Applause] you ionic metallic these are the B of ch he [Music] experiments are how we test theories and further the progressive science Progressive science there are many theories to compare experiment help us find the best one

@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% block title %}Природный гид — бот · {{ site.title }}{% endblock %}
+{% block styles %}{% raw %}
+:root{--voice:#2f6fb0;--voicel:#eef4fb;--amber:#b8791a;--amberl:#fbf4e8}
+.bw{max-width:760px;margin:0 auto;padding:0 24px}
+.hero{padding:48px 0 10px}
+.hero h1{font-size:1.85rem;font-weight:700;margin-bottom:8px}
+.hero p{color:var(--tm);font-size:1rem;max-width:680px}
+.hero .one{margin-top:14px;padding:14px 18px;background:var(--gl);border-left:3px solid var(--g);border-radius:var(--r);font-size:0.95rem;line-height:1.6}
+.sec-t{font-size:1.2rem;font-weight:700;margin:44px 0 4px;color:var(--gd)}
+.sec-d{color:var(--tm);font-size:0.9rem;margin-bottom:20px}
+
+/* generic node */
+.node{border:1.5px solid var(--bd);border-radius:12px;background:#fff;padding:12px 14px;text-align:center;line-height:1.3}
+.node .ic{font-size:1.4rem;line-height:1}
+.node .nm{font-weight:650;font-size:0.86rem;margin-top:5px}
+.node .sb{font-size:0.72rem;color:var(--tm);margin-top:2px}
+
+/* interaction loop */
+.loop{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap}
+.loop .node{flex:1;min-width:130px}
+.arr{display:flex;align-items:center;justify-content:center;color:var(--g);font-size:1.3rem;font-weight:700;flex:0 0 auto}
+.loop .node.brain{border-color:var(--g);background:var(--gl)}
+.loop .node.depth{border-color:var(--amber);background:var(--amberl)}
+.loopnote{margin-top:10px;font-size:0.8rem;color:var(--tm);text-align:center}
+
+/* architecture */
+.arch{border:1px solid var(--bd);border-radius:14px;padding:22px 20px;background:#fcfdfc}
+.rail{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
+.rail .node{flex:0 1 auto;min-width:120px}
+.node.voice{border-color:var(--voice);background:var(--voicel)}
+.node.voice .nm{color:var(--voice)}
+.brainblock{margin:18px auto;max-width:360px}
+.node.bigbrain{border-color:var(--g);background:var(--gl);border-width:2px;padding:16px}
+.node.bigbrain .nm{font-size:1rem}
+.feeders{display:flex;gap:10px;margin-top:12px}
+.feeders .node{flex:1;text-align:left;padding:11px 13px}
+.feeders .node .nm{margin-top:0}
+.vstem{display:flex;flex-direction:column;align-items:center;color:var(--g);font-size:1.2rem;font-weight:700;margin:4px 0}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;font-size:0.78rem;color:var(--tm);justify-content:center}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:11px;height:11px;border-radius:3px;display:inline-block}
+
+/* scenarios */
+.scn-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.scn{border:1px solid var(--bd);border-radius:12px;padding:16px 18px;background:#fff;display:flex;flex-direction:column;gap:10px}
+.scn:hover{border-color:var(--g)}
+.scn h3{font-size:0.98rem;font-weight:700}
+.scn .who{font-size:0.76rem;color:var(--tm);margin-top:-6px}
+.scn ol{list-style:none;display:flex;flex-direction:column;gap:7px;counter-reset:s}
+.scn li{position:relative;padding-left:26px;font-size:0.85rem;line-height:1.45;counter-increment:s}
+.scn li::before{content:counter(s);position:absolute;left:0;top:0;width:18px;height:18px;border-radius:50%;background:var(--gl);color:var(--g);font-size:0.68rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+.scn .lvl{align-self:flex-start;font-size:0.68rem;font-weight:700;padding:3px 9px;border-radius:20px;background:var(--amberl);color:var(--amber);text-transform:uppercase;letter-spacing:0.03em}
+.scn .lvl.free{background:var(--voicel);color:var(--voice)}
+.scn b{color:var(--tx)}
+.scn code{background:var(--gl);padding:1px 5px;border-radius:4px;font-size:0.82em}
+
+.foot{margin:34px 0 56px;font-size:0.85rem;color:var(--tm);padding:14px 16px;background:var(--gl);border-radius:var(--r)}
+.foot a{color:var(--gd)}
+@media(max-width:680px){.scn-grid{grid-template-columns:1fr}.feeders{flex-direction:column}}
+{% endraw %}{% endblock %}
+
+{% block content %}
+<div class="bw">
+  <div class="hero">
+    <h1>🌿 Природный гид — Telegram-бот</h1>
+    <p>Отвечает на вопросы о природе на тропе — голосом или текстом — в каноне русского
+       научпопа. Опирается на готовые вычитанные сюжеты, но умеет уходить в сторону.</p>
+    <div class="one">
+      Спроси голосом <b>«почему здесь обрывистый берег?»</b> — бот ответит голосом коротким
+      сюжетом, предложит копнуть глубже, а если готового сюжета нет — <b>сам сочинит ответ
+      тем же методом</b>, что и эталонные сюжеты тропы.
+    </div>
+  </div>
+
+  <!-- ИНТЕРАКЦИЯ -->
+  <div class="sec-t">Как ты с ним общаешься</div>
+  <div class="sec-d">Один простой цикл. Спросил → услышал → захотел глубже.</div>
+  <div class="loop">
+    <div class="node"><div class="ic">🎤⌨️</div><div class="nm">Вопрос</div><div class="sb">голос или текст</div></div>
+    <div class="arr">→</div>
+    <div class="node brain"><div class="ic">🤖</div><div class="nm">Бот</div><div class="sb">находит / сочиняет сюжет</div></div>
+    <div class="arr">→</div>
+    <div class="node"><div class="ic">🔊📝</div><div class="nm">Ответ</div><div class="sb">голос + текст</div></div>
+    <div class="arr">→</div>
+    <div class="node depth"><div class="ic">🎚️</div><div class="nm">Глубже?</div><div class="sb">уровни А · Б · В</div></div>
+  </div>
+  <div class="loopnote">↻ диалог продолжается: «проще», «глубже», «другой сюжет рядом»</div>
+
+  <!-- АРХИТЕКТУРА -->
+  <div class="sec-t">Как он устроен внутри</div>
+  <div class="sec-d">claude-tg — уши и руки · Claude Code — голова · скилл — манеры · RAG — память.</div>
+  <div class="arch">
+    <!-- вход -->
+    <div class="rail">
+      <div class="node"><div class="ic">👤</div><div class="nm">Турист</div><div class="sb">голос / текст / гео</div></div>
+      <div class="arr">→</div>
+      <div class="node"><div class="ic">✈️</div><div class="nm">claude-tg</div><div class="sb">Telegram-шлюз</div></div>
+      <div class="arr">→</div>
+      <div class="node voice"><div class="ic">🎙️</div><div class="nm">Groq Whisper</div><div class="sb">голос → текст</div></div>
+    </div>
+    <!-- мозг -->
+    <div class="vstem">↓</div>
+    <div class="brainblock">
+      <div class="node bigbrain"><div class="ic">🧠</div><div class="nm">Claude Code</div><div class="sb">понимает вопрос · собирает ответ по канону</div></div>
+      <div class="feeders">
+        <div class="node"><div class="ic">🎯</div><div class="nm">Скилл стиля</div><div class="sb"><code>outdoor-scipop-architect</code>: уровни А/Б/В, 8 фильтров, метод сечения</div></div>
+        <div class="node"><div class="ic">📚</div><div class="nm">RAG — знания</div><div class="sb">40 сюжетов + 41 экспонат + материалы бота</div></div>
+      </div>
+    </div>
+    <div class="vstem">↓</div>
+    <!-- выход -->
+    <div class="rail">
+      <div class="node voice"><div class="ic">🗣️</div><div class="nm">ElevenLabs</div><div class="sb">текст → голос</div></div>
+      <div class="arr">→</div>
+      <div class="node"><div class="ic">✈️</div><div class="nm">claude-tg</div><div class="sb">отправка</div></div>
+      <div class="arr">→</div>
+      <div class="node brain" style="border-color:var(--g);background:var(--gl)"><div class="ic">🔊📝</div><div class="nm">Ответ туристу</div><div class="sb">голос + текст, уровень А/Б/В</div></div>
+    </div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--g)"></i> ядро (claude)</span>
+      <span><i class="dot" style="background:var(--voice)"></i> голос (Groq / ElevenLabs)</span>
+      <span><i class="dot" style="background:var(--amber)"></i> уровень глубины</span>
+    </div>
+  </div>
+
+  <!-- СЦЕНАРИИ -->
+  <div class="sec-t">Сценарии</div>
+  <div class="sec-d">Готовые сюжеты — якорь надёжности. Свободные ответы — свобода уйти в сторону.</div>
+  <div class="scn-grid">
+
+    <div class="scn">
+      <h3>🌊 Голосом у точки</h3>
+      <div class="who">Турист хлопнул у оврага, спрашивает голосом</div>
+      <ol>
+        <li>«Почему склон отвечает эхом?» — <b>голосом</b></li>
+        <li>Groq → текст → RAG находит сюжет <b>WP003 «Услышь расстояние»</b></li>
+        <li>Бот отвечает уровнем А <b>голосом</b>: хук + «хлопни» + одна мысль</li>
+        <li>«Хочешь посчитать расстояние? → Б»</li>
+      </ol>
+      <span class="lvl">готовый сюжет · А</span>
+    </div>
+
+    <div class="scn">
+      <h3>🪁 Шаг в сторону</h3>
+      <div class="who">Ребёнок спросил то, чего нет в библиотеке</div>
+      <ol>
+        <li>«А почему небо синее?» — готового сюжета нет</li>
+        <li>Агент через скилл строит ответ <b>по методу сечения</b></li>
+        <li>Канон: бытовой заход → парадокс → одна мысль, без формул</li>
+        <li>Привязка к месту: «посмотри на закат над Свиягой»</li>
+      </ol>
+      <span class="lvl free">свободный ответ · А</span>
+    </div>
+
+    <div class="scn">
+      <h3>🧮 Углубление</h3>
+      <div class="who">Студент хочет строго и с формулами</div>
+      <ol>
+        <li>«Расскажи про правый берег формулами» → <code>/глубже</code></li>
+        <li>RAG: сюжет <b>ST-01</b>, отдаём уровень В</li>
+        <li>Сила Кориолиса <code>a = 2vΩ·sin(φ)</code>, порядок величины, чай ≠ Кориолис</li>
+        <li>Финал — <b>открытый вопрос</b>: вклад в эрозию считают по участкам</li>
+      </ol>
+      <span class="lvl">готовый сюжет · В</span>
+    </div>
+
+    <div class="scn">
+      <h3>📍 Режим гида</h3>
+      <div class="who">Включена live-локация, наушник в ухе</div>
+      <ol>
+        <li>Турист идёт по тропе, шлёт <code>/гид</code> + геопозицию</li>
+        <li>Бот видит: рядом <b>WP004 «Маятниковая роща»</b></li>
+        <li>Проактивно шлёт сюжет уровня А <b>голосом</b> у точки</li>
+        <li>Дальше по тропе — следующая точка сама заговорит</li>
+      </ol>
+      <span class="lvl">проактивно · А</span>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    Полное ТЗ — <a href="{{ site.links.github }}/blob/main/docs/nature-bot-spec.md">docs/nature-bot-spec.md</a> ·
+    база знаний — <a href="/storylines/">40 сюжетов</a> ·
+    канон стиля — скилл <a href="{{ site.links.github }}/tree/main/skills/outdoor-scipop-architect">outdoor-scipop-architect</a>.
+  </div>
+</div>
+{% endblock %}

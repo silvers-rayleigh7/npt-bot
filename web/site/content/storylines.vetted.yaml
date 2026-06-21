@@ -1,0 +1,467 @@
+# Вычитанная библиотека сюжетов для QR — источник: команда ЦНПТ Университета Иннополис
+# (Тимур Циунчук, идеолог А.В. Гасников). Тексты прошли первичную очистку от галлюцинаций
+# и вычитку round-2 (Сафиуллова, Фишман). Передано Даниилу 2026-06-01.
+#
+# Это ЭТАЛОННЫЙ контент: на голову выше brainstorm-идей в storylines.yaml.
+# Полный текст каждого сюжета (уровни A/B/C, формулы, открытые вопросы) — verbatim
+# в content/qr/storylines/ST-NN.md. Здесь — метаданные + связи.
+#
+# Поля:
+#   id          — код сюжета в библиотеке команды (ST-NN)
+#   title       — формулировка-вопрос
+#   section     — тематический раздел (согласован с storylines.yaml)
+#   topic       — ключевое явление / модель
+#   tags        — для фильтра на сайте
+#   text        — путь к verbatim-тексту (A/B/C для QR-страницы)
+#   maps_to     — id brainstorm-идеи в storylines.yaml, которую этот сюжет реализует (или null)
+#   exhibit     — код физического стенда (WP…), если сюжет вынесен в экспонат (или null)
+#   status      — verified (вычитан) | draft
+#   source      — innopolis_team
+meta:
+  source: innopolis_team
+  curator: "Тимур Циунчук (ЦНПТ УИ)"
+  ideologist: "А.В. Гасников"
+  verification: "round-1 Цыбиков/Галушко ✅; round-2 Сафиуллова/Фишман"
+  received: "2026-06-01"
+  text_dir: content/qr/storylines
+
+storylines:
+  - id: ST-01
+    title: "Почему часто правый берег обрывистый, а левый пологий?"
+    section: "Реки и ландшафт"
+    topic: "Сила Кориолиса, закон Бэра, меандры"
+    tags: [физика, гидрология, геоморфология]
+    text: content/qr/storylines/ST-01.md
+    maps_to: 2
+    exhibit: WP022
+    status: verified
+    source: innopolis_team
+
+  - id: ST-02
+    title: "Откуда текут реки и как они меняют русло?"
+    section: "Реки и ландшафт"
+    topic: "Уклон, меандрирование, речной перехват"
+    tags: [гидрология, геоморфология]
+    text: content/qr/storylines/ST-02.md
+    maps_to: 3
+    exhibit: WP023
+    status: verified
+    source: innopolis_team
+
+  - id: ST-03
+    title: "Почему закат окрашивается в тёплые цвета?"
+    section: "Оптика и свет"
+    topic: "Рэлеевское рассеяние, длина пути в атмосфере"
+    tags: [оптика, физика, атмосфера]
+    text: content/qr/storylines/ST-03.md
+    maps_to: 59
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-04
+    title: "Овал на закате: почему видимый диск Солнца не круглый?"
+    section: "Астрономия"
+    topic: "Атмосферная рефракция у горизонта"
+    tags: [оптика, астрономия, атмосфера]
+    text: content/qr/storylines/ST-04.md
+    maps_to: null
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-05
+    title: "Как возникают солнечные и лунные затмения?"
+    section: "Астрономия"
+    topic: "Геометрия теней, размер мира"
+    tags: [астрономия, геометрия]
+    text: content/qr/storylines/ST-05.md
+    maps_to: null
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-06
+    title: "Почему возникают магнитные бури?"
+    section: "Астрономия"
+    topic: "Солнечный ветер, магнитосфера, космическая погода"
+    tags: [астрономия, физика, солнце]
+    text: content/qr/storylines/ST-06.md
+    maps_to: null
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-07
+    title: "Почему растения не растут где угодно и сколько угодно?"
+    section: "Биология и экология"
+    topic: "Ёмкость среды, конкуренция за ресурс, биоразнообразие на 1 м²"
+    tags: [биология, экология]
+    text: content/qr/storylines/ST-07.md
+    maps_to: null
+    exhibit: WP010
+    status: verified
+    source: innopolis_team
+
+  - id: ST-08
+    title: "Почему Луну видно днём?"
+    section: "Астрономия"
+    topic: "Отражённый свет, контраст с небом"
+    tags: [астрономия, оптика]
+    text: content/qr/storylines/ST-08.md
+    maps_to: null
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-09
+    title: "Почему мы наблюдаем фазы Луны?"
+    section: "Астрономия"
+    topic: "Освещённость и взаимное положение Земли, Луны, Солнца"
+    tags: [астрономия, геометрия]
+    text: content/qr/storylines/ST-09.md
+    maps_to: null
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-10
+    title: "Почему зимой мы видим Большую Медведицу перевёрнутой?"
+    section: "Астрономия"
+    topic: "Суточное и годовое вращение, ориентирование"
+    tags: [астрономия, геометрия]
+    text: content/qr/storylines/ST-10.md
+    maps_to: 68
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-11
+    title: "Что можно узнать по кольцам дерева?"
+    section: "Лес"
+    topic: "Дендрохронология, дерево как прибор"
+    tags: [биология, климат, история]
+    text: content/qr/storylines/ST-11.md
+    maps_to: 79
+    exhibit: WP009
+    status: verified
+    source: innopolis_team
+
+  - id: ST-12
+    title: "Почему ящерица сливается с фоном?"
+    section: "Биология и экология"
+    topic: "Камуфляж, разрушение контура, узнавание образа"
+    tags: [биология, восприятие]
+    text: content/qr/storylines/ST-12.md
+    maps_to: null
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-13
+    title: "Почему грибы часто растут на границе леса и поля?"
+    section: "Лес"
+    topic: "Экотон, краевой эффект, микориза"
+    tags: [биология, экология]
+    text: content/qr/storylines/ST-13.md
+    maps_to: null
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-14
+    title: "Откуда берётся ветер у воды?"
+    section: "Погода и климат"
+    topic: "Бриз, разная теплоёмкость воды и суши"
+    tags: [физика, атмосфера, погода]
+    text: content/qr/storylines/ST-14.md
+    maps_to: null
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-15
+    title: "Как золотое сечение появляется в растениях?"
+    section: "Фрактальная геометрия природы"
+    topic: "Филлотаксис, угол 137.5°, числа Фибоначчи"
+    tags: [математика, биология, геометрия]
+    text: content/qr/storylines/ST-15.md
+    maps_to: 22
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-16
+    title: "Почему растения цветут весной?"
+    section: "Лес"
+    topic: "Фотопериод, температурный счётчик, флориген"
+    tags: [биология, физиология растений]
+    text: content/qr/storylines/ST-16.md
+    maps_to: 50
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-17
+    title: "Цветы и опылители: кто к кому приспособился?"
+    section: "Биология и экология"
+    topic: "Коэволюция, взаимная адаптация"
+    tags: [биология, эволюция, экология]
+    text: content/qr/storylines/ST-17.md
+    maps_to: 56
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-18
+    title: "Съедобные и несъедобные растения"
+    section: "Лес"
+    topic: "Вторичные метаболиты, доза, химическая защита"
+    tags: [биология, химия, экология]
+    text: content/qr/storylines/ST-18.md
+    maps_to: 53
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-19
+    title: "Что такое смола?"
+    section: "Лес"
+    topic: "Полимеризация, защита дерева, янтарь"
+    tags: [химия, биология]
+    text: content/qr/storylines/ST-19.md
+    maps_to: 51
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-20
+    title: "Как тысячи муравьёв действуют как один организм?"
+    section: "Лес"
+    topic: "Стигмергия, самоорганизация без диспетчера, феромонный след"
+    tags: [биология, информатика, оптимизация]
+    text: content/qr/storylines/ST-20.md
+    maps_to: 54
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-21
+    title: "Почему деревья такие высокие?"
+    section: "Лес"
+    topic: "Конкуренция за свет, предел высоты"
+    tags: [биология, физика]
+    text: content/qr/storylines/ST-21.md
+    maps_to: null
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-22
+    title: "Как деревья поднимают воду к листьям на такую высоту?"
+    section: "Лес"
+    topic: "Транспирация, когезия, отрицательное давление"
+    tags: [биология, физика]
+    text: content/qr/storylines/ST-22.md
+    maps_to: 47
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-23
+    title: "Почему деревья растут по спирали?"
+    section: "Лес"
+    topic: "Спиральное жилкование, устойчивость к ветру"
+    tags: [биология, геометрия]
+    text: content/qr/storylines/ST-23.md
+    maps_to: null
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-24
+    title: "Почему некоторые самолёты оставляют след в небе, а другие нет?"
+    section: "Погода и климат"
+    topic: "Конденсационный след, влажность и температура на высоте"
+    tags: [физика, атмосфера]
+    text: content/qr/storylines/ST-24.md
+    maps_to: null
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-25
+    title: "Как живая природа очищает воду?"
+    section: "Реки и ландшафт"
+    topic: "Самоочищение реки, меандры, биофильтрация"
+    tags: [экология, гидрология]
+    text: content/qr/storylines/ST-25.md
+    maps_to: 28
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-26
+    title: "Трофическая структура экосистемы: кто кого ест"
+    section: "Биология и экология"
+    topic: "Трофические уровни, продуценты-консументы-редуценты, пирамида"
+    tags: [биология, экология]
+    text: content/qr/storylines/ST-26.md
+    maps_to: 57
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-27
+    title: "Как возникает радуга?"
+    section: "Оптика и свет"
+    topic: "Преломление и дисперсия в капле, угол 42°"
+    tags: [оптика, физика, геометрия]
+    text: content/qr/storylines/ST-27.md
+    maps_to: null
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-28
+    title: "Почему возникает солнечная и лунная дорожка на воде?"
+    section: "Оптика и свет"
+    topic: "Зеркальное отражение от волн, геометрия наблюдателя"
+    tags: [оптика, физика]
+    text: content/qr/storylines/ST-28.md
+    maps_to: 84
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-29
+    title: "Как образуются водопады?"
+    section: "Реки и ландшафт"
+    topic: "Дифференциальная эрозия, прочный слой поверх мягкого"
+    tags: [гидрология, геоморфология]
+    text: content/qr/storylines/ST-29.md
+    maps_to: null
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-30
+    title: "Откуда берётся туман?"
+    section: "Погода и климат"
+    topic: "Точка росы, радиационное выхолаживание, стекание холода в долину"
+    tags: [физика, атмосфера, погода]
+    text: content/qr/storylines/ST-30.md
+    maps_to: 41
+    exhibit: WP046
+    status: verified
+    source: innopolis_team
+
+  - id: ST-31
+    title: "От чего зависит форма облаков?"
+    section: "Погода и климат"
+    topic: "Конвекция, уровень конденсации, устойчивость атмосферы"
+    tags: [физика, атмосфера, погода]
+    text: content/qr/storylines/ST-31.md
+    maps_to: null
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-32
+    title: "Как капля держится в облаке?"
+    section: "Погода и климат"
+    topic: "Сопротивление воздуха, размер капли, восходящие потоки"
+    tags: [физика, атмосфера]
+    text: content/qr/storylines/ST-32.md
+    maps_to: null
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-33
+    title: "Откуда роса утром на растениях?"
+    section: "Погода и климат"
+    topic: "Точка росы, ночное излучение, конденсация"
+    tags: [физика, атмосфера]
+    text: content/qr/storylines/ST-33.md
+    maps_to: null
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-34
+    title: "Почему обрыв с каждым годом уходит вниз?"
+    section: "Реки и ландшафт"
+    topic: "Эрозия склона, подмыв, оползание"
+    tags: [геоморфология, гидрология]
+    text: content/qr/storylines/ST-34.md
+    maps_to: null
+    exhibit: null
+    status: verified
+    source: innopolis_team
+
+  - id: ST-35
+    title: "Зачем и как звучат птицы?"
+    section: "Биология и экология"
+    topic: "Сиринкс, территория и брачный сигнал, резонанс"
+    tags: [биология, акустика]
+    text: content/qr/storylines/ST-35.md
+    maps_to: null
+    exhibit: WP002
+    status: verified
+    source: innopolis_team
+
+  - id: ST-36
+    title: "Почему вода в роднике всегда холодная?"
+    section: "Реки и ландшафт"
+    topic: "Грунтовые воды, тепловая инерция почвы, постоянная температура"
+    tags: [гидрология, геология, термодинамика]
+    text: content/qr/storylines/ST-36.md
+    maps_to: 4
+    exhibit: WP024
+    status: verified
+    source: innopolis_team
+
+  - id: ST-37
+    title: "Почему сложно идти всегда прямо?"
+    section: "Геометрия на прогулке"
+    topic: "Асимметрия шага, накопление ошибки, случайное блуждание"
+    tags: [геометрия, физиология, статистика]
+    text: content/qr/storylines/ST-37.md
+    maps_to: 7
+    exhibit: WP027
+    status: verified
+    source: innopolis_team
+
+  - id: ST-38
+    title: "Как измерить высоту дерева по тени?"
+    section: "Геометрия на прогулке"
+    topic: "Подобные треугольники, пропорция тени"
+    tags: [геометрия, математика]
+    text: content/qr/storylines/ST-38.md
+    maps_to: 8
+    exhibit: WP028
+    status: verified
+    source: innopolis_team
+
+  - id: ST-39
+    title: "Почему рыбы не замерзают в воде зимой?"
+    section: "Вода"
+    topic: "Аномалия плотности воды, максимум при +4°C, лёд сверху"
+    tags: [физика, термодинамика, биология]
+    text: content/qr/storylines/ST-39.md
+    maps_to: 27
+    exhibit: N37
+    status: verified
+    source: innopolis_team
+
+  - id: ST-40
+    title: "Почему дерево ветвится?"
+    section: "Фрактальная геометрия природы"
+    topic: "Ветвление, оптимизация транспорта, фрактальная структура"
+    tags: [биология, математика, геометрия]
+    text: content/qr/storylines/ST-40.md
+    maps_to: 19
+    exhibit: null
+    status: verified
+    source: innopolis_team

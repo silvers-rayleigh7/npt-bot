@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Солнечная система — Тропа</title>
+<link rel="icon" href="/assets/trees.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site-bar/bot.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
+<script>
+// Рендер математики ТОЛЬКО после загрузки шрифтов KaTeX. Иначе KaTeX считает
+// позицию черты корня/дроби по метрикам фолбэк-шрифта → линия ложится поперёк
+// подкоренного (видимое «зачёркивание»), и без ре-рендера не лечится.
+// ignoredClasses:['katex'] — повторный проход не трогает уже отрендеренное.
+(function(){
+  var KX={delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false,ignoredClasses:['katex']};
+  function whenFontsReady(cb){
+    var fams=['KaTeX_Main','KaTeX_Math','KaTeX_Size1','KaTeX_Size2','KaTeX_Size3','KaTeX_Size4','KaTeX_AMS'];
+    if(document.fonts&&document.fonts.load){
+      Promise.all(fams.map(function(f){return document.fonts.load('1em '+f).catch(function(){});}))
+        .then(function(){return document.fonts.ready;}).then(cb,cb);
+    } else { cb(); }
+  }
+  window.tropaMath=function(el){ if(typeof renderMathInElement==='function'){ whenFontsReady(function(){ renderMathInElement(el,KX); }); } };
+  window.addEventListener('load',function(){ window.tropaMath(document.body); });
+})();
+</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip}
+body{max-width:100%;overflow-x:clip}
+/* TROPA design system — палитра дизайн-пака */
+:root{
+  --sand:#DBD4C7;--sage:#B8B5A6;--olive:#7C7F6A;--char:#3E4038;--ink:#1A1A18;
+  --g:#7C7F6A;--gd:#3E4038;--gl:#F4F2EE;--bg:#FFFFFF;--card:#FFFFFF;
+  --tx:#1A1A18;--tm:#6E7163;--bd:#EAE7E0;--r:10px;
+  --serif:"Cormorant Garamond",Georgia,serif;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:-0.01em}
+a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
+.w{max-width:760px;margin:0 auto;padding:0 24px}
+.nav{padding:14px 0;border-bottom:1px solid var(--bd);background:#fff}
+.nav-inner{display:flex;align-items:center;gap:22px}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.3rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);line-height:1;display:flex;align-items:center;gap:9px}
+.nav-logo img{width:22px;height:22px}
+.nav-spacer{flex:1}
+.nav-link{font-size:0.82rem;color:var(--tm);display:flex;align-items:center;line-height:1;letter-spacing:0.01em}
+.nav-link:hover{color:var(--ink);text-decoration:none}
+.nav-icon{display:flex;align-items:center;justify-content:center;color:var(--tm);transition:color 0.15s}
+.nav-icon:hover{color:var(--olive);text-decoration:none}
+.nav-icon i{width:16px;height:16px}
+
+.sg-hero{padding:48px 0 8px;text-align:center}
+.sg-hero img{height:auto;max-height:46px;width:auto;opacity:.8;display:block;margin:0 auto 16px}
+.sg-hero img.sg-icon{max-height:200px;max-width:440px;width:80%;opacity:1;margin:0 auto 4px}
+.sg-kicker{font-size:0.76rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--olive);margin-bottom:10px}
+.sg-hero h1{font-size:2.3rem;font-weight:700;line-height:1.12;margin-bottom:8px}
+.sg-deck{font-family:var(--serif);font-style:italic;font-size:1.3rem;color:var(--tm);line-height:1.3;margin:0 auto 12px;max-width:560px}
+.sg-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:0.8rem}
+.sg-tag{padding:2px 9px;border-radius:20px;background:var(--gl);color:var(--tm)}
+.sg-geo{color:var(--olive);font-weight:600}
+.tabs{display:flex;align-items:center;gap:4px;border-bottom:1px solid var(--bd);margin:26px 0 0;flex-wrap:wrap}
+.tab{font-family:var(--serif);font-size:1.05rem;font-weight:600;padding:9px 16px;color:var(--tm);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);border-bottom-color:var(--olive)}
+.tab-pdf{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--tm);transition:color .15s}
+.tab-pdf:hover{color:var(--olive);text-decoration:none}
+.tab-pdf i{width:15px;height:15px;stroke-width:1.4}
+/* читается как книжная статья */
+.body{padding:26px 0 8px;font-family:Georgia,"PT Serif","Times New Roman",serif;font-size:1.16rem;line-height:1.84;max-width:660px;color:#262521}
+.body p{margin:0 0 1.05em}.body p:first-of-type{font-size:1.22rem;color:#1c1b17}
+.body strong{color:var(--ink);font-weight:600}
+.body h2,.body h3,.body h4{font-family:var(--serif);font-weight:600;color:var(--char);margin:1.6em 0 .5em;font-size:1.4rem;line-height:1.25;text-align:center}
+.body ul,.body ol{margin:1em 0 1em 22px}.body li{margin:.4em 0}
+.body table{border-collapse:collapse;font-size:0.96rem;margin:1.2em 0;display:block;max-width:100%;overflow-x:auto}
+.body img{max-width:100%;height:auto;display:block;margin:0 auto}
+.body figure.fig{margin:2em auto;text-align:center;max-width:560px}
+.body figure.fig img{max-width:88%;max-height:340px;width:auto;height:auto}
+.body figure.fig figcaption{font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--tm);line-height:1.4;margin-top:.7em;max-width:480px;margin-left:auto;margin-right:auto}
+.body th,.body td{border:1px solid var(--bd);padding:7px 14px;text-align:left}
+.body .formula{text-align:center;font-size:1.2rem;margin:1.4em auto;color:var(--char);letter-spacing:.02em}
+.body .katex-display{margin:1.4em 0}
+.divider{margin:48px 0 12px;text-align:center}.divider img{width:170px;opacity:.85}
+.site-url{text-align:center;font-size:0.78rem;letter-spacing:0.16em;color:var(--tm);margin-bottom:28px}
+.back{font-size:0.85rem}
+
+@media(max-width:640px){
+  .w{padding:0 16px}
+  .nav-inner{gap:14px}
+  .nav-logo{font-size:1.12rem;letter-spacing:0.08em;gap:7px}
+  .nav-logo img{width:19px;height:19px}
+  .nav-link{font-size:0.8rem}
+  .nav-icon{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="w nav-inner">
+  <a href="/" class="nav-logo"><img src="/assets/trees.svg" alt="">Тропа</a>
+  <a href="/storylines/" class="nav-link">Сюжеты</a>
+  <a href="/innopolis/" class="nav-link">Маршрут</a>
+  <a href="/skills/" class="nav-link">Скиллы</a>
+  <a href="/bot/" class="nav-link">Бот</a>
+  <a href="/guides/" class="nav-link">Гиды</a>
+  <div class="nav-spacer"></div>
+  <a href="https://github.com/MerkulovDaniil/tropa" class="nav-icon"><i data-lucide="github"></i></a>
+  <a href="https://t.me/zoobr_bot" class="nav-icon"><i data-lucide="send"></i></a>
+</div></nav>
+
+<div class="w">
+  <div class="sg-hero">
+    <img class="sg-icon" src="/assets/icons/solnechnaya-sistema.svg" alt="">
+    
+    <div class="sg-kicker">Научная тропа Иннополиса</div>
+    <h1>Солнечная система</h1>
+    <div class="sg-deck" id="sg-deck">До Нептуна отсюда 165 метров пешком — и почти весь путь идёт сквозь пустоту</div>
+    <div class="sg-meta">
+      <a class="sg-geo" href="https://yandex.ru/maps/?pt=48.741585,55.752738&z=17&l=map" target="_blank" rel="noopener">📍 на карте</a>
+      <span class="sg-tag">астрономия</span><span class="sg-tag">масштаб</span>
+    </div>
+  </div>
+
+  
+  <div class="tabs">
+    <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
+  </div>
+  
+  <div class="body lvl" data-i="0" style=""><h3>Что это за шар?</h3>
+<p>Этот шар диаметром 2,5 метра — модель Солнца. Отсюда до Нептуна, самой дальней планеты, 165 метров пешком. Один твой шаг по маршруту — это примерно 20 миллионов километров настоящего космоса. А вот сам шар честному масштабу не подчиняется: настоящее Солнце здесь было бы мандарином в 5 сантиметров, но и его, и планеты пришлось увеличить, чтобы их вообще можно было разглядеть, — об этом ниже.</p>
+<h3>Где какие планеты</h3>
+<p>На картинках в учебниках планеты стоят почти впритык. В жизни всё иначе.</p>
+<p>Первые четыре планеты — Меркурий, Венера, Земля, Марс — теснятся возле Солнца: все они умещаются примерно в первых восьми метрах от него. А дальше начинается пустота. От Марса до Юпитера — ещё двадцать метров. От Сатурна до Урана — около пятидесяти. На большей части пути по маршруту ты не встретишь ничего. Солнечная система — это в основном пустое пространство, и редкие планеты в нём — скорее исключение.</p>
+<figure class="fig"><img src="/assets/figures/solnechnaya-sistema-2.svg" alt="Маршрут модели: Солнце и 4 каменные планеты скучены в первых 8 м, а дальше — гиганты с огромными провалами пустоты до Нептуна (165 м)."><figcaption>Маршрут модели: Солнце и 4 каменные планеты скучены в первых 8 м, а дальше — гиганты с огромными провалами пустоты до Нептуна (165 м).</figcaption></figure>
+<h3>Откуда столько пустого пространства</h3>
+<p>4,5 миллиарда лет назад на месте Солнечной системы крутилось облако газа и пыли. Под собственной тяжестью оно сжалось в плоский диск. Внутри этого диска пылинки сталкивались и слипались — сначала в камни, потом в глыбы размером с гору, и в конце концов в планеты.</p>
+<p>Возле молодого горячего Солнца лёгкие вещества — газ и лёд — быстро испарились. Остались только тугоплавкие материалы, и из них собрались небольшие каменные планеты. Дальше от Солнца было холодно, газ и лёд никуда не делись — там выросли огромные Юпитер и Сатурн, а ещё дальше — ледяные Уран и Нептун.</p>
+<p>Между Марсом и Юпитером планета так и не получилась. Юпитер был слишком тяжёлым: своей гравитацией он разгонял соседние обломки и не давал им слипнуться. Этот рассыпанный материал так и остался кружить вокруг Солнца — мы называем его поясом астероидов.</p></div>
+  
+  <div class="body lvl" data-i="1" style="display:none"><h3>Почему здесь два масштаба</h3>
+<p>Расстояния и размеры тел показаны по-разному. Один метр маршрута — это 27,2 миллиона километров реального пространства, а вот все тела — и Солнце, и планеты — сверх того увеличены ещё в 50 раз. Зачем понадобилась такая хитрость?</p>
+<h3>Футбольное поле и горошина</h3>
+<p>Диаметр Земли — около 13 тысяч километров, а до Солнца — 150 миллионов: разница в 12 тысяч раз. Если Солнце сделать размером с мандарин, Земля в честном масштабе будет точкой меньше полумиллиметра — её просто не увидеть. Поэтому расстояния на маршруте мы оставили настоящими, а размеры тел — и Солнца, и планет — увеличили в 50 раз. Мандариновое Солнце так и стало шаром 2,5 метра, а булавочная Земля подросла до 2 сантиметров.</p>
+<h3>Это свойство самой системы</h3>
+<p>Солнечная система устроена так, что показать её в точности на одной картинке нельзя: тела в ней крошечные по сравнению с расстояниями между ними. Такие системы называют разреженными. У любой картинки есть выбор: либо размеры, либо расстояния — что-то одно.</p>
+<h3>Что горит в центре</h3>
+<p>Ты стоишь там, где в реальном масштабе располагается центр Солнца. Раз уж модель поместила тебя в самое сердце звезды — что там происходит?</p>
+<p>Зажжённая спичка горит несколько секунд, полено в печи — несколько часов, а Солнце светит уже 4,5 миллиарда лет и будет светить ещё столько же. Откуда столько энергии?</p>
+<p>Температура в центре Солнца — около 15 миллионов кельвинов<sup id="fnref:core"><a class="footnote-ref" href="#fn:core">1</a></sup>, давление — около 250 миллиардов атмосфер.</p>
+<h3>Что происходит в этих условиях</h3>
+<p>Ядра атомов водорода в обычных условиях отталкиваются друг от друга: они одноимённо заряжены. Но при температуре в миллионы градусов они движутся настолько быстро, что преодолевают это отталкивание и сливаются. Так каждую секунду Солнце перерабатывает около 600 миллионов тонн водорода, и примерно 4 миллиона тонн из них при этом бесследно исчезают — превращаются в энергию излучения по формуле Эйнштейна<sup id="fnref:fusion"><a class="footnote-ref" href="#fn:fusion">2</a></sup>:</p>
+<p>$$ E = mc^2 $$</p>
+<p>Подставим эти 4 миллиона тонн в секунду и скорость света $c \approx 3\cdot10^8$ м/с — получится около $4\cdot10^{26}$ ватт. Это и есть мощность Солнца: столько энергии оно излучает каждую секунду, и так — уже почти пять миллиардов лет подряд.</p>
+<h3>Механизм</h3>
+<p>Этот процесс называется термоядерным синтезом. Он даёт практически всю энергию Солнца — но рождённый в ядре свет не вырывается наружу сразу. Вещество в недрах настолько плотное, что фотон без конца поглощается и переизлучается атомами; от рождения в ядре до выхода в фотосферу проходят от сотен тысяч до нескольких миллионов лет. Зато последний отрезок — от фотосферы до Земли — те же фотоны пролетают всего за восемь минут.</p>
+<p>Тот же синтез человек пытается повторить на Земле — в установках-токамаках, где топливом служат тяжёлые изотопы водорода. Пока ни одна установка не отдала больше энергии, чем потратила на нагрев и удержание плазмы. Именно ради этого строится международный реактор ITER. Разница принципиальная: Солнце держит плазму собственной гравитацией, а на Земле её приходится зажимать в магнитном поле огромных сверхпроводящих катушек.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:core">
+<p>Температура в центре Солнца — около 15 миллионов кельвинов. <a href="https://en.wikipedia.org/wiki/Solar_core">Solar core</a>&#160;<a class="footnote-backref" href="#fnref:core" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:fusion">
+<p>В ядре Солнца ежесекундно ~600 млн тонн водорода превращаются в гелий, дефект массы ~4 млн тонн даёт светимость ≈3,8·10²⁶ Вт. <a href="https://en.wikipedia.org/wiki/Sun">Sun</a>&#160;<a class="footnote-backref" href="#fnref:fusion" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  <div class="body lvl" data-i="2" style="display:none"><figure class="fig"><img src="/assets/figures/solnechnaya-sistema-1.svg" alt="Удвоили расстояние — тот же свет растёкся вчетверо: яркость падает как обратный квадрат."><figcaption>Удвоили расстояние — тот же свет растёкся вчетверо: яркость падает как обратный квадрат.</figcaption></figure>
+<h3>Масштабы модели</h3>
+<p>Один метр маршрута соответствует 27,2 миллиона километров реального пространства. В этом честном масштабе Земля имела бы диаметр 0,47 миллиметра — меньше толщины швейной иглы; Юпитер был бы горошиной 5,2 миллиметра, Солнце — мандарином 5,1 сантиметра. Чтобы тела вообще можно было разглядеть, их размеры увеличены ещё в 50 раз — и это касается всех тел, включая Солнце. Поэтому Солнце на маршруте — шар 2,5 метра (5,1 см × 50), Юпитер — мяч 26 сантиметров, а Земля — кружок чуть больше 2 сантиметров. На фоне 165-метрового маршрута даже увеличенные планеты остаются крошечными точками — расстояния всё равно подавляют размеры.</p>
+<p>Для сравнения: самая протяжённая в мире масштабная модель Солнечной системы — Sweden Solar System — растянута через всю Швецию почти на тысячу километров: её Солнце, Avicii Arena (Глобен) в Стокгольме, — это сфера 110 метров в поперечнике, крупнейшее полусферическое здание мира, а граница гелиосферы вынесена за 950 километров, в заполярную Кируну<sup id="fnref:sweden"><a class="footnote-ref" href="#fn:sweden">1</a></sup>.</p>
+<h3>Откуда пустота между орбитами</h3>
+<p>Изначально вещество протопланетного диска было распределено более или менее равномерно. Современная картина с пустыми промежутками между орбитами сложилась за сотни миллионов лет под действием гравитации крупных планет.</p>
+<p>Юпитер набрал массу первым. Своим тяготением он возмущал движение планетезималей в соседних областях диска: между его орбитой и орбитой Марса частицы выбрасывались на вытянутые траектории и в конечном счёте либо рассеивались, либо притягивались другими телами. Поэтому здесь образовался пояс астероидов вместо отдельной планеты. Нептун, постепенно смещаясь наружу, тем же образом расчистил область за своей орбитой; то, что осталось, сегодня называется поясом Койпера — это сильно разрежённое скопление ледяных тел.</p>
+<h3>Закон обратных квадратов</h3>
+<p>Уличный фонарь освещает землю ярче всего прямо под собой. Шаг в сторону — становится темнее. По какой именно зависимости?</p>
+<p>Свет от точечного источника распределяется по поверхности воображаемой сферы, в центре которой стоит сам источник. Площадь сферы пропорциональна квадрату её радиуса: при удвоении расстояния та же энергия распределяется по вчетверо большей площади. Поэтому интенсивность света падает как $1/r^2$ — это и есть закон обратных квадратов.</p>
+<p>Нептун находится примерно в 30 раз дальше от Солнца, чем Земля, поэтому получает в $30^2 = 900$ раз меньше солнечного света. Это одна из главных причин его крайне низкой средней температуры, около −215 °C<sup id="fnref:neptune"><a class="footnote-ref" href="#fn:neptune">2</a></sup> (на итог влияют ещё и альбедо планеты, и тепловой баланс атмосферы). Но интереснее другое: тому же закону $1/r^2$ подчиняются и притяжение точечных масс, и громкость звука от источника в открытом пространстве, и мощность принимаемого радиосигнала. Четыре совершенно разных по природе явления — а геометрическая причина у всех одна.</p>
+<h3>Та же геометрия в атоме</h3>
+<p>Если бы ядро атома водорода имело размер теннисного мяча, ближайший электрон находился бы от него примерно в двух километрах. Атом, как и Солнечная система, в основном пуст: редкие массивные частицы разделены огромными по сравнению с их собственными размерами расстояниями. В обоих случаях частицы удерживаются на месте центральным силовым полем — гравитационным у планет, электромагнитным у электронов, — а движение по орбите не даёт им упасть к центру.</p>
+<h3>Орбитальный резонанс</h3>
+<p>Чтобы качели раскачались, толкать их нужно в такт собственному периоду качаний; вне такта толчки гасят разгон, а не усиливают его. Похожее правило работает в небесной механике, только в роли толчков выступают гравитационные взаимодействия одного тела на другое.</p>
+<p>Три крупных спутника Юпитера — Ио, Европа и Ганимед — обращаются вокруг него с периодами, относящимися как 1 : 2 : 4. Пока Ганимед делает один оборот, Европа — два, Ио — четыре, и все трое регулярно оказываются примерно в одном и том же взаимном положении. Такое соотношение периодов называется орбитальным резонансом.</p>
+<p>Маленькие гравитационные толчки, которые тела передают друг другу в этих повторяющихся точках, складываются и удерживают орбиты в строгой пропорции. Резонансы во многом определяют, какие конфигурации планетных орбит остаются устойчивыми миллиарды лет, а какие распадаются. Резонанс 2 : 3 с Нептуном удерживает на устойчивой орбите Плутон; в поясе астероидов, напротив, тяготение Юпитера выметает определённые орбиты, и в этих местах образуются пустые полосы — щели Кирквуда.</p>
+<h3>Как это узнаёт наука</h3>
+<p>Расстояния в Солнечной системе измеряют радиолокацией: к планете посылают радиосигнал, замеряют время его возвращения и умножают на скорость света, после чего делят пополам. Именно радиолокация Венеры в начале 1960-х годов позволила заменить приблизительные «150 миллионов километров» от Земли до Солнца на точное значение астрономической единицы<sup id="fnref:au"><a class="footnote-ref" href="#fn:au">3</a></sup>.</p>
+<p>Историю формирования и миграции планет восстанавливают по компьютерному моделированию протопланетных дисков и по сравнению с другими звёздными системами. Основные наблюдательные данные сюда поставляют космические телескопы «Кеплер» и TESS. Оказалось, что планеты вокруг других звёзд расставлены гораздо разнообразнее, чем считалось до начала этих наблюдений; сравнение с такими системами помогает понять, какие особенности нашей Солнечной системы типичны для планетных систем вообще, а какие специфичны.</p>
+<h3>Открытый вопрос</h3>
+<p>Маршрут модели заканчивается на Нептуне, в 165 метрах от Солнца. В том же масштабе ближайшая к Солнцу звезда, Проксима Центавра, оказалась бы примерно в 1470 километрах отсюда — это сравнимо с расстоянием от Москвы до Сочи. В 2016 году у Проксимы нашли планету земного типа<sup id="fnref:proxima"><a class="footnote-ref" href="#fn:proxima">4</a></sup>, причём на таком расстоянии от звезды, при котором на её поверхности могла бы удержаться жидкая вода. Эту полосу вокруг звезды называют зоной обитаемости.</p>
+<p>Существующие космические аппараты добираются до краёв Солнечной системы за десятилетия и оттуда уже не возвращаются. При их скоростях полёт до Проксимы Центавра занял бы десятки тысяч лет. Проект Breakthrough Starshot предлагает иной путь: разгонять миниатюрные аппараты массой около грамма мощным наземным лазером до заметной доли скорости света<sup id="fnref:starshot"><a class="footnote-ref" href="#fn:starshot">5</a></sup>. При такой скорости долёт занял бы около двадцати лет — на глазах одного поколения. Технология пока в стадии разработки.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:sweden">
+<p>Sweden Solar System — крупнейшая постоянная масштабная модель (1:20 000 000); Солнце — Avicii Arena (Глобен) Ø110 м, граница гелиосферы — за 950 км в Кируне. <a href="https://en.wikipedia.org/wiki/Sweden_Solar_System">Sweden Solar System</a>&#160;<a class="footnote-backref" href="#fnref:sweden" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:neptune">
+<p>Средняя температура Нептуна — около −215 °C (≈58 K). <a href="https://en.wikipedia.org/wiki/Neptune">Neptune</a>&#160;<a class="footnote-backref" href="#fnref:neptune" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:au">
+<p>Радиолокация Венеры в начале 1960-х годов уточнила астрономическую единицу. <a href="https://en.wikipedia.org/wiki/Astronomical_unit">Astronomical unit</a>&#160;<a class="footnote-backref" href="#fnref:au" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:proxima">
+<p>Планету Проксима Центавра b земной массы в зоне обитаемости анонсировали 24 августа 2016 года. <a href="https://en.wikipedia.org/wiki/Proxima_Centauri_b">Proxima Centauri b</a>&#160;<a class="footnote-backref" href="#fnref:proxima" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:starshot">
+<p>Breakthrough Starshot — проект разгона аппаратов с парусом массой порядка грамма наземным лазером до доли скорости света. <a href="https://en.wikipedia.org/wiki/Breakthrough_Starshot">Breakthrough Starshot</a>&#160;<a class="footnote-backref" href="#fnref:starshot" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  
+</div>
+
+<script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
+<script defer src="/assets/site-bar/bot.js"></script>
+
+<script>
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
+var TROPA_DECKS = ["До Нептуна отсюда 165 метров пешком — и почти весь путь идёт сквозь пустоту", "Почему эту модель пришлось сделать двойной — и что горит в её центре?", "Один закон связывает свет звезды, силу тяжести и устройство атома — какой?"];
+
+(function(){
+  var tabs=document.querySelectorAll('.tab'), bodies=document.querySelectorAll('.lvl');
+  var pdfs=TROPA_PDFS, decks=TROPA_DECKS, deckEl=document.getElementById('sg-deck');
+  document.querySelector('.tabs')&&document.querySelector('.tabs').addEventListener('click',function(e){
+    var t=e.target.closest('.tab'); if(!t)return;
+    tabs.forEach(function(x){x.classList.remove('active')}); t.classList.add('active');
+    var i=+t.dataset.i;
+    bodies.forEach(function(b){b.style.display=(+b.dataset.i===i)?'':'none'});
+    if(deckEl){ if(decks[i]){deckEl.textContent=decks[i];deckEl.style.display='';if(window.tropaMath)window.tropaMath(deckEl);} else {deckEl.style.display='none'} }
+    var link=document.getElementById('pdf-link'); if(link&&pdfs[i])link.href=pdfs[i];
+    if(window.tropaMath)window.tropaMath(bodies[i]);
+  });
+})();
+
+</script>
+
+</body>
+</html>

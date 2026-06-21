@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Семь мостов Кёнигсберга — Тропа</title>
+<link rel="icon" href="/assets/trees.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site-bar/bot.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
+<script>
+// Рендер математики ТОЛЬКО после загрузки шрифтов KaTeX. Иначе KaTeX считает
+// позицию черты корня/дроби по метрикам фолбэк-шрифта → линия ложится поперёк
+// подкоренного (видимое «зачёркивание»), и без ре-рендера не лечится.
+// ignoredClasses:['katex'] — повторный проход не трогает уже отрендеренное.
+(function(){
+  var KX={delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false,ignoredClasses:['katex']};
+  function whenFontsReady(cb){
+    var fams=['KaTeX_Main','KaTeX_Math','KaTeX_Size1','KaTeX_Size2','KaTeX_Size3','KaTeX_Size4','KaTeX_AMS'];
+    if(document.fonts&&document.fonts.load){
+      Promise.all(fams.map(function(f){return document.fonts.load('1em '+f).catch(function(){});}))
+        .then(function(){return document.fonts.ready;}).then(cb,cb);
+    } else { cb(); }
+  }
+  window.tropaMath=function(el){ if(typeof renderMathInElement==='function'){ whenFontsReady(function(){ renderMathInElement(el,KX); }); } };
+  window.addEventListener('load',function(){ window.tropaMath(document.body); });
+})();
+</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip}
+body{max-width:100%;overflow-x:clip}
+/* TROPA design system — палитра дизайн-пака */
+:root{
+  --sand:#DBD4C7;--sage:#B8B5A6;--olive:#7C7F6A;--char:#3E4038;--ink:#1A1A18;
+  --g:#7C7F6A;--gd:#3E4038;--gl:#F4F2EE;--bg:#FFFFFF;--card:#FFFFFF;
+  --tx:#1A1A18;--tm:#6E7163;--bd:#EAE7E0;--r:10px;
+  --serif:"Cormorant Garamond",Georgia,serif;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:-0.01em}
+a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
+.w{max-width:760px;margin:0 auto;padding:0 24px}
+.nav{padding:14px 0;border-bottom:1px solid var(--bd);background:#fff}
+.nav-inner{display:flex;align-items:center;gap:22px}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.3rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);line-height:1;display:flex;align-items:center;gap:9px}
+.nav-logo img{width:22px;height:22px}
+.nav-spacer{flex:1}
+.nav-link{font-size:0.82rem;color:var(--tm);display:flex;align-items:center;line-height:1;letter-spacing:0.01em}
+.nav-link:hover{color:var(--ink);text-decoration:none}
+.nav-icon{display:flex;align-items:center;justify-content:center;color:var(--tm);transition:color 0.15s}
+.nav-icon:hover{color:var(--olive);text-decoration:none}
+.nav-icon i{width:16px;height:16px}
+
+.sg-hero{padding:48px 0 8px;text-align:center}
+.sg-hero img{height:auto;max-height:46px;width:auto;opacity:.8;display:block;margin:0 auto 16px}
+.sg-hero img.sg-icon{max-height:200px;max-width:440px;width:80%;opacity:1;margin:0 auto 4px}
+.sg-kicker{font-size:0.76rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--olive);margin-bottom:10px}
+.sg-hero h1{font-size:2.3rem;font-weight:700;line-height:1.12;margin-bottom:8px}
+.sg-deck{font-family:var(--serif);font-style:italic;font-size:1.3rem;color:var(--tm);line-height:1.3;margin:0 auto 12px;max-width:560px}
+.sg-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:0.8rem}
+.sg-tag{padding:2px 9px;border-radius:20px;background:var(--gl);color:var(--tm)}
+.sg-geo{color:var(--olive);font-weight:600}
+.tabs{display:flex;align-items:center;gap:4px;border-bottom:1px solid var(--bd);margin:26px 0 0;flex-wrap:wrap}
+.tab{font-family:var(--serif);font-size:1.05rem;font-weight:600;padding:9px 16px;color:var(--tm);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);border-bottom-color:var(--olive)}
+.tab-pdf{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--tm);transition:color .15s}
+.tab-pdf:hover{color:var(--olive);text-decoration:none}
+.tab-pdf i{width:15px;height:15px;stroke-width:1.4}
+/* читается как книжная статья */
+.body{padding:26px 0 8px;font-family:Georgia,"PT Serif","Times New Roman",serif;font-size:1.16rem;line-height:1.84;max-width:660px;color:#262521}
+.body p{margin:0 0 1.05em}.body p:first-of-type{font-size:1.22rem;color:#1c1b17}
+.body strong{color:var(--ink);font-weight:600}
+.body h2,.body h3,.body h4{font-family:var(--serif);font-weight:600;color:var(--char);margin:1.6em 0 .5em;font-size:1.4rem;line-height:1.25;text-align:center}
+.body ul,.body ol{margin:1em 0 1em 22px}.body li{margin:.4em 0}
+.body table{border-collapse:collapse;font-size:0.96rem;margin:1.2em 0;display:block;max-width:100%;overflow-x:auto}
+.body img{max-width:100%;height:auto;display:block;margin:0 auto}
+.body figure.fig{margin:2em auto;text-align:center;max-width:560px}
+.body figure.fig img{max-width:88%;max-height:340px;width:auto;height:auto}
+.body figure.fig figcaption{font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--tm);line-height:1.4;margin-top:.7em;max-width:480px;margin-left:auto;margin-right:auto}
+.body th,.body td{border:1px solid var(--bd);padding:7px 14px;text-align:left}
+.body .formula{text-align:center;font-size:1.2rem;margin:1.4em auto;color:var(--char);letter-spacing:.02em}
+.body .katex-display{margin:1.4em 0}
+.divider{margin:48px 0 12px;text-align:center}.divider img{width:170px;opacity:.85}
+.site-url{text-align:center;font-size:0.78rem;letter-spacing:0.16em;color:var(--tm);margin-bottom:28px}
+.back{font-size:0.85rem}
+
+@media(max-width:640px){
+  .w{padding:0 16px}
+  .nav-inner{gap:14px}
+  .nav-logo{font-size:1.12rem;letter-spacing:0.08em;gap:7px}
+  .nav-logo img{width:19px;height:19px}
+  .nav-link{font-size:0.8rem}
+  .nav-icon{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="w nav-inner">
+  <a href="/" class="nav-logo"><img src="/assets/trees.svg" alt="">Тропа</a>
+  <a href="/storylines/" class="nav-link">Сюжеты</a>
+  <a href="/innopolis/" class="nav-link">Маршрут</a>
+  <a href="/skills/" class="nav-link">Скиллы</a>
+  <a href="/bot/" class="nav-link">Бот</a>
+  <a href="/guides/" class="nav-link">Гиды</a>
+  <div class="nav-spacer"></div>
+  <a href="https://github.com/MerkulovDaniil/tropa" class="nav-icon"><i data-lucide="github"></i></a>
+  <a href="https://t.me/zoobr_bot" class="nav-icon"><i data-lucide="send"></i></a>
+</div></nav>
+
+<div class="w">
+  <div class="sg-hero">
+    <img class="sg-icon" src="/assets/icons/sem-mostov.png" alt="">
+    
+    <div class="sg-kicker">Калининградская область</div>
+    <h1>Семь мостов Кёнигсберга</h1>
+    <div class="sg-deck" id="sg-deck">Можно ли пройти все семь мостов, не ступив ни на один дважды?</div>
+    <div class="sg-meta">
+      <a class="sg-geo" href="https://yandex.ru/maps/?pt=20.5116,54.70653&z=17&l=map" target="_blank" rel="noopener">📍 на карте</a>
+      <span class="sg-tag">математика</span><span class="sg-tag">графы</span>
+    </div>
+  </div>
+
+  
+  <div class="tabs">
+    <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
+  </div>
+  
+  <div class="body lvl" data-i="0" style=""><p>Попробуй нарисовать конверт — квадрат с крышей и диагоналями — одним росчерком, не отрывая ручку и не обводя линию дважды. Где-то получается, где-то нет, и заранее не угадаешь. Ровно такую задачу горожане Кёнигсберга решали не на бумаге, а ногами.</p>
+<p>Прямо здесь, на острове Кнайпхоф у Кафедрального собора, сходились мосты через Прегель: семь штук связывали остров, второй островок и два берега. Весь XVIII век жители искали прогулку, которая прошла бы по каждому мосту ровно раз — и не находили.</p>
+<figure class="fig"><img src="/assets/figures/sem-mostov-1.svg" alt="Четыре участка суши (остров Кнайпхоф, второй островок и два берега) и семь мостов между ними. Для задачи важны не длины и изгибы, а только что с чем соединено."><figcaption>Четыре участка суши (остров Кнайпхоф, второй островок и два берега) и семь мостов между ними. Для задачи важны не длины и изгибы, а только что с чем соединено.</figcaption></figure>
+<p>Разобрался швейцарский и российский математик Леонард Эйлер. Его главный ход — не пройти мосты, а <strong>отбросить лишнее</strong>: длины мостов, форма островов, изгибы реки на ответ не влияют. Важно одно — связность: какой участок суши с каким соединён и сколькими мостами. Сведи карту к четырём точкам и семи линиям между ними — и задача про прогулку превращается в задачу про чертёж одним росчерком.</p>
+<p>И ответ оказался коротким: такого маршрута нет. Не потому, что плохо искали, — а потому, что его не может быть в принципе.</p></div>
+  
+  <div class="body lvl" data-i="1" style="display:none"><p>Посмотри на любой «транзитный» участок — тот, где ты не начинаешь и не заканчиваешь прогулку. Раз ты туда вошёл по одному мосту, то обязан и выйти — по другому. Мосты на таком участке разбиваются на пары «вошёл — вышел», а значит, их число должно быть <strong>чётным</strong>. Нечётное число мостов могут позволить себе только два места: где маршрут стартует и где финиширует.</p>
+<p>Переведём это на язык точек и линий. Число мостов, сходящихся к участку, — это его <strong>степень</strong> $\deg(v)$. Сумма степеней считает каждый мост дважды (у него два конца), поэтому для любого графа верно правило рукопожатий:</p>
+<p>$$ \sum_v \deg(v) = 2\,|E| $$</p>
+<p>где $|E|$ — число рёбер (мостов). Сумма степеней всегда чётна — а значит, вершин с нечётной степенью не может быть нечётное количество: их всегда 0, 2, 4, …</p>
+<p>Теперь подставим Кёнигсберг. У острова Кнайпхоф сходятся пять мостов, у остальных трёх участков — по три:</p>
+<p>$$ 5 + 3 + 3 + 3 = 14 = 2 \cdot 7 $$</p>
+<p>Семь мостов — сходится. Но <strong>все четыре</strong> участка имеют нечётную степень, а маршрут «без повторов» терпит самое большее две нечётные вершины — старт и финиш. Четыре больше двух, и спорить тут не с чем: прогулки не существует<sup id="fnref:euler"><a class="footnote-ref" href="#fn:euler">1</a></sup>.</p>
+<h3>Где работает тот же закон?</h3>
+<p>Правило «нечётных вершин — 0 или 2» переживает любой сюжет, где надо обойти связи, не повторяясь. Снегоуборщик или мусоровоз, что должны проехать по каждой улице ровно раз; плоттер, рисующий чертёж одним движением пера; разводка дорожек на плате. А в биологии тот же приём собирает геном: длинную цепочку ДНК режут на короткие куски, строят из них граф де Брёйна и ищут путь, проходящий по каждому звену, — и из мозаики обрывков восстанавливают исходную последовательность<sup id="fnref:debruijn"><a class="footnote-ref" href="#fn:debruijn">2</a></sup>.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:euler">
+<p>Эйлер изложил решение в работе «Solutio problematis ad geometriam situs pertinentis» (1736), представленной Петербургской академии наук; её принято считать первой статьёй по теории графов (<a href="https://en.wikipedia.org/wiki/Seven_Bridges_of_K%C3%B6nigsberg">Euler, 1736; обзор — Wikipedia, «Seven Bridges of Königsberg»</a>).&#160;<a class="footnote-backref" href="#fnref:euler" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:debruijn">
+<p>Граф де Брёйна — рабочий инструмент сборки геномов из коротких прочтений: ищется путь, проходящий по каждому ребру (эйлеров путь) (<a href="https://www.nature.com/articles/nbt.2023">Compeau, Pevzner, Tesler, «How to apply de Bruijn graphs to genome assembly», Nature Biotechnology, 2011</a>).&#160;<a class="footnote-backref" href="#fnref:debruijn" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  <div class="body lvl" data-i="2" style="display:none"><p>Если маршрут не выходит — спросим иначе: что нужно изменить, чтобы вышел? Помеха — четыре нечётные вершины, а позволено две. Каждый новый мост поднимает степень своих двух концов на единицу, превращая нечётное в чётное. Перекинем мост между двумя нечётными участками — и оба становятся чётными:</p>
+<p>$$ (5,\,3,\,3,\,3) \;\longrightarrow\; (6,\,4,\,3,\,3) $$</p>
+<p>Остаются ровно две нечётные вершины — они и станут стартом и финишем. Восьмой мост открывает прогулку, которой не было при семи<sup id="fnref:bridges"><a class="footnote-ref" href="#fn:bridges">1</a></sup>.</p>
+<figure class="fig"><img src="/assets/figures/sem-mostov-2.svg" alt="Восьмой мост между двумя нечётными участками поднимает их степени на единицу: четыре нечётные вершины превращаются в две — и маршрут без повторов появляется."><figcaption>Восьмой мост между двумя нечётными участками поднимает их степени на единицу: четыре нечётные вершины превращаются в две — и маршрут без повторов появляется.</figcaption></figure>
+<h3>Почему эта задачка стала наукой?</h3>
+<p>Эйлер заметил, что в ответе нет ни одного расстояния — только связи. Так родилась идея геометрии, которой безразличны длины и углы: важно лишь, что соединено и как. Из неё выросли теория графов и топология — «геометрия положения». Сегодня на этом языке описывают транспортные и компьютерные сети, молекулы, социальные связи и маршруты доставки: всюду, где суть не в том, где объекты лежат, а в том, кто с кем связан.</p>
+<h3>Как это проверяют?</h3>
+<p>Чтобы узнать, обходится ли сеть без повторов, не нужно перебирать миллионы маршрутов — достаточно сосчитать нечётные вершины. Ноль — обход есть и кончится там же, где начался; два — есть, но старт и финиш в разных местах; больше двух — обхода нет. Один взгляд на степени вместо полного перебора: в этом и сила абстракции Эйлера.</p>
+<h3>Открытый вопрос</h3>
+<p>Семь мостов давно стали четырьмя точками в учебнике — но город живёт дальше: мосты разрушались в войну, отстраивались, появлялись новые. Если пересчитать степени по нынешней карте Калининграда — найдётся ли сегодня прогулка, которой не было у горожан XVIII века?</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:bridges">
+<p>Из семи исторических мостов часть была разрушена во время Второй мировой войны; современная конфигурация переправ через Преголю отличается от той, что видел Эйлер (<a href="https://en.wikipedia.org/wiki/Seven_Bridges_of_K%C3%B6nigsberg">Wikipedia, «Seven Bridges of Königsberg»</a>).&#160;<a class="footnote-backref" href="#fnref:bridges" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  
+</div>
+
+<script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
+<script defer src="/assets/site-bar/bot.js"></script>
+
+<script>
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
+var TROPA_DECKS = ["Можно ли пройти все семь мостов, не ступив ни на один дважды?", "Почему именно нечётность губит маршрут?", "Где построить восьмой мост?"];
+
+(function(){
+  var tabs=document.querySelectorAll('.tab'), bodies=document.querySelectorAll('.lvl');
+  var pdfs=TROPA_PDFS, decks=TROPA_DECKS, deckEl=document.getElementById('sg-deck');
+  document.querySelector('.tabs')&&document.querySelector('.tabs').addEventListener('click',function(e){
+    var t=e.target.closest('.tab'); if(!t)return;
+    tabs.forEach(function(x){x.classList.remove('active')}); t.classList.add('active');
+    var i=+t.dataset.i;
+    bodies.forEach(function(b){b.style.display=(+b.dataset.i===i)?'':'none'});
+    if(deckEl){ if(decks[i]){deckEl.textContent=decks[i];deckEl.style.display='';if(window.tropaMath)window.tropaMath(deckEl);} else {deckEl.style.display='none'} }
+    var link=document.getElementById('pdf-link'); if(link&&pdfs[i])link.href=pdfs[i];
+    if(window.tropaMath)window.tropaMath(bodies[i]);
+  });
+})();
+
+</script>
+
+</body>
+</html>
