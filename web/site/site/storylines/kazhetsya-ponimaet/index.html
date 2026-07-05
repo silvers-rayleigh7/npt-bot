@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кажется, что понимает — Тропа</title>
+<link rel="icon" href="/assets/trees.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site-bar/bot.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
+<script>
+// Рендер математики ТОЛЬКО после загрузки шрифтов KaTeX. Иначе KaTeX считает
+// позицию черты корня/дроби по метрикам фолбэк-шрифта → линия ложится поперёк
+// подкоренного (видимое «зачёркивание»), и без ре-рендера не лечится.
+// ignoredClasses:['katex'] — повторный проход не трогает уже отрендеренное.
+(function(){
+  var KX={delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false,ignoredClasses:['katex']};
+  function whenFontsReady(cb){
+    var fams=['KaTeX_Main','KaTeX_Math','KaTeX_Size1','KaTeX_Size2','KaTeX_Size3','KaTeX_Size4','KaTeX_AMS'];
+    if(document.fonts&&document.fonts.load){
+      Promise.all(fams.map(function(f){return document.fonts.load('1em '+f).catch(function(){});}))
+        .then(function(){return document.fonts.ready;}).then(cb,cb);
+    } else { cb(); }
+  }
+  window.tropaMath=function(el){ if(typeof renderMathInElement==='function'){ whenFontsReady(function(){ renderMathInElement(el,KX); }); } };
+  window.addEventListener('load',function(){ window.tropaMath(document.body); });
+})();
+</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip}
+body{max-width:100%;overflow-x:clip}
+/* TROPA design system — палитра дизайн-пака */
+:root{
+  --sand:#DBD4C7;--sage:#B8B5A6;--olive:#7C7F6A;--char:#3E4038;--ink:#1A1A18;
+  --g:#7C7F6A;--gd:#3E4038;--gl:#F4F2EE;--bg:#FFFFFF;--card:#FFFFFF;
+  --tx:#1A1A18;--tm:#6E7163;--bd:#EAE7E0;--r:10px;
+  --serif:"Cormorant Garamond",Georgia,serif;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:-0.01em}
+a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
+.w{max-width:760px;margin:0 auto;padding:0 24px}
+.nav{padding:14px 0;border-bottom:1px solid var(--bd);background:#fff}
+.nav-inner{display:flex;align-items:center;gap:22px}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.3rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);line-height:1;display:flex;align-items:center;gap:9px}
+.nav-logo img{width:22px;height:22px}
+.nav-spacer{flex:1}
+.nav-link{font-size:0.82rem;color:var(--tm);display:flex;align-items:center;line-height:1;letter-spacing:0.01em}
+.nav-link:hover{color:var(--ink);text-decoration:none}
+.nav-icon{display:flex;align-items:center;justify-content:center;color:var(--tm);transition:color 0.15s}
+.nav-icon:hover{color:var(--olive);text-decoration:none}
+.nav-icon i{width:16px;height:16px}
+
+.sg-hero{padding:48px 0 8px;text-align:center}
+.sg-hero img{height:auto;max-height:46px;width:auto;opacity:.8;display:block;margin:0 auto 16px}
+.sg-hero img.sg-icon{max-height:200px;max-width:440px;width:80%;opacity:1;margin:0 auto 4px}
+.sg-kicker{font-size:0.76rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--olive);margin-bottom:10px}
+.sg-hero h1{font-size:2.3rem;font-weight:700;line-height:1.12;margin-bottom:8px}
+.sg-deck{font-family:var(--serif);font-style:italic;font-size:1.3rem;color:var(--tm);line-height:1.3;margin:0 auto 12px;max-width:560px}
+.sg-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:0.8rem}
+.sg-tag{padding:2px 9px;border-radius:20px;background:var(--gl);color:var(--tm)}
+.sg-geo{color:var(--olive);font-weight:600}
+.tabs{display:flex;align-items:center;gap:4px;border-bottom:1px solid var(--bd);margin:26px 0 0;flex-wrap:wrap}
+.tab{font-family:var(--serif);font-size:1.05rem;font-weight:600;padding:9px 16px;color:var(--tm);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);border-bottom-color:var(--olive)}
+.tab-pdf{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--tm);transition:color .15s}
+.tab-pdf:hover{color:var(--olive);text-decoration:none}
+.tab-pdf i{width:15px;height:15px;stroke-width:1.4}
+/* читается как книжная статья */
+.body{padding:26px 0 8px;font-family:Georgia,"PT Serif","Times New Roman",serif;font-size:1.16rem;line-height:1.84;max-width:660px;color:#262521}
+.body p{margin:0 0 1.05em}.body p:first-of-type{font-size:1.22rem;color:#1c1b17}
+.body strong{color:var(--ink);font-weight:600}
+.body h2,.body h3,.body h4{font-family:var(--serif);font-weight:600;color:var(--char);margin:1.6em 0 .5em;font-size:1.4rem;line-height:1.25;text-align:center}
+.body ul,.body ol{margin:1em 0 1em 22px}.body li{margin:.4em 0}
+.body table{border-collapse:collapse;font-size:0.96rem;margin:1.2em 0;display:block;max-width:100%;overflow-x:auto}
+.body img{max-width:100%;height:auto;display:block;margin:0 auto}
+.body figure.fig{margin:2em auto;text-align:center;max-width:560px}
+.body figure.fig img{max-width:88%;max-height:340px;width:auto;height:auto}
+.body figure.fig figcaption{font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--tm);line-height:1.4;margin-top:.7em;max-width:480px;margin-left:auto;margin-right:auto}
+.body th,.body td{border:1px solid var(--bd);padding:7px 14px;text-align:left}
+.body .formula{text-align:center;font-size:1.2rem;margin:1.4em auto;color:var(--char);letter-spacing:.02em}
+.body .katex-display{margin:1.4em 0}
+.divider{margin:48px 0 12px;text-align:center}.divider img{width:170px;opacity:.85}
+.site-url{text-align:center;font-size:0.78rem;letter-spacing:0.16em;color:var(--tm);margin-bottom:28px}
+.back{font-size:0.85rem}
+
+@media(max-width:640px){
+  .w{padding:0 16px}
+  .nav-inner{gap:14px}
+  .nav-logo{font-size:1.12rem;letter-spacing:0.08em;gap:7px}
+  .nav-logo img{width:19px;height:19px}
+  .nav-link{font-size:0.8rem}
+  .nav-icon{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="w nav-inner">
+  <a href="/" class="nav-logo"><img src="/assets/trees.svg" alt="">Тропа</a>
+  <a href="/storylines/" class="nav-link">Сюжеты</a>
+  <a href="/innopolis/" class="nav-link">Маршрут</a>
+  <a href="/skills/" class="nav-link">Скиллы</a>
+  <a href="/bot/" class="nav-link">Бот</a>
+  <a href="/guides/" class="nav-link">Гиды</a>
+  <div class="nav-spacer"></div>
+  <a href="https://github.com/MerkulovDaniil/tropa" class="nav-icon"><i data-lucide="github"></i></a>
+  <a href="https://t.me/zoobr_bot" class="nav-icon"><i data-lucide="send"></i></a>
+</div></nav>
+
+<div class="w">
+  <div class="sg-hero">
+    <img src="/assets/glyphs/spruce.png" alt="">
+    <div class="sg-kicker">Научная тропа Иннополиса</div>
+    <h1>Кажется, что понимает</h1>
+    <div class="sg-deck" id="sg-deck">Машина вас слушает — или вам так кажется?</div>
+    <div class="sg-meta">
+      
+      <span class="sg-tag">искусственный интеллект</span><span class="sg-tag">психология</span><span class="sg-tag">история науки</span>
+    </div>
+  </div>
+
+  
+  <div class="tabs">
+    <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
+  </div>
+  
+  <div class="body lvl" data-i="0" style=""><p>Перед вами два собеседника. Слева — ELIZA, программа 1966 года. Справа — современная языковая модель. Напишите обоим одно и то же: расскажите про свой день, пожалуйтесь на что-нибудь. И посмотрите, где разговор держится, а где рассыпается.</p>
+<p>ELIZA внутри почти пуста. Она выхватывает из вашей фразы знакомое слово и переворачивает его обратно вопросом: на «меня никто не понимает» отвечает «почему вы думаете, что вас никто не понимает?». Смысла она не извлекает, про мир ничего не знает, через минуту забывает начало разговора. И всё же первые реплики легко принять за внимание живого собеседника.</p>
+<p>Её автор Джозеф Вейценбаум собрал ELIZA, чтобы показать, до чего проста машинная имитация разговора, — а вышло обратное: его секретарша, прекрасно зная, что перед ней программа, просила оставить её с «доктором» наедине<sup id="fnref:weizenbaum"><a class="footnote-ref" href="#fn:weizenbaum">1</a></sup>. Ощущение, что тебя понимают, держится не на одном собеседнике. Половину работы делает наш собственный мозг, готовый увидеть мысль за подходящими словами.</p>
+<figure class="fig"><img src="/assets/figures/kazhetsya-ponimaet-1.svg" alt="Слева ELIZA: ключевое слово запускает правило-заготовку, и фраза переворачивается обратно вопросом. Справа языковая модель: ответ рождается как предсказание следующего слова обученной сетью. Снаружи похоже, внутри несравнимо."><figcaption>Слева ELIZA: ключевое слово запускает правило-заготовку, и фраза переворачивается обратно вопросом. Справа языковая модель: ответ рождается как предсказание следующего слова обученной сетью. Снаружи похоже, внутри несравнимо.</figcaption></figure>
+<p>Современная модель справится с тем, на чём ELIZA спотыкается: удержит нить, ответит по существу, подстроится под ваш тон. Но приписать понимание ей тянет совершенно так же, как шестьдесят лет назад. Разница между двумя терминалами — в том, что у них внутри. Сходство — в том, что происходит у вас в голове.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:weizenbaum">
+<p>Joseph Weizenbaum, «ELIZA — A Computer Program For the Study of Natural Language Communication Between Man and Machine». <em>Communications of the ACM</em> 9(1), 36–45 (1966). Автор описывает, как пользователи приписывали программе понимание, зная о её простоте (<a href="https://dl.acm.org/doi/10.1145/365153.365168">doi:10.1145/365153.365168</a>).&#160;<a class="footnote-backref" href="#fnref:weizenbaum" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  <div class="body lvl" data-i="1" style="display:none"><p>Алан Тьюринг в 1950 году предложил не спорить, умеет ли машина думать, — вопрос он считал слишком туманным, — а заменить его проверяемым. Посадить судью переписываться вслепую с человеком и с машиной, и пусть угадает, кто из них кто<sup id="fnref:turing"><a class="footnote-ref" href="#fn:turing">1</a></sup>. Не угадывает — машину засчитывают за разумную. Проверка вышла поведенческой: судят не по тому, что у собеседника внутри, а по тому, как он отвечает.</p>
+<p>ELIZA показала, в чём здесь подвох. Исход зависит и от машины, и от судьи, а человек слишком охотно засчитывает понимание. Вейценбаум потом сформулировал это одной мыслью: программа показывает, как легко создать и поддержать иллюзию понимания.</p>
+<p>То же свойство замечали задолго до компьютеров. В начале XX века по Германии гремел конь Умный Ганс — он отстукивал копытом ответы на арифметические задачи, и публика верила, что лошадь считает. В 1907 году психолог Оскар Пфунгст устроил проверку и выяснил: считать конь не умеет<sup id="fnref:hans"><a class="footnote-ref" href="#fn:hans">2</a></sup>. Он улавливал невольные движения спрашивающего — лёгкое напряжение в позе и лице по мере того, как копыто доходило до верного числа, и расслабление в нужный момент. Стоило задать вопрос так, чтобы ответа не знал и сам спрашивающий, и Ганс ошибался. Ум был в комнате, только не в лошади.</p>
+<p>В самом мягком виде это знакомо каждому: лицо, проступающее в облаке, в розетке, в подгоревшем тосте. Мозг держит быстрый детектор лиц, настроенный на чувствительность: ему выгоднее принять случайные пятна за лицо, чем пропустить настоящее<sup id="fnref:pareidolia"><a class="footnote-ref" href="#fn:pareidolia">3</a></sup>. Цена ошибки несимметрична — не заметить хищника в кустах опаснее, чем вздрогнуть от тени, — поэтому детектор откликается на слабый намёк.</p>
+<p>Эффект ELIZA, Умный Ганс, лицо в облаке — срабатывания одного механизма, настроенного видеть лица, агентов и умыслы при первом же поводе. Мы скорее увидим разум, которого нет, чем пропустим тот, что есть.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:turing">
+<p>A. M. Turing, «Computing Machinery and Intelligence». <em>Mind</em> LIX(236), 433–460 (1950) — «имитационная игра» (тест Тьюринга): вопрос «может ли машина мыслить» заменён проверяемой игрой в различение (<a href="https://academic.oup.com/mind/article/LIX/236/433/986238">doi:10.1093/mind/LIX.236.433</a>).&#160;<a class="footnote-backref" href="#fnref:turing" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:hans">
+<p>Oskar Pfungst, «Das Pferd des Herrn von Osten (Der Kluge Hans)» (1907). Конь реагировал на невольные телесные сигналы спрашивающего; когда ответа не знал и человек, Ганс ошибался — «эффект умного Ганса» (<a href="https://en.wikipedia.org/wiki/Clever_Hans">Wikipedia, «Clever Hans»</a>).&#160;<a class="footnote-backref" href="#fnref:hans" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:pareidolia">
+<p>Парейдолия — склонность мозга видеть осмысленные образы (особенно лица) в случайных стимулах; объясняется «дешёвым» гиперчувствительным детектором лиц с несимметричной ценой ошибки (<a href="https://en.wikipedia.org/wiki/Pareidolia">Wikipedia, «Pareidolia»</a>).&#160;<a class="footnote-backref" href="#fnref:pareidolia" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  <div class="body lvl" data-i="2" style="display:none"><p>Тьюринг предсказывал, что к 2000 году машина в пятиминутной беседе будет обманывать судью достаточно часто — настолько, что разговоры о «мыслящих машинах» станут привычными. Точнее, что верно опознавать собеседника судья будет не чаще чем в 70% случаев. Прогноз сбылся с опозданием. В 2025 году Кэмерон Джонс и Бенджамин Берген (Калифорнийский университет в Сан-Диего) провели контролируемый трёхсторонний тест: судья пять минут параллельно переписывался с человеком и с программой, а затем называл, кто из двоих человек<sup id="fnref:jones"><a class="footnote-ref" href="#fn:jones">1</a></sup>.</p>
+<p>Результат говорит сам за себя в сравнении:</p>
+<table>
+<thead>
+<tr>
+<th>Собеседник</th>
+<th>Принят за человека</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GPT-4.5, с указанием держаться роли</td>
+<td>73%</td>
+</tr>
+<tr>
+<td>GPT-4.5, без такого указания</td>
+<td>36%</td>
+</tr>
+<tr>
+<td>GPT-4o (прежнее поколение)</td>
+<td>21%</td>
+</tr>
+<tr>
+<td>ELIZA (1966)</td>
+<td>23%</td>
+</tr>
+</tbody>
+</table>
+<p>Современную модель GPT-4.5, которой велели держаться человеческой роли, судьи приняли за человека в 73% случаев — чаще, чем настоящего собеседника-человека. Это первое строгое свидетельство, что машина проходит классический тест Тьюринга. А сама ELIZA, проигрывая, делает результат убедительным: раз её узнают как машину почти всегда, высокие баллы модели — не просто общая людская склонность всё очеловечивать. Тест, как видно, удостоверяет неотличимость в разговоре, а не мышление; а неотличимость — это факт и про машину, и про судью.</p>
+<h3>Две машины, два устройства</h3>
+<p>ELIZA устроена просто. Она ищет в реплике ключевое слово, по жёстко прописанному правилу разбирает фразу на части и собирает ответ обратно, переставляя местоимения: «я» на «вы», «моё» на «ваше». Весь её «разум» — несколько сотен строк таких правил и заготовок; ни модели мира, ни памяти о сказанном за пределами текущей фразы. Нет ключевого слова — в ход идут безопасные заглушки вроде «расскажите подробнее».</p>
+<p>Современная модель устроена иначе и куда тяжелее. Её не программируют правилами вручную: её обучают предсказывать следующее слово в тексте, прогнав через неё громадные объёмы написанного людьми. Из одной этой задачи — угадать продолжение — вырастают миллиарды настроенных чисел, в которых осели закономерности языка. Отвечает она, выбирая вероятное продолжение разговора. Снаружи оба собеседника держат одну сторону беседы; внутри между ними пропасть.</p>
+<h3>Проходит — значит ли понимает?</h3>
+<p>Тест проверяет неотличимость в разговоре, а не понимание, и одно из другого не вытекает. Философ Джон Сёрл возразил мысленным опытом о «китайской комнате»: человек, не знающий китайского, по толстому своду правил выдаёт на китайские записки безупречные китайские ответы — снаружи он будто сдаёт экзамен на язык, внутри не понимает ни иероглифа<sup id="fnref:searle"><a class="footnote-ref" href="#fn:searle">2</a></sup>. Так и прохождение теста, по этому доводу, говорит об убедительности ответов, но не о понимании за ними. Спор этот не закрыт.</p>
+<p>Сами авторы теста замечают: высокий балл — про социальную убедительность, а не про ум. И добавляют деталь: без подсказки держаться роли модель набирает заметно меньше — те же 36% против 73%. Казаться человеком она умеет, а вот сообразить сама, каким человеком надо казаться, выходит хуже.</p>
+<h3>Как это измеряют</h3>
+<p>Чтобы отделить настоящую неотличимость от поспешного очеловечивания, тест ставят как контролируемый опыт: судья сравнивает машину не саму по себе, а бок о бок с живым человеком; вопросы и роли оговорены заранее; в набор включают слабую программу-приманку (ту самую ELIZA). Если приманку распознают, а сильную модель нет — дело не в одной людской доверчивости. Это прямая родня проверке Пфунгста: тот тоже не поверил молве про коня, а развёл спрашивающего и животное и менял, кто из людей знает ответ.</p>
+<h3>Открытый вопрос</h3>
+<p>Если в беседе машина уже неотличима от человека, что остаётся надёжным признаком мысли — и есть ли он вообще? И по мере того как имитация крепнет, эффект ELIZA нас выручает или подводит: готовность видеть в собеседнике своего помогает ладить с машинами — или мешает разглядеть, что перед нами лишь складно подобранные слова?</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:jones">
+<p>Cameron R. Jones, Benjamin K. Bergen, «Large Language Models Pass the Turing Test» (2025), UC San Diego. В контролируемом трёхстороннем тесте GPT-4.5 с инструкцией держать роль принимали за человека в 73% случаев (<a href="https://arxiv.org/abs/2503.23674">arXiv:2503.23674</a>).&#160;<a class="footnote-backref" href="#fnref:jones" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:searle">
+<p>John Searle, «Minds, Brains, and Programs». <em>Behavioral and Brain Sciences</em> 3(3), 417–457 (1980) — мысленный эксперимент «Китайская комната»: синтаксис (манипуляция символами) не даёт семантики (понимания) (<a href="https://plato.stanford.edu/entries/chinese-room/">Stanford Encyclopedia of Philosophy, «The Chinese Room Argument»</a>).&#160;<a class="footnote-backref" href="#fnref:searle" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></div>
+  
+  
+</div>
+
+<script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
+<script defer src="/assets/site-bar/bot.js"></script>
+
+<script>
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
+var TROPA_DECKS = ["Машина вас слушает — или вам так кажется?", "Один тип ошибки — от лошади до облака", "Что на самом деле измеряет тест"];
+
+(function(){
+  var tabs=document.querySelectorAll('.tab'), bodies=document.querySelectorAll('.lvl');
+  var pdfs=TROPA_PDFS, decks=TROPA_DECKS, deckEl=document.getElementById('sg-deck');
+  document.querySelector('.tabs')&&document.querySelector('.tabs').addEventListener('click',function(e){
+    var t=e.target.closest('.tab'); if(!t)return;
+    tabs.forEach(function(x){x.classList.remove('active')}); t.classList.add('active');
+    var i=+t.dataset.i;
+    bodies.forEach(function(b){b.style.display=(+b.dataset.i===i)?'':'none'});
+    if(deckEl){ if(decks[i]){deckEl.textContent=decks[i];deckEl.style.display='';if(window.tropaMath)window.tropaMath(deckEl);} else {deckEl.style.display='none'} }
+    var link=document.getElementById('pdf-link'); if(link&&pdfs[i])link.href=pdfs[i];
+    if(window.tropaMath)window.tropaMath(bodies[i]);
+  });
+})();
+
+</script>
+
+</body>
+</html>
