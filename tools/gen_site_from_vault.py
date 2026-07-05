@@ -1,98 +1,100 @@
 #!/usr/bin/env python3
-"""Генератор САЙТА из базы знаний (единый источник → сайт).
+"""Синхронизатор СЮЖЕТОВ из базы знаний в сайт и ТГ-бот (единый источник).
 
-Из vault-заметок с полем `site_slug` формирует файлы content/storylines/*.md
-в формате сайта Даниила. Тело — дословно из заметки (без раздела «## Связи»),
-frontmatter — сайтовые поля (title/code/region/tags/geo/routes).
+База `knowledge/` — единственный источник правды. Этот скрипт разносит её в оба продукта:
+  • сайт  — `~/Projects/tropa/content/storylines/*.md` (+ схемы `content/figures/*.typ`)
+  • ТГ-бот — `~/Projects/tropa-bot/tg-bot/content/storylines/*.md` (RAG)
 
-По умолчанию — СУХОЙ ПРОГОН: генерит во временную папку и строго сверяет с текущим
-сайтом (значения frontmatter + тело + побайтово). Ничего не трогает.
-С флагом --apply — записывает прямо в content/storylines/ репо сайта.
+Обрабатывает ДОБАВЛЕНИЕ / ИЗМЕНЕНИЕ / УДАЛЕНИЕ сюжетов: что удалили из базы — удаляется
+и из продуктов. Из vault берутся заметки с полем `site_slug`; тело — без раздела «## Связи».
 
-Проверено 06.07.2026: 40/40 сюжетов генерятся байт-в-байт как на сайте.
+По умолчанию — СУХОЙ ПРОГОН (показывает, что изменится, ничего не трогает).
+    python3 tools/gen_site_from_vault.py            # что изменится
+    python3 tools/gen_site_from_vault.py --apply     # применить к сайту
+    python3 tools/gen_site_from_vault.py --apply --bot   # + к ТГ-боту
+    python3 tools/gen_site_from_vault.py --check     # строгая сверка (для миграции): всё ли байт-в-байт
 
-Использование:
-    python3 tools/gen_site_from_vault.py            # проверка (dry-run)
-    python3 tools/gen_site_from_vault.py --apply     # записать в репо сайта
+После --apply: собрать сайт (`build.py` в репо Даниила) и запушить; ТГ-бот — задеплоить (scp).
 """
-import os, re, glob, sys, yaml, tempfile, shutil
+import os, re, glob, sys, yaml, shutil
 
 VAULT = os.path.expanduser(os.environ.get("NPT_VAULT", "~/Projects/tropa-bot/knowledge"))
 SITE  = os.path.expanduser(os.environ.get("TROPA_SITE", "~/Projects/tropa/content/storylines"))
+SITE_FIG = os.path.expanduser(os.environ.get("TROPA_FIG", "~/Projects/tropa/content/figures"))
+BOT   = os.path.expanduser(os.environ.get("BOT_STORYLINES", "~/Projects/tropa-bot/tg-bot/content/storylines"))
 SYU   = os.path.join(VAULT, "10-syuzhety")
+VFIG  = os.path.join(VAULT, "assets", "figures")
 
-def split(text):
-    m = re.match(r"^---\n(.*?)\n---\n(.*)$", text, re.S)
-    return (m.group(1), m.group(2)) if m else (None, text)
+def split(t):
+    m = re.match(r"^---\n(.*?)\n---\n(.*)$", t, re.S)
+    return (m.group(1), m.group(2)) if m else (None, t)
 
-def gen_frontmatter(v, title, vfm_txt):
-    lines = [f"title: {title}", f"code: {v['code']}"]
-    if v.get("region"): lines.append(f"region: {v['region']}")
-    lines.append("tags:")
-    for t in v.get("tags", []): lines.append(f"- {t}")
+def gen_fm(v, title, vfm_txt):
+    L = [f"title: {title}", f"code: {v['code']}"]
+    if v.get("region"): L.append(f"region: {v['region']}")
+    L.append("tags:")
+    for t in v.get("tags", []): L.append(f"- {t}")
     if "geo" in v:
-        graw = re.search(r"^geo:\s*\[(.+?)\]\s*$", vfm_txt, re.M)  # координаты дословно
-        vals = [g.strip() for g in graw.group(1).split(",")] if graw else [str(x) for x in v["geo"]]
-        lines.append("geo:")
-        for x in vals: lines.append(f"- {x}")
+        g = re.search(r"^geo:\s*\[(.+?)\]\s*$", vfm_txt, re.M)   # координаты дословно
+        vals = [x.strip() for x in g.group(1).split(",")] if g else [str(x) for x in v["geo"]]
+        L.append("geo:"); L += [f"- {x}" for x in vals]
     if "routes" in v:
         if v["routes"]:
-            lines.append("routes:")
-            for r in v["routes"]: lines.append(f"- {r}")
+            L.append("routes:"); L += [f"- {r}" for r in v["routes"]]
         else:
-            lines.append("routes: []")
-    return "\n".join(lines)
+            L.append("routes: []")
+    return "\n".join(L)
 
-def generate(out_dir):
-    n = 0
-    for path in glob.glob(os.path.join(SYU, "*.md")):
-        vfm, vbody = split(open(path, encoding="utf-8").read())
-        if not vfm: continue
-        v = yaml.safe_load(vfm)
-        if not v.get("site_slug"): continue
-        title = os.path.basename(path)[:-3]
-        body = re.sub(r"\n## Связи\n.*$", "", vbody, flags=re.S).strip()
-        out = "---\n" + gen_frontmatter(v, title, vfm) + "\n---\n\n" + body + "\n"
-        open(os.path.join(out_dir, v["site_slug"] + ".md"), "w", encoding="utf-8").write(out)
-        n += 1
-    return n
+# ── собрать желаемое состояние из базы ──────────────────────────
+desired = {}   # site_slug -> текст файла сайта
+for path in glob.glob(os.path.join(SYU, "*.md")):
+    vfm, vbody = split(open(path, encoding="utf-8").read())
+    if not vfm: continue
+    v = yaml.safe_load(vfm)
+    slug = v.get("site_slug")
+    if not slug: continue
+    title = os.path.basename(path)[:-3]
+    body = re.sub(r"\n## Связи\n.*$", "", vbody, flags=re.S).strip()
+    desired[slug] = "---\n" + gen_fm(v, title, vfm) + "\n---\n\n" + body + "\n"
 
-def verify(gen_dir):
-    fm_bad, body_bad, missing, byte_ok = [], [], [], 0
-    for f in glob.glob(os.path.join(gen_dir, "*.md")):
-        slug = os.path.basename(f); cur = os.path.join(SITE, slug)
-        if not os.path.exists(cur): missing.append(slug); continue
-        g = open(f, encoding="utf-8").read(); c = open(cur, encoding="utf-8").read()
-        if g == c: byte_ok += 1
-        gfm, gb = split(g); cfm, cb = split(c)
-        if yaml.safe_load(gfm) != yaml.safe_load(cfm): fm_bad.append(slug)
-        if gb.strip() != cb.strip(): body_bad.append(slug)
-    return fm_bad, body_bad, missing, byte_ok
+if not desired:
+    print("В базе нет сюжетов с site_slug — отказ (защита от случайного удаления всего)."); sys.exit(1)
+
+def classify(target_dir):
+    cur = {os.path.basename(f)[:-3]: open(f, encoding="utf-8").read()
+           for f in glob.glob(os.path.join(target_dir, "*.md"))}
+    new     = [s for s in desired if s not in cur]
+    changed = [s for s in desired if s in cur and desired[s] != cur[s]]
+    removed = [s for s in cur if s not in desired]
+    return new, changed, removed
 
 apply = "--apply" in sys.argv
-tmp = tempfile.mkdtemp(prefix="gen_storylines_")
-try:
-    n = generate(tmp)
-    fm_bad, body_bad, missing, byte_ok = verify(tmp)
-    print(f"Сгенерировано: {n} | байт-в-байт: {byte_ok}/{n} | "
-          f"frontmatter расходится: {len(fm_bad)} | тело: {len(body_bad)} | нет на сайте: {len(missing)}")
-    ok = not (fm_bad or body_bad or missing)
-    if not ok:
-        print("❌ Расхождения:", (fm_bad + body_bad + missing)[:8]); sys.exit(1)
-    print("✅ Генерация эквивалентна текущему сайту.")
+do_bot = "--bot" in sys.argv
+check = "--check" in sys.argv
+
+targets = [("САЙТ", SITE, True)] + ([("ТГ-БОТ", BOT, False)] if do_bot else [])
+for name, tdir, is_site in targets:
+    os.makedirs(tdir, exist_ok=True)
+    new, changed, removed = classify(tdir)
+    print(f"\n=== {name} ({tdir}) ===")
+    print(f"  новых: {len(new)} {new}")
+    print(f"  изменённых: {len(changed)} {changed}")
+    print(f"  на удаление: {len(removed)} {removed}")
+    if check:
+        byte_ok = sum(1 for s in desired
+                      if os.path.exists(os.path.join(tdir, s + ".md"))
+                      and open(os.path.join(tdir, s + ".md"), encoding="utf-8").read() == desired[s])
+        print(f"  байт-в-байт совпадает: {byte_ok}/{len(desired)}")
     if apply:
-        for f in glob.glob(os.path.join(tmp, "*.md")):
-            shutil.copy2(f, os.path.join(SITE, os.path.basename(f)))
-        print(f"→ Записано в {SITE} ({n} файлов). Дальше: собрать сайт и запушить в репо Даниила.")
-    if "--bot" in sys.argv:
-        # тот же формат сюжета питает и ТГ-бота (RAG по content/storylines/)
-        bot_dir = os.path.expanduser(os.environ.get("BOT_STORYLINES",
-                    "~/Projects/tropa-bot/tg-bot/content/storylines"))
-        os.makedirs(bot_dir, exist_ok=True)
-        for f in glob.glob(os.path.join(tmp, "*.md")):
-            shutil.copy2(f, os.path.join(bot_dir, os.path.basename(f)))
-        print(f"→ Записано в {bot_dir} ({n} файлов) — ТГ-бот теперь видит все сюжеты базы.")
-    if not apply and "--bot" not in sys.argv:
-        print("Сухой прогон. Запись: --apply (сайт), --bot (ТГ-бот), можно вместе.")
-finally:
-    shutil.rmtree(tmp, ignore_errors=True)
+        for s in new + changed:
+            open(os.path.join(tdir, s + ".md"), "w", encoding="utf-8").write(desired[s])
+        for s in removed:
+            os.remove(os.path.join(tdir, s + ".md"))
+        # схемы (только для сайта): синк .typ из базы
+        if is_site and os.path.isdir(VFIG):
+            for f in glob.glob(os.path.join(VFIG, "*.typ")):
+                shutil.copy2(f, os.path.join(SITE_FIG, os.path.basename(f)))
+        print(f"  → применено (записано {len(new)+len(changed)}, удалено {len(removed)}).")
+
+if not apply:
+    print("\nСухой прогон. Применить: --apply (сайт), добавить --bot (ТГ-бот).")
