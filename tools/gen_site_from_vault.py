@@ -84,7 +84,15 @@ try:
         for f in glob.glob(os.path.join(tmp, "*.md")):
             shutil.copy2(f, os.path.join(SITE, os.path.basename(f)))
         print(f"→ Записано в {SITE} ({n} файлов). Дальше: собрать сайт и запушить в репо Даниила.")
-    else:
-        print("Сухой прогон. Для записи в репо сайта: --apply")
+    if "--bot" in sys.argv:
+        # тот же формат сюжета питает и ТГ-бота (RAG по content/storylines/)
+        bot_dir = os.path.expanduser(os.environ.get("BOT_STORYLINES",
+                    "~/Projects/tropa-bot/tg-bot/content/storylines"))
+        os.makedirs(bot_dir, exist_ok=True)
+        for f in glob.glob(os.path.join(tmp, "*.md")):
+            shutil.copy2(f, os.path.join(bot_dir, os.path.basename(f)))
+        print(f"→ Записано в {bot_dir} ({n} файлов) — ТГ-бот теперь видит все сюжеты базы.")
+    if not apply and "--bot" not in sys.argv:
+        print("Сухой прогон. Запись: --apply (сайт), --bot (ТГ-бот), можно вместе.")
 finally:
     shutil.rmtree(tmp, ignore_errors=True)
