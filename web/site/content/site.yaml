@@ -4,6 +4,11 @@ description: >
   Telegram-бот отслеживает Live Location и запускает голосовой рассказ,
   когда вы подходите к научной точке маршрута.
 
+analytics:
+  # ID счётчика Яндекс.Метрики. Создать: metrika.yandex.ru → «Добавить счётчик» для tropa.fmin.xyz.
+  # Пока пусто — сниппет НЕ вставляется (сайт не трекается). Впиши число — заработает.
+  yandex_id: ""
+
 links:
   github: "https://github.com/MerkulovDaniil/tropa"
   brief: "https://github.com/MerkulovDaniil/tropa/blob/main/BRIEF.md"

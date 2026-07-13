@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Маршруты — {{ site.title }}{% endblock %}
+{% block styles %}
+.page-hero{padding:52px 0 6px;display:flex;align-items:center;gap:18px}
+.page-hero img{max-height:48px;width:auto;opacity:.8}
+.page-hero h1{font-size:2.1rem;font-weight:700;margin-bottom:2px}
+.page-hero p{color:var(--tm);font-size:0.95rem}
+.route-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin:30px 0 60px}
+.route-card{display:block;background:#fff;border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;transition:all 0.15s;text-decoration:none}
+.route-card:hover{border-color:var(--g);box-shadow:0 4px 16px rgba(47,111,99,0.08);text-decoration:none;transform:translateY(-2px)}
+.rc-map{height:180px;background:#eef2f0;position:relative}
+.rc-map img{width:100%;height:100%;object-fit:cover}
+.rc-status{position:absolute;top:10px;right:10px;font-size:0.7rem;padding:3px 8px;border-radius:6px;font-weight:500}
+.rc-status.draft{background:#fef3c7;color:#92400e}
+.rc-status.ready{background:var(--gl);color:var(--g)}
+.rc-body{padding:16px}
+.rc-name{font-weight:600;font-size:1.05rem;color:var(--tx)}
+.rc-meta{font-size:0.82rem;color:var(--tm);margin-top:3px}
+@media(max-width:640px){.route-gallery{grid-template-columns:1fr}}
+{% endblock %}
+
+{% block content %}
+<div class="w">
+  <div class="page-hero">
+    <img src="/assets/glyphs/mountains.png" alt="">
+    <div>
+      <h1>Маршруты</h1>
+      <p>Научные тропы — каждая как набор сюжетов с точками на карте</p>
+    </div>
+  </div>
+  <div class="route-gallery">
+  {% for route in routes %}
+    <a href="/{{ route.id }}/" class="route-card">
+      <div class="rc-map">
+        <img src="/assets/{{ route.id }}-map.png" alt="{{ route.name }}" onerror="this.parentElement.style.background='var(--gl)'">
+        <span class="rc-status {% if route.status == 'ready' %}ready{% else %}draft{% endif %}">{{ 'готов' if route.status == 'ready' else 'черновик' }}</span>
+      </div>
+      <div class="rc-body">
+        <div class="rc-name">{{ route.name }}</div>
+        <div class="rc-meta">{{ route.city }} &middot; {{ route.points }} точек{% if route.time_min %} &middot; {{ route.time_min }} мин{% endif %}</div>
+      </div>
+    </a>
+  {% endfor %}
+  </div>
+</div>
+{% endblock %}

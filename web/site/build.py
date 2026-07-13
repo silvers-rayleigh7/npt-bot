@@ -575,10 +575,20 @@ def build():
         f.write(env.get_template("index.html").render(site=site, routes=cards))
     print(f"  index.html ({len(cards)} routes)")
 
+    # ── отдельная вкладка «Маршруты» (карточки всех маршрутов)
+    routes_out = os.path.join(OUT, "routes")
+    os.makedirs(routes_out, exist_ok=True)
+    with open(os.path.join(routes_out, "index.html"), "w") as f:
+        f.write(env.get_template("routes.html").render(site=site, routes=cards))
+    print(f"  routes/index.html ({len(cards)} routes)")
+
     # ── маршруты: POI = сюжеты с geo + членством, порядок TSP, линия по тропам
     route_tpl = env.get_template("route.html")
     for r in routes:
         poi = [s for s in storylines if r["id"] in s["routes"] and s["geo"]]
+        if not poi:  # маршрут без сюжетов с geo — карточка есть, страницу-карту не строим
+            print(f"  {r['id']}/ — 0 POI, страница пропущена")
+            continue
         coords = [s["geo"] for s in poi]
         start = next((i for i, s in enumerate(poi) if s.get("code") == "WP001"), 0)
         order = tsp_order(coords, start)

@@ -3,18 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{% block title %}{{ site.title }}{% endblock %}</title>
+<title>Маршруты — Тропа</title>
 <link rel="icon" href="/assets/trees.svg" type="image/svg+xml">
-{% if site.analytics and site.analytics.yandex_id %}<!-- Яндекс.Метрика -->
-<script type="text/javascript">
-   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-   m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
-   k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-   (window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
-   ym({{ site.analytics.yandex_id }},"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/{{ site.analytics.yandex_id }}" style="position:absolute;left:-9999px" alt=""></div></noscript>
-{% endif %}
+
 <link rel="stylesheet" href="/assets/site-bar/bot.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
@@ -41,7 +32,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
-{% block head %}{% endblock %}
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html{overflow-x:clip}
@@ -67,7 +58,24 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 .nav-icon{display:flex;align-items:center;justify-content:center;color:var(--tm);transition:color 0.15s}
 .nav-icon:hover{color:var(--olive);text-decoration:none}
 .nav-icon i{width:16px;height:16px}
-{% block styles %}{% endblock %}
+
+.page-hero{padding:52px 0 6px;display:flex;align-items:center;gap:18px}
+.page-hero img{max-height:48px;width:auto;opacity:.8}
+.page-hero h1{font-size:2.1rem;font-weight:700;margin-bottom:2px}
+.page-hero p{color:var(--tm);font-size:0.95rem}
+.route-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin:30px 0 60px}
+.route-card{display:block;background:#fff;border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;transition:all 0.15s;text-decoration:none}
+.route-card:hover{border-color:var(--g);box-shadow:0 4px 16px rgba(47,111,99,0.08);text-decoration:none;transform:translateY(-2px)}
+.rc-map{height:180px;background:#eef2f0;position:relative}
+.rc-map img{width:100%;height:100%;object-fit:cover}
+.rc-status{position:absolute;top:10px;right:10px;font-size:0.7rem;padding:3px 8px;border-radius:6px;font-weight:500}
+.rc-status.draft{background:#fef3c7;color:#92400e}
+.rc-status.ready{background:var(--gl);color:var(--g)}
+.rc-body{padding:16px}
+.rc-name{font-weight:600;font-size:1.05rem;color:var(--tx)}
+.rc-meta{font-size:0.82rem;color:var(--tm);margin-top:3px}
+@media(max-width:640px){.route-gallery{grid-template-columns:1fr}}
+
 @media(max-width:640px){
   .w{padding:0 16px}
   .nav-inner{gap:14px}
@@ -87,12 +95,36 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   <a href="/bot/" class="nav-link">Бот</a>
   <a href="/guides/" class="nav-link">Гиды</a>
   <div class="nav-spacer"></div>
-  <a href="{{ site.links.github }}" class="nav-icon"><i data-lucide="github"></i></a>
-  <a href="{{ site.links.telegram }}" class="nav-icon"><i data-lucide="send"></i></a>
+  <a href="https://github.com/MerkulovDaniil/tropa" class="nav-icon"><i data-lucide="github"></i></a>
+  <a href="https://t.me/zoobr_bot" class="nav-icon"><i data-lucide="send"></i></a>
 </div></nav>
-{% block content %}{% endblock %}
+
+<div class="w">
+  <div class="page-hero">
+    <img src="/assets/glyphs/mountains.png" alt="">
+    <div>
+      <h1>Маршруты</h1>
+      <p>Научные тропы — каждая как набор сюжетов с точками на карте</p>
+    </div>
+  </div>
+  <div class="route-gallery">
+  
+    <a href="/innopolis/" class="route-card">
+      <div class="rc-map">
+        <img src="/assets/innopolis-map.png" alt="Научная тропа Иннополиса" onerror="this.parentElement.style.background='var(--gl)'">
+        <span class="rc-status ready">готов</span>
+      </div>
+      <div class="rc-body">
+        <div class="rc-name">Научная тропа Иннополиса</div>
+        <div class="rc-meta">Иннополис, Татарстан · правый берег Волги &middot; 13 точек &middot; 110 мин</div>
+      </div>
+    </a>
+  
+  </div>
+</div>
+
 <script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
 <script defer src="/assets/site-bar/bot.js"></script>
-{% block scripts %}{% endblock %}
+
 </body>
 </html>

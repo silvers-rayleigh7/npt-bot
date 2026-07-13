@@ -5,15 +5,30 @@
 .page-hero img{max-height:48px;width:auto;opacity:.8}
 .page-hero h1{font-size:2.1rem;font-weight:700;margin-bottom:2px}
 .page-hero p{color:var(--tm);font-size:0.95rem}
-.sl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px;margin:30px 0 60px}
-/* иллюстрация во всю карточку + агрессивный белый градиент снизу под крупный заголовок */
+/* фильтр */
+.sl-filters{margin:22px 0 4px;display:flex;flex-direction:column;gap:8px}
+.sl-frow{display:flex;flex-wrap:wrap;align-items:center;gap:7px}
+.sl-flabel{font-size:0.8rem;color:var(--tm);min-width:64px}
+.sl-chip{font-size:0.8rem;padding:5px 12px;border:1px solid var(--sand,#DBD4C7);border-radius:999px;
+  background:#fff;color:var(--tm);cursor:pointer;transition:background .12s,color .12s,border-color .12s;user-select:none}
+.sl-chip:hover{border-color:var(--olive)}
+.sl-chip.active{background:var(--olive);color:#fff;border-color:var(--olive)}
+.sl-count{font-size:0.8rem;color:var(--tm);margin-left:auto}
+.sl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px;margin:16px 0 60px}
 .sl-card{display:block;position:relative;aspect-ratio:2/1;border:1px solid #D6CFC1;border-radius:14px;overflow:hidden;background:#fff;transition:border-color .15s;text-decoration:none}
 .sl-card:hover{border-color:var(--olive);text-decoration:none}
+.sl-card.hidden{display:none}
 .sl-ic{position:absolute;inset:0;background-position:center 20%;background-size:122%;background-repeat:no-repeat;opacity:.9}
 .sl-veil{position:absolute;inset:0;background:linear-gradient(to top,#ffffff 0%,#ffffff 26%,rgba(255,255,255,.82) 48%,rgba(255,255,255,0) 78%)}
+/* чипы на карточке — сверху слева, до 3 */
+.sl-tags{position:absolute;top:12px;left:12px;right:12px;display:flex;flex-wrap:wrap;gap:5px;z-index:2}
+.sl-tag{font-size:0.68rem;line-height:1;padding:4px 8px;border-radius:6px;background:rgba(255,255,255,.82);
+  color:var(--tm);border:1px solid rgba(0,0,0,.06);backdrop-filter:blur(2px)}
+.sl-tag.reg{background:rgba(124,127,106,.9);color:#fff;border-color:transparent}
 .sl-title{position:absolute;left:22px;right:22px;bottom:18px;font-family:var(--serif);font-size:1.75rem;font-weight:600;line-height:1.03;color:var(--ink);transition:color .15s}
 .sl-card:hover .sl-title{color:var(--gd)}
-@media(max-width:640px){.sl-grid{grid-template-columns:1fr}}
+.sl-empty{color:var(--tm);padding:30px 0 60px}
+@media(max-width:640px){.sl-grid{grid-template-columns:1fr}.sl-flabel{min-width:52px}}
 {% endraw %}{% endblock %}
 
 {% block content %}
@@ -25,14 +40,72 @@
       <p>Вычитанные научные сюжеты тропы — каждый с тремя уровнями глубины</p>
     </div>
   </div>
-  <div class="sl-grid">
+
+  <div class="sl-filters" id="sl-filters">
+    <div class="sl-frow" data-group="region"><span class="sl-flabel">Регион</span></div>
+    <div class="sl-frow" data-group="subject"><span class="sl-flabel">Тема</span><span class="sl-count" id="sl-count"></span></div>
+  </div>
+
+  <div class="sl-grid" id="sl-grid">
     {% for s in storylines %}
-    <a class="sl-card" href="/storylines/{{ s.slug }}/">
+    <a class="sl-card" href="/storylines/{{ s.slug }}/"
+       data-region="{{ s.region or '' }}"
+       data-tags="{{ s.tags|join('|') if s.tags else '' }}">
       <div class="sl-ic" style="background-image:url(/{{ s.icon or 'assets/glyphs/mountains.png' }})"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        {% if s.region %}<span class="sl-tag reg">{{ s.region }}</span>{% endif %}
+        {% for t in (s.tags or [])[:2] %}<span class="sl-tag">{{ t }}</span>{% endfor %}
+      </div>
       <span class="sl-title">{{ s.title }}</span>
     </a>
     {% endfor %}
   </div>
+  <div class="sl-empty hidden" id="sl-empty">По выбранным фильтрам сюжетов нет.</div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function(){
+  var grid=document.getElementById('sl-grid');
+  var cards=[].slice.call(grid.querySelectorAll('.sl-card'));
+  var countEl=document.getElementById('sl-count');
+  var emptyEl=document.getElementById('sl-empty');
+  var active={region:null,subject:null};
+
+  // собрать уникальные значения
+  function uniq(list){return list.filter(function(v,i){return v&&list.indexOf(v)===i;}).sort(function(a,b){return a.localeCompare(b,'ru');});}
+  var regions=uniq(cards.map(function(c){return c.dataset.region;}));
+  var subjects=uniq([].concat.apply([],cards.map(function(c){return c.dataset.tags?c.dataset.tags.split('|'):[];})));
+
+  function buildRow(group,values){
+    var row=document.querySelector('.sl-frow[data-group="'+group+'"]');
+    function mk(label,val){
+      var b=document.createElement('span');b.className='sl-chip'+(val===null?' active':'');
+      b.textContent=label;b.dataset.val=(val===null?'':val);
+      b.onclick=function(){active[group]=val;
+        row.querySelectorAll('.sl-chip').forEach(function(x){x.classList.remove('active');});
+        b.classList.add('active');apply();};
+      row.appendChild(b);
+    }
+    mk('Все',null);values.forEach(function(v){mk(v,v);});
+  }
+  buildRow('region',regions);
+  buildRow('subject',subjects);
+
+  function apply(){
+    var shown=0;
+    cards.forEach(function(c){
+      var okR=!active.region||c.dataset.region===active.region;
+      var tags=c.dataset.tags?c.dataset.tags.split('|'):[];
+      var okS=!active.subject||tags.indexOf(active.subject)>-1;
+      var vis=okR&&okS;c.classList.toggle('hidden',!vis);if(vis)shown++;
+    });
+    countEl.textContent=shown+' из '+cards.length;
+    emptyEl.classList.toggle('hidden',shown>0);
+  }
+  apply();
+})();
+</script>
 {% endblock %}

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Сюжеты — Тропа</title>
 <link rel="icon" href="/assets/trees.svg" type="image/svg+xml">
+
 <link rel="stylesheet" href="/assets/site-bar/bot.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
@@ -62,15 +63,30 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 .page-hero img{max-height:48px;width:auto;opacity:.8}
 .page-hero h1{font-size:2.1rem;font-weight:700;margin-bottom:2px}
 .page-hero p{color:var(--tm);font-size:0.95rem}
-.sl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px;margin:30px 0 60px}
-/* иллюстрация во всю карточку + агрессивный белый градиент снизу под крупный заголовок */
+/* фильтр */
+.sl-filters{margin:22px 0 4px;display:flex;flex-direction:column;gap:8px}
+.sl-frow{display:flex;flex-wrap:wrap;align-items:center;gap:7px}
+.sl-flabel{font-size:0.8rem;color:var(--tm);min-width:64px}
+.sl-chip{font-size:0.8rem;padding:5px 12px;border:1px solid var(--sand,#DBD4C7);border-radius:999px;
+  background:#fff;color:var(--tm);cursor:pointer;transition:background .12s,color .12s,border-color .12s;user-select:none}
+.sl-chip:hover{border-color:var(--olive)}
+.sl-chip.active{background:var(--olive);color:#fff;border-color:var(--olive)}
+.sl-count{font-size:0.8rem;color:var(--tm);margin-left:auto}
+.sl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px;margin:16px 0 60px}
 .sl-card{display:block;position:relative;aspect-ratio:2/1;border:1px solid #D6CFC1;border-radius:14px;overflow:hidden;background:#fff;transition:border-color .15s;text-decoration:none}
 .sl-card:hover{border-color:var(--olive);text-decoration:none}
+.sl-card.hidden{display:none}
 .sl-ic{position:absolute;inset:0;background-position:center 20%;background-size:122%;background-repeat:no-repeat;opacity:.9}
 .sl-veil{position:absolute;inset:0;background:linear-gradient(to top,#ffffff 0%,#ffffff 26%,rgba(255,255,255,.82) 48%,rgba(255,255,255,0) 78%)}
+/* чипы на карточке — сверху слева, до 3 */
+.sl-tags{position:absolute;top:12px;left:12px;right:12px;display:flex;flex-wrap:wrap;gap:5px;z-index:2}
+.sl-tag{font-size:0.68rem;line-height:1;padding:4px 8px;border-radius:6px;background:rgba(255,255,255,.82);
+  color:var(--tm);border:1px solid rgba(0,0,0,.06);backdrop-filter:blur(2px)}
+.sl-tag.reg{background:rgba(124,127,106,.9);color:#fff;border-color:transparent}
 .sl-title{position:absolute;left:22px;right:22px;bottom:18px;font-family:var(--serif);font-size:1.75rem;font-weight:600;line-height:1.03;color:var(--ink);transition:color .15s}
 .sl-card:hover .sl-title{color:var(--gd)}
-@media(max-width:640px){.sl-grid{grid-template-columns:1fr}}
+.sl-empty{color:var(--tm);padding:30px 0 60px}
+@media(max-width:640px){.sl-grid{grid-template-columns:1fr}.sl-flabel{min-width:52px}}
 
 @media(max-width:640px){
   .w{padding:0 16px}
@@ -86,7 +102,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 <nav class="nav"><div class="w nav-inner">
   <a href="/" class="nav-logo"><img src="/assets/trees.svg" alt="">Тропа</a>
   <a href="/storylines/" class="nav-link">Сюжеты</a>
-  <a href="/innopolis/" class="nav-link">Маршрут</a>
+  <a href="/routes/" class="nav-link">Маршруты</a>
   <a href="/skills/" class="nav-link">Скиллы</a>
   <a href="/bot/" class="nav-link">Бот</a>
   <a href="/guides/" class="nav-link">Гиды</a>
@@ -103,265 +119,567 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
       <p>Вычитанные научные сюжеты тропы — каждый с тремя уровнями глубины</p>
     </div>
   </div>
-  <div class="sl-grid">
+
+  <div class="sl-filters" id="sl-filters">
+    <div class="sl-frow" data-group="region"><span class="sl-flabel">Регион</span></div>
+    <div class="sl-frow" data-group="subject"><span class="sl-flabel">Тема</span><span class="sl-count" id="sl-count"></span></div>
+  </div>
+
+  <div class="sl-grid" id="sl-grid">
     
-    <a class="sl-card" href="/storylines/almazy/">
+    <a class="sl-card" href="/storylines/almazy/"
+       data-region="Республика Саха (Якутия)"
+       data-tags="физика|геология">
       <div class="sl-ic" style="background-image:url(/assets/icons/almazy.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Республика Саха (Якутия)</span>
+        <span class="sl-tag">физика</span><span class="sl-tag">геология</span>
+      </div>
       <span class="sl-title">Алмазные копи Якутии</span>
     </a>
     
-    <a class="sl-card" href="/storylines/batagay/">
+    <a class="sl-card" href="/storylines/batagay/"
+       data-region="Республика Саха (Якутия)"
+       data-tags="математика|геология">
       <div class="sl-ic" style="background-image:url(/assets/icons/batagay.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Республика Саха (Якутия)</span>
+        <span class="sl-tag">математика</span><span class="sl-tag">геология</span>
+      </div>
       <span class="sl-title">Батагайский провал</span>
     </a>
     
-    <a class="sl-card" href="/storylines/belaya-bereza/">
+    <a class="sl-card" href="/storylines/belaya-bereza/"
+       data-region=""
+       data-tags="биология|оптика">
       <div class="sl-ic" style="background-image:url(/assets/icons/belaya-bereza.svg)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        
+        <span class="sl-tag">биология</span><span class="sl-tag">оптика</span>
+      </div>
       <span class="sl-title">Белая берёза</span>
     </a>
     
-    <a class="sl-card" href="/storylines/belyaev/">
+    <a class="sl-card" href="/storylines/belyaev/"
+       data-region="Новосибирск · Академгородок"
+       data-tags="биология|генетика">
       <div class="sl-ic" style="background-image:url(/assets/icons/belyaev.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Новосибирск · Академгородок</span>
+        <span class="sl-tag">биология</span><span class="sl-tag">генетика</span>
+      </div>
       <span class="sl-title">Одомашнивание лисиц</span>
     </a>
     
-    <a class="sl-card" href="/storylines/bessel/">
+    <a class="sl-card" href="/storylines/bessel/"
+       data-region="Калининградская область"
+       data-tags="астрономия|геодезия">
       <div class="sl-ic" style="background-image:url(/assets/icons/bessel.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Калининградская область</span>
+        <span class="sl-tag">астрономия</span><span class="sl-tag">геодезия</span>
+      </div>
       <span class="sl-title">Расстояние до звезды</span>
     </a>
     
-    <a class="sl-card" href="/storylines/dendrohronologiya/">
+    <a class="sl-card" href="/storylines/dendrohronologiya/"
+       data-region="Новосибирск · Академгородок"
+       data-tags="биология|история">
       <div class="sl-ic" style="background-image:url(/assets/icons/dendrohronologiya.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Новосибирск · Академгородок</span>
+        <span class="sl-tag">биология</span><span class="sl-tag">история</span>
+      </div>
       <span class="sl-title">Как деревья хранят память о прошлом</span>
     </a>
     
-    <a class="sl-card" href="/storylines/dvizhushaya-dyuna/">
+    <a class="sl-card" href="/storylines/dvizhushaya-dyuna/"
+       data-region="Калининградская область"
+       data-tags="механика|география">
       <div class="sl-ic" style="background-image:url(/assets/icons/dvizhushaya-dyuna.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Калининградская область</span>
+        <span class="sl-tag">механика</span><span class="sl-tag">география</span>
+      </div>
       <span class="sl-title">Движущаяся дюна</span>
     </a>
     
-    <a class="sl-card" href="/storylines/fraktalnaya-ramka/">
+    <a class="sl-card" href="/storylines/fraktalnaya-ramka/"
+       data-region=""
+       data-tags="математика|фракталы">
       <div class="sl-ic" style="background-image:url(/assets/icons/fraktalnaya-ramka.svg)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        
+        <span class="sl-tag">математика</span><span class="sl-tag">фракталы</span>
+      </div>
       <span class="sl-title">Фрактальная рамка</span>
     </a>
     
-    <a class="sl-card" href="/storylines/geo-srez/">
+    <a class="sl-card" href="/storylines/geo-srez/"
+       data-region=""
+       data-tags="геология|время">
       <div class="sl-ic" style="background-image:url(/assets/icons/geo-srez.svg)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        
+        <span class="sl-tag">геология</span><span class="sl-tag">время</span>
+      </div>
       <span class="sl-title">Геологический срез</span>
     </a>
     
-    <a class="sl-card" href="/storylines/kant-sistema/">
+    <a class="sl-card" href="/storylines/kant-sistema/"
+       data-region="Калининградская область"
+       data-tags="астрономия|механика">
       <div class="sl-ic" style="background-image:url(/assets/icons/kant-sistema.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Калининградская область</span>
+        <span class="sl-tag">астрономия</span><span class="sl-tag">механика</span>
+      </div>
       <span class="sl-title">Рождение Солнечной системы</span>
     </a>
     
-    <a class="sl-card" href="/storylines/kantorovich/">
+    <a class="sl-card" href="/storylines/kantorovich/"
+       data-region="Новосибирск · Академгородок"
+       data-tags="математика|экономика">
       <div class="sl-ic" style="background-image:url(/assets/icons/kantorovich.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Новосибирск · Академгородок</span>
+        <span class="sl-tag">математика</span><span class="sl-tag">экономика</span>
+      </div>
       <span class="sl-title">Как назначить цену ресурсу</span>
     </a>
     
-    <a class="sl-card" href="/storylines/kazhetsya-ponimaet/">
+    <a class="sl-card" href="/storylines/kazhetsya-ponimaet/"
+       data-region=""
+       data-tags="искусственный интеллект|психология|история науки">
       <div class="sl-ic" style="background-image:url(/assets/glyphs/mountains.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        
+        <span class="sl-tag">искусственный интеллект</span><span class="sl-tag">психология</span>
+      </div>
       <span class="sl-title">Кажется, что понимает</span>
     </a>
     
-    <a class="sl-card" href="/storylines/klimat-yakutii/">
+    <a class="sl-card" href="/storylines/klimat-yakutii/"
+       data-region="Республика Саха (Якутия)"
+       data-tags="физика|география">
       <div class="sl-ic" style="background-image:url(/assets/icons/klimat-yakutii.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Республика Саха (Якутия)</span>
+        <span class="sl-tag">физика</span><span class="sl-tag">география</span>
+      </div>
       <span class="sl-title">Резкоконтинентальный климат Якутии</span>
     </a>
     
-    <a class="sl-card" href="/storylines/kraevedenie/">
+    <a class="sl-card" href="/storylines/kraevedenie/"
+       data-region=""
+       data-tags="история|место">
       <div class="sl-ic" style="background-image:url(/assets/icons/kraevedenie.svg)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        
+        <span class="sl-tag">история</span><span class="sl-tag">место</span>
+      </div>
       <span class="sl-title">Краеведческий стенд</span>
     </a>
     
-    <a class="sl-card" href="/storylines/kvadrat-zhizni/">
+    <a class="sl-card" href="/storylines/kvadrat-zhizni/"
+       data-region=""
+       data-tags="биология|экология">
       <div class="sl-ic" style="background-image:url(/assets/icons/kvadrat-zhizni.svg)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        
+        <span class="sl-tag">биология</span><span class="sl-tag">экология</span>
+      </div>
       <span class="sl-title">Квадрат жизни</span>
     </a>
     
-    <a class="sl-card" href="/storylines/lavrentyev/">
+    <a class="sl-card" href="/storylines/lavrentyev/"
+       data-region="Новосибирск · Академгородок"
+       data-tags="механика|математика">
       <div class="sl-ic" style="background-image:url(/assets/icons/lavrentyev.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Новосибирск · Академгородок</span>
+        <span class="sl-tag">механика</span><span class="sl-tag">математика</span>
+      </div>
       <span class="sl-title">Как металл заставили течь</span>
     </a>
     
-    <a class="sl-card" href="/storylines/lenskie-stolby/">
+    <a class="sl-card" href="/storylines/lenskie-stolby/"
+       data-region="Республика Саха (Якутия)"
+       data-tags="геология|физика">
       <div class="sl-ic" style="background-image:url(/assets/icons/lenskie-stolby.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Республика Саха (Якутия)</span>
+        <span class="sl-tag">геология</span><span class="sl-tag">физика</span>
+      </div>
       <span class="sl-title">Ленские столбы</span>
     </a>
     
-    <a class="sl-card" href="/storylines/mamonty/">
+    <a class="sl-card" href="/storylines/mamonty/"
+       data-region="Республика Саха (Якутия)"
+       data-tags="биология|физика">
       <div class="sl-ic" style="background-image:url(/assets/icons/mamonty.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Республика Саха (Якутия)</span>
+        <span class="sl-tag">биология</span><span class="sl-tag">физика</span>
+      </div>
       <span class="sl-title">Мамонты Якутии</span>
     </a>
     
-    <a class="sl-card" href="/storylines/mayatniki/">
+    <a class="sl-card" href="/storylines/mayatniki/"
+       data-region=""
+       data-tags="физика|колебания">
       <div class="sl-ic" style="background-image:url(/assets/icons/mayatniki.svg)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        
+        <span class="sl-tag">физика</span><span class="sl-tag">колебания</span>
+      </div>
       <span class="sl-title">Маятниковая роща</span>
     </a>
     
-    <a class="sl-card" href="/storylines/mikrobiom/">
+    <a class="sl-card" href="/storylines/mikrobiom/"
+       data-region="Республика Саха (Якутия)"
+       data-tags="биология|генетика">
       <div class="sl-ic" style="background-image:url(/assets/icons/mikrobiom.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Республика Саха (Якутия)</span>
+        <span class="sl-tag">биология</span><span class="sl-tag">генетика</span>
+      </div>
       <span class="sl-title">Как питание народа настраивает пищеварение</span>
     </a>
     
-    <a class="sl-card" href="/storylines/minkovsky/">
+    <a class="sl-card" href="/storylines/minkovsky/"
+       data-region="Калининградская область"
+       data-tags="математика|физика">
       <div class="sl-ic" style="background-image:url(/assets/icons/minkovsky.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Калининградская область</span>
+        <span class="sl-tag">математика</span><span class="sl-tag">физика</span>
+      </div>
       <span class="sl-title">Пространство-время Минковского</span>
     </a>
     
-    <a class="sl-card" href="/storylines/most-leonardo/">
+    <a class="sl-card" href="/storylines/most-leonardo/"
+       data-region=""
+       data-tags="инженерия|геометрия">
       <div class="sl-ic" style="background-image:url(/assets/icons/most-leonardo.svg)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        
+        <span class="sl-tag">инженерия</span><span class="sl-tag">геометрия</span>
+      </div>
       <span class="sl-title">Мост Леонардо</span>
     </a>
     
-    <a class="sl-card" href="/storylines/mys-taran/">
+    <a class="sl-card" href="/storylines/mys-taran/"
+       data-region="Калининградская область"
+       data-tags="геология|механика">
       <div class="sl-ic" style="background-image:url(/assets/icons/mys-taran.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Калининградская область</span>
+        <span class="sl-tag">геология</span><span class="sl-tag">механика</span>
+      </div>
       <span class="sl-title">Мыс Таран</span>
     </a>
     
-    <a class="sl-card" href="/storylines/obratnye-zadachi/">
+    <a class="sl-card" href="/storylines/obratnye-zadachi/"
+       data-region="Новосибирск · Академгородок"
+       data-tags="математика|геофизика">
       <div class="sl-ic" style="background-image:url(/assets/icons/obratnye-zadachi.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Новосибирск · Академгородок</span>
+        <span class="sl-tag">математика</span><span class="sl-tag">геофизика</span>
+      </div>
       <span class="sl-title">Обратные задачи</span>
     </a>
     
-    <a class="sl-card" href="/storylines/observatoriya/">
+    <a class="sl-card" href="/storylines/observatoriya/"
+       data-region=""
+       data-tags="астрономия|геометрия">
       <div class="sl-ic" style="background-image:url(/assets/icons/observatoriya.svg)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        
+        <span class="sl-tag">астрономия</span><span class="sl-tag">геометрия</span>
+      </div>
       <span class="sl-title">Обсерватория</span>
     </a>
     
-    <a class="sl-card" href="/storylines/russkie-isklyucheniya/">
+    <a class="sl-card" href="/storylines/russkie-isklyucheniya/"
+       data-region=""
+       data-tags="лингвистика|эволюция|статистика">
       <div class="sl-ic" style="background-image:url(/assets/glyphs/mountains.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        
+        <span class="sl-tag">лингвистика</span><span class="sl-tag">эволюция</span>
+      </div>
       <span class="sl-title">Почему в русском столько исключений</span>
     </a>
     
-    <a class="sl-card" href="/storylines/sem-mostov/">
+    <a class="sl-card" href="/storylines/sem-mostov/"
+       data-region="Калининградская область"
+       data-tags="математика|графы">
       <div class="sl-ic" style="background-image:url(/assets/icons/sem-mostov.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Калининградская область</span>
+        <span class="sl-tag">математика</span><span class="sl-tag">графы</span>
+      </div>
       <span class="sl-title">Семь мостов Кёнигсберга</span>
     </a>
     
-    <a class="sl-card" href="/storylines/seysmograf-viherta/">
+    <a class="sl-card" href="/storylines/seysmograf-viherta/"
+       data-region="Калининградская область"
+       data-tags="физика|геофизика">
       <div class="sl-ic" style="background-image:url(/assets/icons/seysmograf-viherta.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Калининградская область</span>
+        <span class="sl-tag">физика</span><span class="sl-tag">геофизика</span>
+      </div>
       <span class="sl-title">Сейсмограф Вихерта</span>
     </a>
     
-    <a class="sl-card" href="/storylines/skrytaya-matematika/">
+    <a class="sl-card" href="/storylines/skrytaya-matematika/"
+       data-region="Новосибирск · Академгородок"
+       data-tags="биология|математика">
       <div class="sl-ic" style="background-image:url(/assets/icons/skrytaya-matematika.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Новосибирск · Академгородок</span>
+        <span class="sl-tag">биология</span><span class="sl-tag">математика</span>
+      </div>
       <span class="sl-title">Скрытая математика размера</span>
     </a>
     
-    <a class="sl-card" href="/storylines/sobolev/">
+    <a class="sl-card" href="/storylines/sobolev/"
+       data-region="Новосибирск · Академгородок"
+       data-tags="математика|физика">
       <div class="sl-ic" style="background-image:url(/assets/icons/sobolev.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Новосибирск · Академгородок</span>
+        <span class="sl-tag">математика</span><span class="sl-tag">физика</span>
+      </div>
       <span class="sl-title">Математика негладкого мира</span>
     </a>
     
-    <a class="sl-card" href="/storylines/solnechnaya-sistema/">
+    <a class="sl-card" href="/storylines/solnechnaya-sistema/"
+       data-region=""
+       data-tags="астрономия|масштаб">
       <div class="sl-ic" style="background-image:url(/assets/icons/solnechnaya-sistema.svg)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        
+        <span class="sl-tag">астрономия</span><span class="sl-tag">масштаб</span>
+      </div>
       <span class="sl-title">Солнечная система</span>
     </a>
     
-    <a class="sl-card" href="/storylines/solnechnye-chasy/">
+    <a class="sl-card" href="/storylines/solnechnye-chasy/"
+       data-region=""
+       data-tags="астрономия|время">
       <div class="sl-ic" style="background-image:url(/assets/icons/solnechnye-chasy.svg)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        
+        <span class="sl-tag">астрономия</span><span class="sl-tag">время</span>
+      </div>
       <span class="sl-title">Солнечные часы</span>
     </a>
     
-    <a class="sl-card" href="/storylines/sputnik/">
+    <a class="sl-card" href="/storylines/sputnik/"
+       data-region=""
+       data-tags="навигация|геометрия">
       <div class="sl-ic" style="background-image:url(/assets/icons/sputnik.svg)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        
+        <span class="sl-tag">навигация</span><span class="sl-tag">геометрия</span>
+      </div>
       <span class="sl-title">Спутниковая навигация</span>
     </a>
     
-    <a class="sl-card" href="/storylines/staryj-les/">
+    <a class="sl-card" href="/storylines/staryj-les/"
+       data-region="Новосибирск · Академгородок"
+       data-tags="экология|биология">
       <div class="sl-ic" style="background-image:url(/assets/icons/staryj-les.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Новосибирск · Академгородок</span>
+        <span class="sl-tag">экология</span><span class="sl-tag">биология</span>
+      </div>
       <span class="sl-title">Почему старый лес нельзя посадить заново</span>
     </a>
     
-    <a class="sl-card" href="/storylines/tancuyushiy-les/">
+    <a class="sl-card" href="/storylines/tancuyushiy-les/"
+       data-region="Калининградская область"
+       data-tags="биология|механика">
       <div class="sl-ic" style="background-image:url(/assets/icons/tancuyushiy-les.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Калининградская область</span>
+        <span class="sl-tag">биология</span><span class="sl-tag">механика</span>
+      </div>
       <span class="sl-title">Танцующий лес</span>
     </a>
     
-    <a class="sl-card" href="/storylines/terrasy-vremeni/">
+    <a class="sl-card" href="/storylines/terrasy-vremeni/"
+       data-region=""
+       data-tags="геология|рельеф">
       <div class="sl-ic" style="background-image:url(/assets/icons/terrasy-vremeni.svg)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        
+        <span class="sl-tag">геология</span><span class="sl-tag">рельеф</span>
+      </div>
       <span class="sl-title">Террасы времени</span>
     </a>
     
-    <a class="sl-card" href="/storylines/uslysh-rasstoyanie/">
+    <a class="sl-card" href="/storylines/uslysh-rasstoyanie/"
+       data-region=""
+       data-tags="акустика|физика">
       <div class="sl-ic" style="background-image:url(/assets/icons/uslysh-rasstoyanie.svg)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        
+        <span class="sl-tag">акустика</span><span class="sl-tag">физика</span>
+      </div>
       <span class="sl-title">Услышь расстояние</span>
     </a>
     
-    <a class="sl-card" href="/storylines/valun-termometr/">
+    <a class="sl-card" href="/storylines/valun-termometr/"
+       data-region=""
+       data-tags="физика|тепло">
       <div class="sl-ic" style="background-image:url(/assets/icons/valun-termometr.svg)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        
+        <span class="sl-tag">физика</span><span class="sl-tag">тепло</span>
+      </div>
       <span class="sl-title">Валун-термометр</span>
     </a>
     
-    <a class="sl-card" href="/storylines/vhod/">
+    <a class="sl-card" href="/storylines/vhod/"
+       data-region=""
+       data-tags="навигация|методология">
       <div class="sl-ic" style="background-image:url(/assets/icons/vhod.svg)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        
+        <span class="sl-tag">навигация</span><span class="sl-tag">методология</span>
+      </div>
       <span class="sl-title">Входной стенд</span>
     </a>
     
-    <a class="sl-card" href="/storylines/vishtynec/">
+    <a class="sl-card" href="/storylines/vishtynec/"
+       data-region="Калининградская область"
+       data-tags="физика|экология">
       <div class="sl-ic" style="background-image:url(/assets/icons/vishtynec.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Калининградская область</span>
+        <span class="sl-tag">физика</span><span class="sl-tag">экология</span>
+      </div>
       <span class="sl-title">Озеро Виштынец</span>
     </a>
     
-    <a class="sl-card" href="/storylines/vodorazdel/">
+    <a class="sl-card" href="/storylines/vodorazdel/"
+       data-region=""
+       data-tags="гидрология|геоморфология">
       <div class="sl-ic" style="background-image:url(/assets/icons/vodorazdel.svg)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        
+        <span class="sl-tag">гидрология</span><span class="sl-tag">геоморфология</span>
+      </div>
       <span class="sl-title">Водораздел</span>
     </a>
     
-    <a class="sl-card" href="/storylines/yantar/">
+    <a class="sl-card" href="/storylines/yantar/"
+       data-region="Калининградская область"
+       data-tags="химия|геология">
       <div class="sl-ic" style="background-image:url(/assets/icons/yantar.png)"></div>
       <div class="sl-veil"></div>
+      <div class="sl-tags">
+        <span class="sl-tag reg">Калининградская область</span>
+        <span class="sl-tag">химия</span><span class="sl-tag">геология</span>
+      </div>
       <span class="sl-title">Балтийский янтарь</span>
     </a>
     
   </div>
+  <div class="sl-empty hidden" id="sl-empty">По выбранным фильтрам сюжетов нет.</div>
 </div>
 
 <script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
 <script defer src="/assets/site-bar/bot.js"></script>
+
+<script>
+(function(){
+  var grid=document.getElementById('sl-grid');
+  var cards=[].slice.call(grid.querySelectorAll('.sl-card'));
+  var countEl=document.getElementById('sl-count');
+  var emptyEl=document.getElementById('sl-empty');
+  var active={region:null,subject:null};
+
+  // собрать уникальные значения
+  function uniq(list){return list.filter(function(v,i){return v&&list.indexOf(v)===i;}).sort(function(a,b){return a.localeCompare(b,'ru');});}
+  var regions=uniq(cards.map(function(c){return c.dataset.region;}));
+  var subjects=uniq([].concat.apply([],cards.map(function(c){return c.dataset.tags?c.dataset.tags.split('|'):[];})));
+
+  function buildRow(group,values){
+    var row=document.querySelector('.sl-frow[data-group="'+group+'"]');
+    function mk(label,val){
+      var b=document.createElement('span');b.className='sl-chip'+(val===null?' active':'');
+      b.textContent=label;b.dataset.val=(val===null?'':val);
+      b.onclick=function(){active[group]=val;
+        row.querySelectorAll('.sl-chip').forEach(function(x){x.classList.remove('active');});
+        b.classList.add('active');apply();};
+      row.appendChild(b);
+    }
+    mk('Все',null);values.forEach(function(v){mk(v,v);});
+  }
+  buildRow('region',regions);
+  buildRow('subject',subjects);
+
+  function apply(){
+    var shown=0;
+    cards.forEach(function(c){
+      var okR=!active.region||c.dataset.region===active.region;
+      var tags=c.dataset.tags?c.dataset.tags.split('|'):[];
+      var okS=!active.subject||tags.indexOf(active.subject)>-1;
+      var vis=okR&&okS;c.classList.toggle('hidden',!vis);if(vis)shown++;
+    });
+    countEl.textContent=shown+' из '+cards.length;
+    emptyEl.classList.toggle('hidden',shown>0);
+  }
+  apply();
+})();
+</script>
 
 </body>
 </html>
