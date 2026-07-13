@@ -1,57 +1,60 @@
-"""Тесты веб-ретривера. Без реальной сети — метод _search мокается."""
+"""WebRetriever: keyless Википедия по умолчанию, Tavily при ключе, устойчивость к ошибкам."""
 import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from retrieval.base import RetrievalQuery       # noqa: E402
+from retrieval.base import RetrievalQuery        # noqa: E402
 from retrieval.web_retriever import WebRetriever  # noqa: E402
 
 
-def test_disabled_without_key():
-    # без ключа ретривер выключен — всегда []
-    r = WebRetriever(api_key=None)
-    assert r.retrieve(RetrievalQuery(topic="опыление", subject="биология")) == []
+def test_disabled_when_no_key_and_no_wiki():
+    wr = WebRetriever(api_key=None, use_wikipedia=False)
+    assert wr.enabled is False
+    assert wr.retrieve(RetrievalQuery(topic="опыление", subject="биология")) == []
 
 
-def test_with_key_returns_snippet():
-    r = WebRetriever(api_key="TESTKEY")
-    # подменяем сеть заглушкой
-    r._search = lambda query: [
-        {
-            "title": "Пчёлы",
-            "content": "Пчела посещает ~2000 цветков в день",
-            "url": "https://example.org/bees",
-        }
+def test_enabled_with_wikipedia():
+    assert WebRetriever(api_key=None, use_wikipedia=True).enabled is True
+
+
+def test_wikipedia_mock():
+    wr = WebRetriever(api_key=None, use_wikipedia=True)
+    wr._search = lambda topic, subject: [
+        {"title": "Хлорофилл", "content": "Хлорофилл — зелёный пигмент растений.",
+         "url": "https://ru.wikipedia.org/wiki/Хлорофилл"}
     ]
-    snippets = r.retrieve(RetrievalQuery(topic="опыление", subject="биология"))
-    assert len(snippets) == 1
-    s = snippets[0]
-    assert s.source == "веб"
-    assert s.url == "https://example.org/bees"
-    assert "2000" in s.text
+    res = wr.retrieve(RetrievalQuery(topic="хлорофилл", subject="биология"))
+    assert len(res) == 1 and res[0].source == "веб"
+    assert "Хлорофилл" in res[0].title and "wikipedia" in res[0].url
+
+
+def test_tavily_selected_when_key():
+    wr = WebRetriever(api_key="TESTKEY")
+    wr._search = lambda topic, subject: [
+        {"title": "Пчёлы", "content": "Пчела посещает ~2000 цветков в день", "url": "https://example.org/bees"}
+    ]
+    res = wr.retrieve(RetrievalQuery(topic="опыление", subject="биология"))
+    assert len(res) == 1 and "2000" in res[0].text and res[0].url == "https://example.org/bees"
 
 
 def test_search_error_returns_empty():
-    r = WebRetriever(api_key="TESTKEY")
+    wr = WebRetriever(api_key="TESTKEY")
 
-    def boom(query):
-        raise RuntimeError("network down")
+    def boom(topic, subject):
+        raise RuntimeError("network")
 
-    r._search = boom
-    assert r.retrieve(RetrievalQuery(topic="опыление", subject="биология")) == []
+    wr._search = boom
+    assert wr.retrieve(RetrievalQuery(topic="x", subject="y")) == []
 
 
 def test_empty_topic_and_subject():
-    # ключ есть, но тема и предмет пусты → []
-    r = WebRetriever(api_key="TESTKEY")
-    r._search = lambda query: [{"title": "x", "content": "y", "url": "z"}]
-    assert r.retrieve(RetrievalQuery(topic="", subject="")) == []
+    wr = WebRetriever(api_key=None, use_wikipedia=True)
+    assert wr.retrieve(RetrievalQuery()) == []
 
 
 if __name__ == "__main__":
-    test_disabled_without_key()
-    test_with_key_returns_snippet()
-    test_search_error_returns_empty()
-    test_empty_topic_and_subject()
+    test_disabled_when_no_key_and_no_wiki(); test_enabled_with_wikipedia()
+    test_wikipedia_mock(); test_tavily_selected_when_key()
+    test_search_error_returns_empty(); test_empty_topic_and_subject()
     print("OK test_web_retriever")

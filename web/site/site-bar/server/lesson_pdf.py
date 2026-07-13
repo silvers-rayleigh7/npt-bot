@@ -49,31 +49,36 @@ def parse_lesson(md: str) -> dict:
     return {"title": title or "Урок", "meta": meta, "sections": sections}
 
 
-# ─────────────────────────── экранирование Typst ───────────────────────────
-_SPECIAL = ["\\", "#", "$", "*", "_", "`", "[", "]", "@", "<", ">", "~"]
+# ─────── подача текста в Typst СТРОКОВЫМ ЛИТЕРАЛОМ (без markup-интерпретации) ───────
+# Так произвольный текст модели/Википедии не сломает компиляцию: экранируем лишь \ и ".
+def _tystr(s: str) -> str:
+    return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
 
 
 def _esc(s: str) -> str:
-    for ch in _SPECIAL:
-        s = s.replace(ch, "\\" + ch)
-    return s
+    """Строковый рендер для заголовков: #(...) вставляет текст как есть."""
+    return f"#({_tystr(s)})"
+
+
+def _run(s: str, bold: bool = False) -> str:
+    if not s:
+        return ""
+    body = f"#({_tystr(s)})"
+    return f"#strong[{body}]" if bold else body
 
 
 def _inline(s: str) -> str:
-    """Markdown **жирный** → Typst #strong[...], остальное экранируется."""
+    """Markdown **жирный** → #strong[#("...")], остальное — строковые литералы."""
     parts = re.split(r"\*\*(.+?)\*\*", s)
-    out = []
-    for i, part in enumerate(parts):
-        e = _esc(part)
-        out.append(f"#strong[{e}]" if i % 2 == 1 else e)
-    return "".join(out)
+    out = [_run(part, bold=(i % 2 == 1)) for i, part in enumerate(parts) if part]
+    return "".join(out) or '#("")'
 
 
 def _bold_colon(it: str) -> str:
     """«Ключ: текст» → ключ жирным."""
     m = re.match(r"^(.+?):\s*(.+)$", it)
     if m:
-        return f"#strong[{_esc(m.group(1))}:] {_inline(m.group(2))}"
+        return f"{_run(m.group(1) + ':', bold=True)} {_inline(m.group(2))}"
     return _inline(it)
 
 

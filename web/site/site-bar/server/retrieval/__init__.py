@@ -36,7 +36,7 @@ def build_retrievers() -> List:
         try:
             from retrieval.web_retriever import WebRetriever
             wr = WebRetriever()
-            if wr.api_key:            # без ключа не добавляем — пустой ретривер не нужен
+            if wr.enabled:            # включён, если есть ключ Tavily ИЛИ разрешена Википедия
                 retrievers.append(wr)
         except Exception:
             pass
@@ -80,11 +80,15 @@ def gather_context(
 
         snippets.sort(key=lambda s: s.score, reverse=True)
 
-        lines = ["Материалы для опоры (используй по делу; факты из [веб] приводи с источником):"]
+        lines = ["Материалы для опоры (используй по делу; веб-факт приводи с названием источника):"]
         used = len(lines[0])
         for s in snippets:
             src = _LABEL.get(s.source, s.source)
-            tail = f" (источник: {s.url})" if s.source == "веб" and s.url else ""
+            if s.source == "веб" and s.url:
+                site = "Википедия" if "wikipedia.org" in s.url else s.url.split("/")[2] if "//" in s.url else "веб"
+                tail = f" (источник: {site}, «{s.title}»: {s.url})"
+            else:
+                tail = ""
             line = f"[{src}] {s.title} — {s.text}{tail}".strip()
             if used + len(line) + 1 > char_budget:
                 continue
