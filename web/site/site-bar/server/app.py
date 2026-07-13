@@ -23,6 +23,18 @@ LESSON_PROMPT = (ROOT / "lesson_prompt.md").read_text(encoding="utf-8")
 MAX_CONTEXT_CHARS = 6000
 MAX_HISTORY = 8
 
+# Retrieval-слой урока (опора на сюжеты/программу/веб). Мастер-флаг + мягкий импорт:
+# если что-то не так с модулем — урок работает как раньше, без опоры.
+RETRIEVAL_ENABLED = os.environ.get("RETRIEVAL_ENABLED", "0").strip() not in ("", "0", "false", "False")
+try:
+    from retrieval import gather_context, build_retrievers  # noqa: E402
+    from retrieval.base import RetrievalQuery               # noqa: E402
+    _RETRIEVERS = build_retrievers() if RETRIEVAL_ENABLED else []
+except Exception:
+    RETRIEVAL_ENABLED = False
+    _RETRIEVERS = []
+    RetrievalQuery = None
+
 # Заявки гидов копятся в jsonl (append-only), уведомление — в Telegram админу.
 GUIDE_APPLICATIONS = Path(os.environ.get("GUIDE_APPLICATIONS_PATH", ROOT / "guide_applications.jsonl"))
 TG_NOTIFY_TOKEN = os.environ.get("TG_NOTIFY_TOKEN", "")
@@ -116,6 +128,25 @@ class LessonIn(BaseModel):
 class LessonOut(BaseModel):
     lesson: str
     provider: str
+    sources: list[str] = Field(default_factory=list)   # заголовки источников опоры (для показа)
+
+
+def _lesson_context(inp: "LessonIn"):
+    """Собирает блок опоры и список источников. Любая ошибка → ("", []): урок не ломается."""
+    if not (RETRIEVAL_ENABLED and _RETRIEVERS and RetrievalQuery):
+        return "", []
+    try:
+        q = RetrievalQuery(grade=inp.grade, subject=inp.subject, topic=inp.topic,
+                           location=inp.location, season=inp.season, text=inp.textbook)
+        ctx = gather_context(q, retrievers=_RETRIEVERS)
+        sources = []
+        for line in ctx.splitlines()[1:]:
+            # «[сюжет] Заголовок — …» → берём заголовок для показа под уроком
+            if "]" in line and "—" in line:
+                sources.append(line.split("]", 1)[1].split("—", 1)[0].strip())
+        return ctx, sources[:6]
+    except Exception:
+        return "", []
 
 
 @app.post("/api/lesson", response_model=LessonOut)
@@ -128,9 +159,12 @@ def lesson(inp: LessonIn):
     body = "\n".join(f"{k}: {v.strip()}" for k, v in fields if v and v.strip())
     if not body:
         return LessonOut(lesson="Заполните хотя бы класс и предмет.", provider="none")
+
+    ctx, sources = _lesson_context(inp)
+    user_content = (f"{ctx}\n\n" if ctx else "") + "Данные формы учителя:\n" + body
     messages = [
         {"role": "system", "content": LESSON_PROMPT},
-        {"role": "user", "content": "Данные формы учителя:\n" + body},
+        {"role": "user", "content": user_content},
     ]
     try:
         answer, provider = generate(
@@ -138,7 +172,7 @@ def lesson(inp: LessonIn):
             max_tokens=int(os.environ.get("LESSON_MAX_TOKENS", "1100")),
             temperature=float(os.environ.get("LESSON_TEMPERATURE", "0.5")),
         )
-        return LessonOut(lesson=answer, provider=provider)
+        return LessonOut(lesson=answer, provider=provider, sources=sources)
     except ProviderError as e:
         return LessonOut(
             lesson="Не получилось собрать урок. Попробуйте ещё раз чуть позже.",

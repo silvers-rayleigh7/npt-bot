@@ -98,6 +98,8 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 .t-dl:hover{background:var(--gl)}
 .t-loading{display:none;color:var(--tm);font-size:0.92rem;margin-top:16px}
 .t-loading.show{display:block}
+.t-src{margin-top:16px;padding-top:12px;border-top:1px solid var(--bd);font-size:0.8rem;color:var(--tm)}
+.t-src span{color:var(--gd)}
 .t-suggest{display:none;margin:-2px 0 14px}
 .t-suggest.show{display:block}
 .t-suggest-h{font-size:0.8rem;color:var(--tm);margin-bottom:8px}
@@ -300,7 +302,12 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
       .then(function(r){return r.json();})
       .then(function(d){
         lastMd = d.lesson || 'Не удалось собрать урок.';
-        out.innerHTML = md(lastMd) +
+        var srcHtml = '';
+        if (d.sources && d.sources.length){
+          srcHtml = '<div class="t-src">Опирается на: ' +
+            d.sources.map(function(s){return '<span>'+esc(s)+'</span>';}).join(' · ') + '</div>';
+        }
+        out.innerHTML = md(lastMd) + srcHtml +
           '<div class="t-actions"><a class="t-dl" id="t-dl">⬇ Скачать (.txt)</a></div>';
         out.classList.add('show');
         document.getElementById('t-dl').onclick = function(){
