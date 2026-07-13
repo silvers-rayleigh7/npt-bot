@@ -18,6 +18,34 @@ def test_enabled_with_wikipedia():
     assert WebRetriever(api_key=None, use_wikipedia=True).enabled is True
 
 
+def test_default_disabled_without_key():
+    # без ключа Tavily и без явной Википедии — веб выключен (Википедия по умолчанию off)
+    assert WebRetriever(api_key=None, use_wikipedia=False).enabled is False
+
+
+def test_tavily_uses_allowlist():
+    wr = WebRetriever(api_key="TESTKEY", allowed_domains=["elementy.ru", "nkj.ru"])
+    captured = {}
+    import retrieval.web_retriever as m
+    orig = m.requests.post
+
+    class _R:
+        def raise_for_status(self): pass
+        def json(self): return {"results": [{"title": "Э", "content": "факт", "url": "https://elementy.ru/x"}]}
+
+    def fake_post(url, json=None, timeout=None):
+        captured["domains"] = json.get("include_domains")
+        return _R()
+
+    m.requests.post = fake_post
+    try:
+        res = wr.retrieve(RetrievalQuery(topic="опыление", subject="биология"))
+    finally:
+        m.requests.post = orig
+    assert captured["domains"] == ["elementy.ru", "nkj.ru"]
+    assert len(res) == 1 and "elementy.ru" in res[0].url
+
+
 def test_wikipedia_mock():
     wr = WebRetriever(api_key=None, use_wikipedia=True)
     wr._search = lambda topic, subject: [
@@ -55,6 +83,7 @@ def test_empty_topic_and_subject():
 
 if __name__ == "__main__":
     test_disabled_when_no_key_and_no_wiki(); test_enabled_with_wikipedia()
+    test_default_disabled_without_key(); test_tavily_uses_allowlist()
     test_wikipedia_mock(); test_tavily_selected_when_key()
     test_search_error_returns_empty(); test_empty_topic_and_subject()
     print("OK test_web_retriever")

@@ -18,9 +18,14 @@ import requests
 from .base import RetrievalQuery, Snippet
 
 _UA = {"User-Agent": "TropaLessonBot/1.0 (+https://tropa.fmin.xyz)"}
-# Вопросительные и служебные слова — выкидываем из запроса к Википедии.
+# Вопросительные и служебные слова — выкидываем из запроса.
 _STOP = {"почему", "как", "что", "такое", "зачем", "какой", "какие", "какая", "где", "когда",
          "для", "детей", "чем", "это", "при", "или", "если", "чтобы"}
+# Белый список авторитетных научпоп/энциклопедических источников (правится через WEB_ALLOWED_DOMAINS).
+_DEFAULT_ALLOWED = [
+    "elementy.ru", "nkj.ru", "postnauka.ru", "nplus1.ru", "bigenc.ru",
+    "naked-science.ru", "scientificrussia.ru", "arzamas.academy",
+]
 
 
 def _flag(name: str, default: str) -> bool:
@@ -44,9 +49,14 @@ class WebRetriever:
     name = "веб"
 
     def __init__(self, api_key: Optional[str] = None, timeout: float = 5.0,
-                 use_wikipedia: Optional[bool] = None):
+                 use_wikipedia: Optional[bool] = None, allowed_domains: Optional[List[str]] = None):
         self.api_key = api_key if api_key is not None else os.environ.get("WEB_SEARCH_API_KEY")
-        self.use_wikipedia = _flag("WEB_WIKIPEDIA", "1") if use_wikipedia is None else use_wikipedia
+        # Википедия по умолчанию ВЫКЛючена (краудсорс — слабый источник для образования).
+        self.use_wikipedia = _flag("WEB_WIKIPEDIA", "0") if use_wikipedia is None else use_wikipedia
+        env_domains = os.environ.get("WEB_ALLOWED_DOMAINS", "")
+        self.allowed_domains = allowed_domains if allowed_domains is not None else (
+            [d.strip() for d in env_domains.split(",") if d.strip()] or list(_DEFAULT_ALLOWED)
+        )
         self.timeout = timeout
 
     @property
@@ -56,11 +66,10 @@ class WebRetriever:
     # ── провайдеры поиска (каждый может бросить — ловит retrieve) ──
     def _search_tavily(self, topic: str, subject: str) -> List[dict]:
         query = " ".join(p for p in (topic, subject) if p).strip() + " для детей научно-популярно"
-        r = requests.post(
-            "https://api.tavily.com/search",
-            json={"api_key": self.api_key, "query": query, "max_results": 2, "search_depth": "basic"},
-            timeout=self.timeout,
-        )
+        payload = {"api_key": self.api_key, "query": query, "max_results": 3, "search_depth": "basic"}
+        if self.allowed_domains:                       # только доверенные домены
+            payload["include_domains"] = self.allowed_domains
+        r = requests.post("https://api.tavily.com/search", json=payload, timeout=self.timeout)
         r.raise_for_status()
         return [
             {"title": x.get("title", ""), "content": (x.get("content", "") or ""), "url": x.get("url", "")}
