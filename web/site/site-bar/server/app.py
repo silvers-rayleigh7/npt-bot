@@ -9,7 +9,7 @@ from pathlib import Path
 
 import requests
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -20,6 +20,7 @@ load_dotenv(ROOT / ".env")
 from providers import build_providers, generate, ProviderError  # noqa: E402  (после load_dotenv)
 SYSTEM_PROMPT = (ROOT / "system_prompt.md").read_text(encoding="utf-8")
 LESSON_PROMPT = (ROOT / "lesson_prompt.md").read_text(encoding="utf-8")
+METHODICHKA_PROMPT = (ROOT / "methodichka_prompt.md").read_text(encoding="utf-8")
 MAX_CONTEXT_CHARS = 6000
 MAX_HISTORY = 8
 
@@ -178,6 +179,49 @@ def lesson(inp: LessonIn):
             lesson="Не получилось собрать урок. Попробуйте ещё раз чуть позже.",
             provider=f"error:{e}",
         )
+
+
+def _form_body(inp: "LessonIn") -> str:
+    fields = [
+        ("Класс", inp.grade), ("Предмет", inp.subject),
+        ("Учебник/автор", inp.textbook), ("Тема", inp.topic),
+        ("Локация", inp.location), ("Сезон", inp.season),
+    ]
+    return "\n".join(f"{k}: {v.strip()}" for k, v in fields if v and v.strip())
+
+
+@app.post("/api/lesson/pdf")
+def lesson_pdf(inp: LessonIn):
+    """Развёрнутая методичка (GigaChat + опора из RAG) → рендер в PDF (Typst)."""
+    body = _form_body(inp)
+    if not body:
+        return Response("Заполните хотя бы класс и предмет.", status_code=400,
+                        media_type="text/plain; charset=utf-8")
+    ctx, _ = _lesson_context(inp)
+    user_content = (f"{ctx}\n\n" if ctx else "") + "Данные формы учителя:\n" + body
+    messages = [
+        {"role": "system", "content": METHODICHKA_PROMPT},
+        {"role": "user", "content": user_content},
+    ]
+    try:
+        md, _ = generate(
+            messages, _PROVIDERS,
+            max_tokens=int(os.environ.get("METHODICHKA_MAX_TOKENS", "2600")),
+            temperature=float(os.environ.get("METHODICHKA_TEMPERATURE", "0.5")),
+        )
+    except ProviderError:
+        return Response("Сейчас не удалось собрать методичку. Попробуйте позже.",
+                        status_code=503, media_type="text/plain; charset=utf-8")
+    try:
+        from lesson_pdf import render_lesson_pdf
+        pdf = render_lesson_pdf(md)
+    except Exception:
+        return Response("Не удалось сформировать PDF.", status_code=500,
+                        media_type="text/plain; charset=utf-8")
+    return Response(
+        content=pdf, media_type="application/pdf",
+        headers={"Content-Disposition": 'attachment; filename="urok-tropa.pdf"'},
+    )
 
 
 class GuideIn(BaseModel):

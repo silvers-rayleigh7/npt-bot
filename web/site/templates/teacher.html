@@ -29,6 +29,8 @@
 .t-actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
 .t-dl{padding:9px 18px;border:1px solid var(--olive);color:var(--gd);border-radius:999px;font-size:0.9rem;cursor:pointer;background:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:7px}
 .t-dl:hover{background:var(--gl)}
+.t-pdf{background:var(--olive);color:#fff;border-color:var(--olive);font-weight:600}
+.t-pdf:hover{background:var(--gd);color:#fff}
 .t-loading{display:none;color:var(--tm);font-size:0.92rem;margin-top:16px}
 .t-loading.show{display:block}
 .t-src{margin-top:16px;padding-top:12px;border-top:1px solid var(--bd);font-size:0.8rem;color:var(--tm)}
@@ -198,16 +200,18 @@
     return h;
   }
 
-  form.addEventListener('submit', function(e){
-    e.preventDefault();
-    var payload = {
-      grade: grade.value,
-      subject: subject.value,
-      textbook: textbook.value,
-      topic: topic.value,
-      location: document.getElementById('f-location').value,
+  var PDF_API = API.replace('/lesson', '/lesson/pdf');
+  function buildPayload(){
+    return {
+      grade: grade.value, subject: subject.value, textbook: textbook.value,
+      topic: topic.value, location: document.getElementById('f-location').value,
       season: seasonNow()
     };
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var payload = buildPayload();
     if(!payload.grade || !payload.subject){ alert('Укажите хотя бы класс и предмет'); return; }
     submit.disabled = true; loading.classList.add('show'); out.classList.remove('show');
     fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)})
@@ -220,12 +224,29 @@
             d.sources.map(function(s){return '<span>'+esc(s)+'</span>';}).join(' · ') + '</div>';
         }
         out.innerHTML = md(lastMd) + srcHtml +
-          '<div class="t-actions"><a class="t-dl" id="t-dl">⬇ Скачать (.txt)</a></div>';
+          '<div class="t-actions">' +
+            '<a class="t-dl t-pdf" id="t-pdf">📄 Скачать методичку (PDF)</a>' +
+            '<a class="t-dl" id="t-dl">⬇ Текст (.txt)</a>' +
+          '</div>';
         out.classList.add('show');
         document.getElementById('t-dl').onclick = function(){
           var blob = new Blob([lastMd], {type:'text/plain;charset=utf-8'});
           var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
           a.download = 'urok-tropa.txt'; a.click();
+        };
+        var pdfBtn = document.getElementById('t-pdf');
+        pdfBtn.onclick = function(){
+          if(pdfBtn.dataset.busy) return;
+          pdfBtn.dataset.busy = '1'; var label = pdfBtn.textContent;
+          pdfBtn.textContent = 'Готовлю методичку…';
+          fetch(PDF_API, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(buildPayload())})
+            .then(function(r){ if(!r.ok) throw new Error('pdf'); return r.blob(); })
+            .then(function(blob){
+              var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+              a.download = 'urok-tropa.pdf'; document.body.appendChild(a); a.click(); a.remove();
+            })
+            .catch(function(){ alert('Не удалось собрать PDF. Попробуйте ещё раз.'); })
+            .finally(function(){ pdfBtn.textContent = label; delete pdfBtn.dataset.busy; });
         };
         out.scrollIntoView({behavior:'smooth', block:'start'});
       })
