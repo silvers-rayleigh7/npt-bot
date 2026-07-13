@@ -72,6 +72,18 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 .sl-chip:hover{border-color:var(--olive)}
 .sl-chip.active{background:var(--olive);color:#fff;border-color:var(--olive)}
 .sl-count{font-size:0.8rem;color:var(--tm);margin-left:auto}
+/* раскрывающаяся кнопка тем */
+.sl-toggle{display:inline-flex;align-items:center;gap:7px;font-size:0.8rem;padding:5px 13px;
+  border:1px solid var(--sand,#DBD4C7);border-radius:999px;background:#fff;color:var(--gd);cursor:pointer;
+  transition:background .12s,border-color .12s}
+.sl-toggle:hover{border-color:var(--olive);background:var(--gl,#F4F2EE)}
+.sl-toggle.open{background:var(--olive);color:#fff;border-color:var(--olive)}
+.sl-toggle .chev{width:13px;height:13px;transition:transform .2s}
+.sl-toggle.open .chev{transform:rotate(180deg)}
+.sl-toggle .picked{font-weight:600}
+.sl-subject-chips{display:flex;flex-wrap:wrap;gap:7px;overflow:hidden;max-height:0;opacity:0;
+  transition:max-height .28s ease,opacity .2s,margin .2s;margin-top:0}
+.sl-subject-chips.open{max-height:600px;opacity:1;margin-top:9px}
 .sl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px;margin:16px 0 60px}
 .sl-card{display:block;position:relative;aspect-ratio:2/1;border:1px solid #D6CFC1;border-radius:14px;overflow:hidden;background:#fff;transition:border-color .15s;text-decoration:none}
 .sl-card:hover{border-color:var(--olive);text-decoration:none}
@@ -122,7 +134,15 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 
   <div class="sl-filters" id="sl-filters">
     <div class="sl-frow" data-group="region"><span class="sl-flabel">Регион</span></div>
-    <div class="sl-frow" data-group="subject"><span class="sl-flabel">Тема</span><span class="sl-count" id="sl-count"></span></div>
+    <div class="sl-frow">
+      <span class="sl-flabel">Тема</span>
+      <button class="sl-toggle" id="sl-toggle" type="button" aria-expanded="false" aria-controls="sl-subject-chips">
+        <span id="sl-toggle-txt">Все темы</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <span class="sl-count" id="sl-count"></span>
+    </div>
+    <div class="sl-subject-chips" id="sl-subject-chips" data-group="subject"></div>
   </div>
 
   <div class="sl-grid" id="sl-grid">
@@ -652,19 +672,31 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   var subjects=uniq([].concat.apply([],cards.map(function(c){return c.dataset.tags?c.dataset.tags.split('|'):[];})));
 
   function buildRow(group,values){
-    var row=document.querySelector('.sl-frow[data-group="'+group+'"]');
+    var row=document.querySelector('[data-group="'+group+'"]');
     function mk(label,val){
       var b=document.createElement('span');b.className='sl-chip'+(val===null?' active':'');
       b.textContent=label;b.dataset.val=(val===null?'':val);
       b.onclick=function(){active[group]=val;
         row.querySelectorAll('.sl-chip').forEach(function(x){x.classList.remove('active');});
-        b.classList.add('active');apply();};
+        b.classList.add('active');
+        if(group==='subject'){var t=document.getElementById('sl-toggle-txt');
+          t.innerHTML=val?('Тема: <span class="picked">'+val+'</span>'):'Все темы';}
+        apply();};
       row.appendChild(b);
     }
     mk('Все',null);values.forEach(function(v){mk(v,v);});
   }
   buildRow('region',regions);
   buildRow('subject',subjects);
+
+  // раскрывающаяся панель тем
+  var toggle=document.getElementById('sl-toggle');
+  var chips=document.getElementById('sl-subject-chips');
+  toggle.onclick=function(){
+    var open=chips.classList.toggle('open');
+    toggle.classList.toggle('open',open);
+    toggle.setAttribute('aria-expanded',open?'true':'false');
+  };
 
   function apply(){
     var shown=0;
