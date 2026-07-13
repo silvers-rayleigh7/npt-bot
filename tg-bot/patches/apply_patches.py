@@ -343,6 +343,80 @@ def patch_media(base):
     open(p, "w").write(m.replace(marker, add, 1))
 
 
+def patch_geolocation(base):
+    """Геолокация: handle_location + Haversine-матчинг + кнопка запроса локации.
+
+    Идемпотентно по маркеру `async def handle_location`. Требует, чтобы рядом с bot.py
+    лежал модуль geo_match.py (деплоится отдельно). Запускать ПОСЛЕ patch_bot_multiaccount
+    (нужны приветствия cmd_start)."""
+    p = os.path.join(base, "bot.py")
+    b = open(p).read()
+    if "async def handle_location" in b:
+        return
+
+    # 1) импорт клавиатур
+    b = b.replace(
+        "from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup",
+        "from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, "
+        "KeyboardButton, ReplyKeyboardMarkup",
+        1,
+    )
+
+    # 2) метод handle_location — кладёт [ГЕО]-блок в общий буфер, конвейер переиспользуется
+    anchor = "    async def handle_photo(self, update: Update, context: ContextTypes.DEFAULT_TYPE):"
+    if anchor not in b:
+        sys.exit("bot.py: handle_photo не найден (версия claude-tg изменилась)")
+    method = (
+        "    async def handle_location(self, update: Update, context: ContextTypes.DEFAULT_TYPE):\n"
+        "        if not self._is_authorized(update):\n"
+        "            return\n"
+        "        loc = update.message.location if update.message else None\n"
+        "        if not loc:\n"
+        "            return\n"
+        "        from claude_tg.geo_match import nearest_storylines, format_distance\n"
+        "        content_dir = os.path.join(self.config.work_dir, \"content\", \"storylines\")\n"
+        "        near = nearest_storylines(loc.latitude, loc.longitude, content_dir, top=3)\n"
+        "        if near:\n"
+        "            items = \"; \".join(\n"
+        "                f\"{i}) {n['title']} — {format_distance(n['dist_m'])}\"\n"
+        "                for i, n in enumerate(near, 1)\n"
+        "            )\n"
+        "        else:\n"
+        "            items = \"(поблизости нет точек с координатами)\"\n"
+        "        prompt = (\n"
+        "            f\"[ГЕО] Пользователь прислал геолокацию ({loc.latitude:.5f}, {loc.longitude:.5f}). \"\n"
+        "            f\"Ближайшие точки: {items}. Покажи их списком с расстояниями, дай выбрать номер, \"\n"
+        "            f\"затем расскажи про выбранную. Если ближайшая дальше 3 км — честно скажи, \"\n"
+        "            f\"что рядом научных точек нет, назови ближайшую и предложи рассказать про неё \"\n"
+        "            f\"или задать любую тему.\"\n"
+        "        )\n"
+        "        self._buffer.append(prompt)\n"
+        "        await self._schedule_debounce(context)\n\n"
+    )
+    b = b.replace(anchor, method + anchor, 1)
+
+    # 3) регистрация LOCATION-хендлера рядом с PHOTO
+    reg = "        app.add_handler(MessageHandler(filters.PHOTO, self.handle_photo))"
+    if reg not in b:
+        sys.exit("bot.py: регистрация PHOTO не найдена")
+    b = b.replace(
+        reg,
+        "        app.add_handler(MessageHandler(filters.LOCATION, self.handle_location))\n" + reg,
+        1,
+    )
+
+    # 4) кнопка «📍 Что рядом?» (request_location) в приветствиях cmd_start
+    kb = (', reply_markup=ReplyKeyboardMarkup([[KeyboardButton("📍 Что рядом?", '
+          'request_location=True)]], resize_keyboard=True)')
+    for greet in (
+        "С возвращением! Спросите что-нибудь о науке — отвечу голосом.",
+        "Привет! Я научный гид. Спросите голосом или текстом — расскажу интересно и коротко.",
+    ):
+        b = b.replace(f'reply_text("{greet}")', f'reply_text("{greet}"{kb})')
+
+    open(p, "w").write(b)
+
+
 def main():
     base = find_base()
     patch_stream(base)
@@ -352,6 +426,7 @@ def main():
     patch_mcp(base)
     patch_mcp_sendmsg(base)
     patch_media(base)
+    patch_geolocation(base)
     for f in ("bot.py", "stream.py", "config.py", "mcp_server.py", "media.py"):
         ast.parse(open(os.path.join(base, f)).read())
     shutil.rmtree(os.path.join(base, "__pycache__"), ignore_errors=True)
