@@ -392,6 +392,16 @@ def patch_geolocation(base):
         "        )\n"
         "        self._buffer.append(prompt)\n"
         "        await self._schedule_debounce(context)\n\n"
+        "    async def cmd_location(self, update: Update, context: ContextTypes.DEFAULT_TYPE):\n"
+        "        if not self._is_authorized(update):\n"
+        "            return\n"
+        "        await update.message.reply_text(\n"
+        "            \"Нажми кнопку ниже — пришлёшь геолокацию, и я расскажу, что рядом.\",\n"
+        "            reply_markup=ReplyKeyboardMarkup(\n"
+        "                [[KeyboardButton(\"📍 Что рядом?\", request_location=True)]],\n"
+        "                resize_keyboard=True,\n"
+        "            ),\n"
+        "        )\n\n"
     )
     b = b.replace(anchor, method + anchor, 1)
 
@@ -402,6 +412,16 @@ def patch_geolocation(base):
     b = b.replace(
         reg,
         "        app.add_handler(MessageHandler(filters.LOCATION, self.handle_location))\n" + reg,
+        1,
+    )
+
+    # 3b) команда /location
+    creg = '        app.add_handler(CommandHandler("clear", self.cmd_clear))'
+    if creg not in b:
+        sys.exit("bot.py: регистрация clear-команды не найдена")
+    b = b.replace(
+        creg,
+        creg + '\n        app.add_handler(CommandHandler("location", self.cmd_location))',
         1,
     )
 
