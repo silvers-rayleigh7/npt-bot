@@ -396,7 +396,9 @@ def patch_geolocation(base):
         "        if not self._is_authorized(update):\n"
         "            return\n"
         "        await update.message.reply_text(\n"
-        "            \"Нажми кнопку ниже — пришлёшь геолокацию, и я расскажу, что рядом.\",\n"
+        "            \"Пришли геолокацию — расскажу, что рядом и про тропу.\\n\"\n"
+        "            \"📱 На телефоне: нажми кнопку «📍 Что рядом?» ниже.\\n\"\n"
+        "            \"💻 На компьютере: 📎 (скрепка) → Геопозиция → выбери точку.\",\n"
         "            reply_markup=ReplyKeyboardMarkup(\n"
         "                [[KeyboardButton(\"📍 Что рядом?\", request_location=True)]],\n"
         "                resize_keyboard=True,\n"
@@ -437,6 +439,33 @@ def patch_geolocation(base):
     open(p, "w").write(b)
 
 
+def patch_geo_text_ok(base):
+    """Не показывать «не удалось озвучить», если ответ ушёл текстом (send_telegram_message).
+
+    Для гео-ответов (список ближайших) бот отвечает текстом, а не голосом — но страховка
+    _stream_turn считала это провалом озвучки и пугала пользователя. Учитываем text-ответ."""
+    p = os.path.join(base, "bot.py")
+    b = open(p).read()
+    if "msg_sent = False" in b:
+        return
+    if "voice_sent = False" not in b:
+        return  # _stream_turn не пропатчен — нечего чинить
+    b = b.replace("        voice_sent = False\n",
+                  "        voice_sent = False\n        msg_sent = False\n", 1)
+    b = b.replace(
+        '                if "send_telegram_file" in (event.tool_name or ""):\n'
+        '                    voice_sent = True\n',
+        '                if "send_telegram_file" in (event.tool_name or ""):\n'
+        '                    voice_sent = True\n'
+        '                if "send_telegram_message" in (event.tool_name or ""):\n'
+        '                    msg_sent = True\n',
+        1,
+    )
+    b = b.replace("if not voice_sent and fallback:",
+                  "if not voice_sent and not msg_sent and fallback:")
+    open(p, "w").write(b)
+
+
 def main():
     base = find_base()
     patch_stream(base)
@@ -447,6 +476,7 @@ def main():
     patch_mcp_sendmsg(base)
     patch_media(base)
     patch_geolocation(base)
+    patch_geo_text_ok(base)
     for f in ("bot.py", "stream.py", "config.py", "mcp_server.py", "media.py"):
         ast.parse(open(os.path.join(base, f)).read())
     shutil.rmtree(os.path.join(base, "__pycache__"), ignore_errors=True)
