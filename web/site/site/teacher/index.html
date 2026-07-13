@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Учителю — урок на природе · Тропа</title>
+<link rel="icon" href="/assets/trees.svg" type="image/svg+xml">
+<!-- Яндекс.Метрика -->
+<script type="text/javascript">
+   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+   m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
+   k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+   (window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
+   ym(110637922,"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/110637922" style="position:absolute;left:-9999px" alt=""></div></noscript>
+
+<link rel="stylesheet" href="/assets/site-bar/bot.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
+<script>
+// Рендер математики ТОЛЬКО после загрузки шрифтов KaTeX. Иначе KaTeX считает
+// позицию черты корня/дроби по метрикам фолбэк-шрифта → линия ложится поперёк
+// подкоренного (видимое «зачёркивание»), и без ре-рендера не лечится.
+// ignoredClasses:['katex'] — повторный проход не трогает уже отрендеренное.
+(function(){
+  var KX={delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false,ignoredClasses:['katex']};
+  function whenFontsReady(cb){
+    var fams=['KaTeX_Main','KaTeX_Math','KaTeX_Size1','KaTeX_Size2','KaTeX_Size3','KaTeX_Size4','KaTeX_AMS'];
+    if(document.fonts&&document.fonts.load){
+      Promise.all(fams.map(function(f){return document.fonts.load('1em '+f).catch(function(){});}))
+        .then(function(){return document.fonts.ready;}).then(cb,cb);
+    } else { cb(); }
+  }
+  window.tropaMath=function(el){ if(typeof renderMathInElement==='function'){ whenFontsReady(function(){ renderMathInElement(el,KX); }); } };
+  window.addEventListener('load',function(){ window.tropaMath(document.body); });
+})();
+</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip}
+body{max-width:100%;overflow-x:clip}
+/* TROPA design system — палитра дизайн-пака */
+:root{
+  --sand:#DBD4C7;--sage:#B8B5A6;--olive:#7C7F6A;--char:#3E4038;--ink:#1A1A18;
+  --g:#7C7F6A;--gd:#3E4038;--gl:#F4F2EE;--bg:#FFFFFF;--card:#FFFFFF;
+  --tx:#1A1A18;--tm:#6E7163;--bd:#EAE7E0;--r:10px;
+  --serif:"Cormorant Garamond",Georgia,serif;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:-0.01em}
+a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
+.w{max-width:760px;margin:0 auto;padding:0 24px}
+.nav{padding:14px 0;border-bottom:1px solid var(--bd);background:#fff}
+.nav-inner{display:flex;align-items:center;gap:22px}
+.nav-logo{font-family:var(--serif);font-weight:700;font-size:1.3rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);line-height:1;display:flex;align-items:center;gap:9px}
+.nav-logo img{width:22px;height:22px}
+.nav-spacer{flex:1}
+.nav-link{font-size:0.82rem;color:var(--tm);display:flex;align-items:center;line-height:1;letter-spacing:0.01em}
+.nav-link:hover{color:var(--ink);text-decoration:none}
+.nav-icon{display:flex;align-items:center;justify-content:center;color:var(--tm);transition:color 0.15s}
+.nav-icon:hover{color:var(--olive);text-decoration:none}
+.nav-icon i{width:16px;height:16px}
+
+.tw{max-width:720px;margin:0 auto;padding:0 24px}
+.t-hero{padding:48px 0 8px}
+.t-hero h1{font-size:1.9rem;font-weight:700;margin-bottom:8px}
+.t-hero p{color:var(--tm);font-size:1rem;max-width:620px}
+.t-modes{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0 8px}
+.t-mode{flex:1;min-width:230px;border:1px solid var(--bd);border-radius:14px;padding:16px 18px;background:#fff;cursor:pointer;transition:border-color .15s,box-shadow .15s;text-decoration:none;display:block}
+.t-mode:hover{border-color:var(--olive);text-decoration:none}
+.t-mode.active{border-color:var(--olive);background:var(--gl)}
+.t-mode .tm-t{font-weight:700;font-size:1rem;color:var(--ink)}
+.t-mode .tm-d{font-size:0.85rem;color:var(--tm);margin-top:3px}
+.t-form{border:1px solid var(--bd);border-radius:14px;padding:22px 20px;background:#fcfdfc;margin-top:8px}
+.t-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.t-field{flex:1;min-width:180px;display:flex;flex-direction:column;gap:5px}
+.t-field label{font-size:0.82rem;color:var(--tm);font-weight:600}
+.t-field input,.t-field select{padding:10px 12px;border:1px solid var(--bd);border-radius:10px;font:0.95rem -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:#fff;outline:none}
+.t-field input:focus,.t-field select:focus{border-color:var(--olive)}
+.t-hint{font-size:0.8rem;color:var(--tm);margin:-4px 0 14px}
+.t-submit{padding:12px 26px;background:var(--olive);color:#fff;border:none;border-radius:999px;font-weight:650;font-size:1rem;cursor:pointer;transition:opacity .15s}
+.t-submit:disabled{opacity:.5;cursor:default}
+.t-out{margin:22px 0 60px;border:1px solid var(--bd);border-radius:14px;padding:22px 22px 26px;background:#fff;display:none}
+.t-out.show{display:block}
+.t-out h2{font-family:var(--serif);font-size:1.5rem;margin:0 0 4px}
+.t-out h3{font-size:1.05rem;font-weight:700;color:var(--gd);margin:18px 0 6px}
+.t-out p{margin:0 0 .6em}.t-out ul{margin:.3em 0 .6em;padding-left:1.3em}.t-out li{margin:.25em 0}
+.t-out strong{font-weight:700}
+.t-actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.t-dl{padding:9px 18px;border:1px solid var(--olive);color:var(--gd);border-radius:999px;font-size:0.9rem;cursor:pointer;background:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:7px}
+.t-dl:hover{background:var(--gl)}
+.t-loading{display:none;color:var(--tm);font-size:0.92rem;margin-top:16px}
+.t-loading.show{display:block}
+.t-suggest{display:none;margin:-2px 0 14px}
+.t-suggest.show{display:block}
+.t-suggest-h{font-size:0.8rem;color:var(--tm);margin-bottom:8px}
+.t-chips{display:flex;flex-wrap:wrap;gap:8px}
+.t-chip{padding:7px 14px;border:1px solid var(--olive);background:var(--gl);color:var(--gd);border-radius:999px;font-size:0.85rem;cursor:pointer;transition:background .12s}
+.t-chip:hover{background:#fff}
+@media(max-width:560px){.t-modes{flex-direction:column}}
+
+@media(max-width:640px){
+  .w{padding:0 16px}
+  .nav-inner{gap:14px}
+  .nav-logo{font-size:1.12rem;letter-spacing:0.08em;gap:7px}
+  .nav-logo img{width:19px;height:19px}
+  .nav-link{font-size:0.8rem}
+  .nav-icon{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="w nav-inner">
+  <a href="/" class="nav-logo"><img src="/assets/trees.svg" alt="">Тропа</a>
+  <a href="/storylines/" class="nav-link">Сюжеты</a>
+  <a href="/routes/" class="nav-link">Маршруты</a>
+  <a href="/teacher/" class="nav-link">Учителю</a>
+  <a href="/bot/" class="nav-link">Бот</a>
+  <a href="/guides/" class="nav-link">Гиды</a>
+  <div class="nav-spacer"></div>
+  <a href="https://t.me/npt_innopolis_bot" class="nav-icon"><i data-lucide="send"></i></a>
+</div></nav>
+
+<div class="tw">
+  <div class="t-hero">
+    <h1>🎓 Учителю — урок на природе</h1>
+    <p>Соберите готовый материал для урока на свежем воздухе: о чём рассказать, какой опыт провести
+       и что спросить у детей. Заполните пару полей — остальное соберёт помощник.</p>
+  </div>
+
+  <div class="t-modes">
+    <div class="t-mode active" id="mode-lesson">
+      <div class="tm-t">📄 Готовый урок</div>
+      <div class="tm-d">Класс, предмет, тема → материал для прогулки + опыт</div>
+    </div>
+    <a class="t-mode" id="mode-free" href="/storylines/">
+      <div class="tm-t">💬 Свободный вопрос</div>
+      <div class="tm-d">Любой вопрос по готовым сюжетам — спросите бота «Чем помочь?»</div>
+    </a>
+  </div>
+
+  <form class="t-form" id="t-form">
+    <div class="t-row">
+      <div class="t-field">
+        <label>Класс</label>
+        <select id="f-grade" required>
+          <option value="">—</option>
+          <option value="1">1 класс</option><option value="2">2 класс</option><option value="3">3 класс</option><option value="4">4 класс</option><option value="5">5 класс</option><option value="6">6 класс</option><option value="7">7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option>
+        </select>
+      </div>
+      <div class="t-field">
+        <label>Предмет</label>
+        <select id="f-subject" required>
+          <option value="">—</option>
+          <option>физика</option><option>биология</option><option>география</option>
+          <option>химия</option><option>математика</option><option>экология</option>
+          <option>астрономия</option><option>окружающий мир</option><option>история</option>
+        </select>
+      </div>
+    </div>
+    <div class="t-row">
+      <div class="t-field">
+        <label>Учебник / автор <span style="font-weight:400">(необязательно)</span></label>
+        <select id="f-textbook">
+          <option value="">— выберите предмет —</option>
+        </select>
+      </div>
+      <div class="t-field">
+        <label>Тема <span style="font-weight:400">(необязательно)</span></label>
+        <input id="f-topic" placeholder="если пусто — подберём уместную">
+      </div>
+    </div>
+
+    <div class="t-suggest" id="t-suggest">
+      <div class="t-suggest-h">Сейчас уместно — нажмите, чтобы подставить тему:</div>
+      <div class="t-chips" id="t-chips"></div>
+    </div>
+
+    <div class="t-row">
+      <div class="t-field">
+        <label>Город / локация <span style="font-weight:400">(необязательно)</span></label>
+        <input id="f-location" placeholder="напр. Казань">
+      </div>
+    </div>
+    <div class="t-hint">Минимум — класс и предмет. Чем больше укажете, тем точнее урок.</div>
+    <button class="t-submit" id="t-submit" type="submit">Собрать урок</button>
+    <div class="t-loading" id="t-loading">Собираю урок…</div>
+  </form>
+
+  <div class="t-out" id="t-out"></div>
+</div>
+
+<script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
+<script defer src="/assets/site-bar/bot.js"></script>
+
+<script>
+(function(){
+  var API = (document.body.dataset.botApi ? document.body.dataset.botApi.replace('/chat','/lesson') : '/api/lesson');
+  var form = document.getElementById('t-form');
+  var out = document.getElementById('t-out');
+  var loading = document.getElementById('t-loading');
+  var submit = document.getElementById('t-submit');
+  var lastMd = '';
+
+  // Федеральные учебники (перечень Минпросвещения) по предметам — учитель выбирает, не печатает.
+  var TEXTBOOKS = {
+    'физика': ['Пёрышкин А.В.', 'Мякишев Г.Я.', 'Грачёв А.В.', 'Генденштейн Л.Э.'],
+    'биология': ['Пасечник В.В.', 'Пономарёва И.Н.', 'Сивоглазов В.И.', 'Сонин Н.И.'],
+    'география': ['Алексеев А.И.', 'Домогацких Е.М.', 'Баринова И.И.', 'Дронов В.П.'],
+    'химия': ['Рудзитис Г.Е.', 'Габриелян О.С.', 'Кузнецова Н.Е.'],
+    'математика': ['Мерзляк А.Г.', 'Виленкин Н.Я.', 'Макарычев Ю.Н.', 'Атанасян Л.С.'],
+    'экология': ['Чернова Н.М.', 'Мамедов Н.М.'],
+    'астрономия': ['Воронцов-Вельяминов Б.А.', 'Чаругин В.М.'],
+    'окружающий мир': ['Плешаков А.А.', 'Виноградова Н.Ф.'],
+    'история': ['Арсентьев Н.М.', 'Данилов А.А.', 'Торкунов А.В.']
+  };
+
+  // Сезон определяем из месяца в браузере — подсказки тем «уместно сейчас».
+  function seasonNow(){
+    var m = new Date().getMonth() + 1; // 1..12
+    if (m===12||m<=2) return 'зима';
+    if (m<=5) return 'весна';
+    if (m<=8) return 'лето';
+    return 'осень';
+  }
+
+  // Готовые темы «под сезон» — прямой ответ на «не знаю, что спросить».
+  // Наблюдаемые на прогулке явления по предмету и времени года.
+  var TOPICS = {
+    'физика':   {зима:['Почему скрипит снег','Иней и конденсация','Тепло и одежда'], весна:['Таяние и теплообмен','Радуга и преломление','Звук капели'], лето:['Тени и высота Солнца','Испарение из лужи','Гроза: свет и звук'], осень:['Ветер и давление','Туман и точка росы','Как летит лист']},
+    'биология': {зима:['Как деревья зимуют','Следы животных на снегу','Хвойные и вечнозелёные'], весна:['Набухание почек','Первоцветы','Пробуждение насекомых'], лето:['Опыление цветов','Ярусы леса','Насекомые луга'], осень:['Почему листья желтеют','Плоды и семена','Подготовка к зиме']},
+    'география':{зима:['Снежный покров','Стороны света по Солнцу','Роза ветров'], весна:['Ручьи и рельеф','Овраги и эрозия','Половодье'], лето:['Ориентирование на местности','Почвы','Микроклимат двора'], осень:['Погода и наблюдения','Реки осенью','Виды облаков']},
+    'химия':    {зима:['Соль и таяние льда','Замерзание растворов'], весна:['Кислотность талой воды','Ржавчина'], лето:['Испарение и растворы','Жёсткость воды'], осень:['Почему меняется цвет листа','Горение и дым']},
+    'экология': {зима:['Птицы зимой и кормушки','Снег как индикатор'], весна:['Первоцветы под охраной','Уборка территории'], лето:['Биоразнообразие луга','Вода и загрязнение'], осень:['Опад и почва','Миграции птиц']},
+    'астрономия':{зима:['Зимние созвездия','Долгая ночь и высота Солнца'], весна:['Фазы Луны','Весеннее равноденствие'], лето:['Короткая ночь','Солнце в зените'], осень:['Осеннее равноденствие','Полярная звезда']},
+    'математика':{зима:['Симметрия снежинки','Измеряем сугроб'], весна:['Скорость таяния','Углы и тени'], лето:['Высота дерева по тени','Периметр клумбы'], осень:['Считаем и сортируем листья','Диаграмма погоды']},
+    'окружающий мир':{зима:['Кто как зимует','Свойства снега'], весна:['Что просыпается весной','Первая зелень'], лето:['Кто живёт на лугу','Погода летом'], осень:['Признаки осени','Готовимся к холодам']},
+    'история':  {зима:['Как встречали зиму в старину','Старые названия улиц'], весна:['Весенние праздники','Памятники рядом'], лето:['История нашего парка','Ремёсла края'], осень:['Урожай в истории','Старые здания вокруг']}
+  };
+
+  var grade = document.getElementById('f-grade');
+  var subject = document.getElementById('f-subject');
+  var textbook = document.getElementById('f-textbook');
+  var topic = document.getElementById('f-topic');
+  var suggest = document.getElementById('t-suggest');
+  var chips = document.getElementById('t-chips');
+
+  function refreshTextbooks(){
+    var list = TEXTBOOKS[subject.value] || [];
+    textbook.innerHTML = '<option value="">' + (list.length ? '— не важно —' : '— выберите предмет —') + '</option>';
+    list.forEach(function(a){ var o=document.createElement('option'); o.textContent=a; textbook.appendChild(o); });
+  }
+
+  function refreshSuggestions(){
+    var s = (TOPICS[subject.value] || {})[seasonNow()] || [];
+    chips.innerHTML = '';
+    if (!subject.value || !grade.value || !s.length){ suggest.classList.remove('show'); return; }
+    s.forEach(function(t){
+      var b = document.createElement('span'); b.className='t-chip'; b.textContent=t;
+      b.onclick = function(){ topic.value = t; };
+      chips.appendChild(b);
+    });
+    suggest.classList.add('show');
+  }
+
+  subject.addEventListener('change', function(){ refreshTextbooks(); refreshSuggestions(); });
+  grade.addEventListener('change', refreshSuggestions);
+
+  function esc(s){return s.replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+  function md(t){
+    var h = esc(t);
+    h = h.replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/^## (.+)$/gm,'<h2>$1</h2>');
+    h = h.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+    h = h.replace(/(?:^|\n)[-•] (.+)/g,'\n<li>$1</li>');
+    h = h.replace(/(<li>[\s\S]*?<\/li>)/g,'<ul>$1</ul>').replace(/<\/ul>\s*<ul>/g,'');
+    h = h.split(/\n{2,}/).map(function(p){p=p.trim();if(!p)return '';return /^<(h2|h3|ul|li)/.test(p)?p:'<p>'+p.replace(/\n/g,'<br>')+'</p>';}).join('');
+    return h;
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var payload = {
+      grade: grade.value,
+      subject: subject.value,
+      textbook: textbook.value,
+      topic: topic.value,
+      location: document.getElementById('f-location').value,
+      season: seasonNow()
+    };
+    if(!payload.grade || !payload.subject){ alert('Укажите хотя бы класс и предмет'); return; }
+    submit.disabled = true; loading.classList.add('show'); out.classList.remove('show');
+    fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        lastMd = d.lesson || 'Не удалось собрать урок.';
+        out.innerHTML = md(lastMd) +
+          '<div class="t-actions"><a class="t-dl" id="t-dl">⬇ Скачать (.txt)</a></div>';
+        out.classList.add('show');
+        document.getElementById('t-dl').onclick = function(){
+          var blob = new Blob([lastMd], {type:'text/plain;charset=utf-8'});
+          var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+          a.download = 'urok-tropa.txt'; a.click();
+        };
+        out.scrollIntoView({behavior:'smooth', block:'start'});
+      })
+      .catch(function(){ out.innerHTML='<p>Не получилось связаться с сервером. Попробуйте ещё раз.</p>'; out.classList.add('show'); })
+      .finally(function(){ submit.disabled = false; loading.classList.remove('show'); });
+  });
+})();
+</script>
+
+</body>
+</html>

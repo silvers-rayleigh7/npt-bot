@@ -132,18 +132,22 @@ class OpenRouterProvider:
 def build_providers() -> list:
     """Собирает список провайдеров по приоритету из переменных окружения."""
     provs = []
+    # Урок длиннее чата — GigaChat может отвечать 30–50с; даём запас (env, дефолт 60с).
+    timeout = float(os.environ.get("LLM_TIMEOUT", "60"))
     auth = os.environ.get("GIGACHAT_AUTH_KEY")
     if auth:
         provs.append(GigaChatProvider(
             auth_key=auth,
             scope=os.environ.get("GIGACHAT_SCOPE", "GIGACHAT_API_CORP"),
             model=os.environ.get("GIGACHAT_MODEL", "GigaChat-2-Max"),
+            timeout=timeout,
         ))
     ork = os.environ.get("OPENROUTER_API_KEY")
     if ork:
         provs.append(OpenRouterProvider(
             api_key=ork,
             model=os.environ.get("OPENROUTER_MODEL", "deepseek/deepseek-chat"),
+            timeout=timeout,
         ))
     if not provs:
         raise RuntimeError("Нет ни одного провайдера: задайте GIGACHAT_AUTH_KEY и/или OPENROUTER_API_KEY")

@@ -651,6 +651,11 @@ def build():
     with open(bd, "w") as f:
         f.write(env.get_template("bot.html").render(site=site))
     print("  bot/index.html")
+    # ── учителю (форма готового урока на природе)
+    td = _mk(os.path.join(OUT, "teacher"))
+    with open(td, "w") as f:
+        f.write(env.get_template("teacher.html").render(site=site))
+    print("  teacher/index.html")
     print(f"Done → {OUT}/ ({len(storylines)} storylines, {len(routes)} route(s))")
 
 
