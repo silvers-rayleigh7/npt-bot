@@ -3,4 +3,4 @@
 Обновляется скриптом tools/sync-site-mirror.sh после каждого push к Даниилу.
 
 source_repo: https://github.com/MerkulovDaniil/tropa
-mirror_commit: 2beec51f754ad1dcc634794c29ee00272180ef75
+mirror_commit: 5422a0b22fc40c138de88e5f8f0bcb3f95c315cf

@@ -642,8 +642,10 @@ def build():
 
     # ── гиды (отдельный тип контента: авторские маршруты с интерактивной картой)
     build_guides(env, site)
-    # ── скиллы (общая шапка)
-    build_skills(env, site)
+    # ── скиллы — АРХИВИРОВАНО (13.07.2026): вкладка и страница скрыты по просьбе.
+    # Шаблон в archive/skills.html; данные в site.yaml (skills:). Чтобы вернуть —
+    # раскомментировать строку ниже и вернуть archive/skills.html → templates/.
+    # build_skills(env, site)
     # ── бот
     bd = _mk(os.path.join(OUT, "bot"))
     with open(bd, "w") as f:
