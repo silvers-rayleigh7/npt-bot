@@ -1,9 +1,13 @@
 """site-bar бэкенд: прокси между виджетом сайта и LLM (GigaChat → OpenRouter fallback)."""
 from __future__ import annotations
 
+import html as _html
+import json
 import os
+from datetime import datetime, timezone
 from pathlib import Path
 
+import requests
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -18,6 +22,27 @@ SYSTEM_PROMPT = (ROOT / "system_prompt.md").read_text(encoding="utf-8")
 LESSON_PROMPT = (ROOT / "lesson_prompt.md").read_text(encoding="utf-8")
 MAX_CONTEXT_CHARS = 6000
 MAX_HISTORY = 8
+
+# Заявки гидов копятся в jsonl (append-only), уведомление — в Telegram админу.
+GUIDE_APPLICATIONS = Path(os.environ.get("GUIDE_APPLICATIONS_PATH", ROOT / "guide_applications.jsonl"))
+TG_NOTIFY_TOKEN = os.environ.get("TG_NOTIFY_TOKEN", "")
+TG_NOTIFY_CHAT = os.environ.get("TG_NOTIFY_CHAT", "")
+
+
+def _notify_telegram(text: str) -> bool:
+    """Шлёт уведомление админу через Bot API (stateless, без процесса бота)."""
+    if not (TG_NOTIFY_TOKEN and TG_NOTIFY_CHAT):
+        return False
+    try:
+        r = requests.post(
+            f"https://api.telegram.org/bot{TG_NOTIFY_TOKEN}/sendMessage",
+            json={"chat_id": TG_NOTIFY_CHAT, "text": text,
+                  "parse_mode": "HTML", "disable_web_page_preview": True},
+            timeout=10,
+        )
+        return r.ok
+    except Exception:
+        return False
 
 app = FastAPI(title="Tropa site-bar API")
 
@@ -119,3 +144,57 @@ def lesson(inp: LessonIn):
             lesson="Не получилось собрать урок. Попробуйте ещё раз чуть позже.",
             provider=f"error:{e}",
         )
+
+
+class GuideIn(BaseModel):
+    name: str = ""          # ФИО
+    contact: str = ""       # телефон / @telegram / email
+    region: str = ""        # город/регион
+    attestation: str = ""   # аттестация экскурсовода
+    topics: str = ""        # темы/специализация
+    experience: str = ""    # опыт (кратко)
+    link: str = ""          # соцсети/сайт (опц.)
+    consent: bool = False   # согласие на обработку ПД (152-ФЗ)
+    website: str = ""        # honeypot: у людей пусто, боты заполняют
+
+
+class GuideOut(BaseModel):
+    ok: bool
+    message: str
+
+
+@app.post("/api/guide-register", response_model=GuideOut)
+def guide_register(inp: GuideIn):
+    if inp.website.strip():                       # honeypot сработал — тихо принимаем и игнорируем
+        return GuideOut(ok=True, message="Заявка принята.")
+    name, contact = inp.name.strip(), inp.contact.strip()
+    if not name or not contact:
+        return GuideOut(ok=False, message="Укажите, пожалуйста, имя и контакт.")
+    if not inp.consent:
+        return GuideOut(ok=False, message="Нужно согласие на обработку персональных данных.")
+
+    rec = {
+        "ts": datetime.now(timezone.utc).isoformat(),
+        "name": name, "contact": contact, "region": inp.region.strip(),
+        "attestation": inp.attestation.strip(), "topics": inp.topics.strip(),
+        "experience": inp.experience.strip(), "link": inp.link.strip(),
+    }
+    try:
+        GUIDE_APPLICATIONS.parent.mkdir(parents=True, exist_ok=True)
+        with GUIDE_APPLICATIONS.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    except Exception:
+        return GuideOut(ok=False, message="Не удалось сохранить заявку. Попробуйте позже.")
+
+    esc = lambda s: _html.escape(s or "—")
+    _notify_telegram(
+        "🧭 <b>Новая заявка гида</b>\n"
+        f"<b>Имя:</b> {esc(name)}\n"
+        f"<b>Контакт:</b> {esc(contact)}\n"
+        f"<b>Регион:</b> {esc(rec['region'])}\n"
+        f"<b>Аттестация:</b> {esc(rec['attestation'])}\n"
+        f"<b>Темы:</b> {esc(rec['topics'])}\n"
+        f"<b>Опыт:</b> {esc(rec['experience'])}\n"
+        f"<b>Ссылка:</b> {esc(rec['link'])}"
+    )
+    return GuideOut(ok=True, message="Спасибо! Заявка отправлена — свяжемся по указанному контакту.")

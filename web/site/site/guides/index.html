@@ -81,6 +81,11 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 .gd-card:hover .gd-name{color:var(--gd)}
 .gd-region{display:flex;align-items:center;gap:5px;color:var(--tm);font-size:0.85rem;margin-top:4px}
 .gd-region i{width:13px;height:13px;stroke-width:1.6}
+.gd-join{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;border:1px solid var(--bd);border-radius:14px;padding:18px 20px;background:var(--gl);margin:0 0 60px}
+.gd-join-t{font-family:var(--serif);font-size:1.25rem;font-weight:600;color:var(--ink)}
+.gd-join-d{color:var(--tm);font-size:0.88rem;margin-top:2px}
+.gd-join-btn{padding:11px 22px;background:var(--olive);color:#fff;border-radius:999px;font-weight:650;font-size:0.95rem;white-space:nowrap}
+.gd-join-btn:hover{opacity:.9;text-decoration:none}
 @media(max-width:640px){.gd-grid{grid-template-columns:1fr 1fr;gap:12px}.gd-name{font-size:1.2rem}}
 
 @media(max-width:640px){
@@ -123,6 +128,13 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
       </div>
     </a>
     
+  </div>
+  <div class="gd-join">
+    <div>
+      <div class="gd-join-t">Водите экскурсии?</div>
+      <div class="gd-join-d">Оставьте заявку — добавим вас в каталог гидов и усилим маршруты ИИ-помощником.</div>
+    </div>
+    <a class="gd-join-btn" href="/guides/register/">Стать гидом</a>
   </div>
 </div>
 

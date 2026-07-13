@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Стать гидом · {{ site.title }}{% endblock %}
+{% block styles %}{% raw %}
+.gw{max-width:640px;margin:0 auto;padding:0 24px}
+.gr-hero{padding:48px 0 6px}
+.gr-hero h1{font-size:1.9rem;font-weight:700;margin-bottom:8px}
+.gr-hero p{color:var(--tm);font-size:1rem;max-width:560px}
+.gr-form{border:1px solid var(--bd);border-radius:14px;padding:22px 20px;background:#fcfdfc;margin-top:18px}
+.gr-field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.gr-field label{font-size:0.84rem;color:var(--tm);font-weight:600}
+.gr-field .req{color:#b4553b}
+.gr-field input,.gr-field select,.gr-field textarea{padding:10px 12px;border:1px solid var(--bd);border-radius:10px;font:0.95rem -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:#fff;outline:none}
+.gr-field input:focus,.gr-field select:focus,.gr-field textarea:focus{border-color:var(--olive)}
+.gr-field textarea{resize:vertical;min-height:64px}
+.gr-row{display:flex;gap:14px;flex-wrap:wrap}
+.gr-row .gr-field{flex:1;min-width:200px}
+.gr-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.gr-consent{display:flex;gap:9px;align-items:flex-start;margin:6px 0 16px;font-size:0.85rem;color:var(--tm)}
+.gr-consent input{margin-top:3px}
+.gr-submit{padding:12px 26px;background:var(--olive);color:#fff;border:none;border-radius:999px;font-weight:650;font-size:1rem;cursor:pointer;transition:opacity .15s}
+.gr-submit:disabled{opacity:.5;cursor:default}
+.gr-msg{margin-top:16px;padding:14px 16px;border-radius:10px;font-size:0.95rem;display:none}
+.gr-msg.ok{display:block;background:#eef4ec;border:1px solid #cfe0c8;color:#33562b}
+.gr-msg.err{display:block;background:#fbeeea;border:1px solid #ecccc0;color:#8a3b28}
+{% endraw %}{% endblock %}
+
+{% block content %}
+<div class="gw">
+  <div class="gr-hero">
+    <h1>🧭 Стать гидом «Тропы»</h1>
+    <p>Вы аттестованный экскурсовод или знаток своих мест? Оставьте заявку — добавим вас
+       на страницу гидов, а ваши маршруты усилим научпоп-материалом и ИИ-помощником.</p>
+  </div>
+
+  <form class="gr-form" id="gr-form">
+    <div class="gr-row">
+      <div class="gr-field">
+        <label>Имя <span class="req">*</span></label>
+        <input id="g-name" required placeholder="ФИО или как представить">
+      </div>
+      <div class="gr-field">
+        <label>Контакт <span class="req">*</span></label>
+        <input id="g-contact" required placeholder="телефон, @telegram или email">
+      </div>
+    </div>
+    <div class="gr-row">
+      <div class="gr-field">
+        <label>Город / регион</label>
+        <input id="g-region" placeholder="напр. Калининград">
+      </div>
+      <div class="gr-field">
+        <label>Аттестация экскурсовода</label>
+        <select id="g-attestation">
+          <option value="">—</option>
+          <option>Есть удостоверение</option>
+          <option>В процессе аттестации</option>
+          <option>Нет, но веду экскурсии</option>
+        </select>
+      </div>
+    </div>
+    <div class="gr-field">
+      <label>Темы и маршруты, которые водите</label>
+      <input id="g-topics" placeholder="напр. геология побережья, дендрология, астрономия">
+    </div>
+    <div class="gr-field">
+      <label>Коротко об опыте</label>
+      <textarea id="g-experience" placeholder="Сколько лет водите, где, что особенного"></textarea>
+    </div>
+    <div class="gr-field">
+      <label>Ссылка <span style="font-weight:400">(соцсети/сайт, необязательно)</span></label>
+      <input id="g-link" placeholder="https://">
+    </div>
+
+    <!-- honeypot: людям не видно, боты заполняют -->
+    <div class="gr-hp" aria-hidden="true"><label>Не заполняйте<input id="g-website" tabindex="-1" autocomplete="off"></label></div>
+
+    <label class="gr-consent">
+      <input type="checkbox" id="g-consent">
+      <span>Согласен(на) на обработку персональных данных для связи по заявке (152-ФЗ).</span>
+    </label>
+
+    <button class="gr-submit" id="g-submit" type="submit">Отправить заявку</button>
+    <div class="gr-msg" id="g-msg"></div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function(){
+  var API = (document.body.dataset.botApi ? document.body.dataset.botApi.replace('/chat','/guide-register') : '/api/guide-register');
+  var form = document.getElementById('gr-form');
+  var submit = document.getElementById('g-submit');
+  var msg = document.getElementById('g-msg');
+  function val(id){ return document.getElementById(id).value.trim(); }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var payload = {
+      name: val('g-name'), contact: val('g-contact'), region: val('g-region'),
+      attestation: val('g-attestation'), topics: val('g-topics'),
+      experience: val('g-experience'), link: val('g-link'),
+      consent: document.getElementById('g-consent').checked,
+      website: val('g-website')
+    };
+    if(!payload.name || !payload.contact){ show('err','Укажите имя и контакт.'); return; }
+    if(!payload.consent){ show('err','Отметьте согласие на обработку персональных данных.'); return; }
+    submit.disabled = true; msg.className='gr-msg';
+    fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(d.ok){ show('ok', d.message || 'Заявка отправлена.'); form.reset(); }
+        else { show('err', d.message || 'Не удалось отправить.'); submit.disabled=false; }
+      })
+      .catch(function(){ show('err','Не получилось связаться с сервером. Попробуйте ещё раз.'); submit.disabled=false; });
+  });
+  function show(kind, text){ msg.textContent=text; msg.className='gr-msg '+kind; }
+})();
+</script>
+{% endblock %}

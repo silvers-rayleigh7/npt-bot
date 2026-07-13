@@ -656,6 +656,11 @@ def build():
     with open(td, "w") as f:
         f.write(env.get_template("teacher.html").render(site=site))
     print("  teacher/index.html")
+    # ── саморегистрация гидов (форма заявки → /api/guide-register)
+    gr = _mk(os.path.join(OUT, "guides", "register"))
+    with open(gr, "w") as f:
+        f.write(env.get_template("guide-register.html").render(site=site))
+    print("  guides/register/index.html")
     print(f"Done → {OUT}/ ({len(storylines)} storylines, {len(routes)} route(s))")
 
 
