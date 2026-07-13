@@ -7,7 +7,7 @@ description: >
 analytics:
   # ID счётчика Яндекс.Метрики. Создать: metrika.yandex.ru → «Добавить счётчик» для tropa.fmin.xyz.
   # Пока пусто — сниппет НЕ вставляется (сайт не трекается). Впиши число — заработает.
-  yandex_id: ""
+  yandex_id: 110637922
 
 links:
   github: "https://github.com/MerkulovDaniil/tropa"
