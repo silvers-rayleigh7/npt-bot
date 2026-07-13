@@ -7,6 +7,10 @@
 .hero h1{font-size:1.85rem;font-weight:700;margin-bottom:8px}
 .hero p{color:var(--tm);font-size:1rem;max-width:680px}
 .hero .one{margin-top:14px;padding:14px 18px;background:var(--gl);border-left:3px solid var(--g);border-radius:var(--r);font-size:0.95rem;line-height:1.6}
+.cta{display:inline-flex;align-items:center;gap:8px;margin-top:20px;padding:13px 26px;background:var(--olive);color:#fff;border-radius:999px;font-weight:650;font-size:1.02rem;text-decoration:none;transition:transform .15s,box-shadow .15s}
+.cta:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(124,127,106,.32);text-decoration:none}
+.cta svg{width:19px;height:19px}
+.foot-cta{text-align:center;margin:38px 0 8px}
 .sec-t{font-size:1.2rem;font-weight:700;margin:44px 0 4px;color:var(--gd)}
 .sec-d{color:var(--tm);font-size:0.9rem;margin-bottom:20px}
 
@@ -71,6 +75,10 @@
       сюжетом, предложит копнуть глубже, а если готового сюжета нет — <b>сам сочинит ответ
       тем же методом</b>, что и эталонные сюжеты тропы.
     </div>
+    <a href="{{ site.links.telegram }}" class="cta" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+      Попробовать в Telegram
+    </a>
   </div>
 
   <!-- ИНТЕРАКЦИЯ -->
@@ -179,10 +187,15 @@
 
   </div>
 
+  <div class="foot-cta">
+    <a href="{{ site.links.telegram }}" class="cta" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+      Попробовать бота
+    </a>
+  </div>
   <div class="foot">
-    Полное ТЗ — <a href="{{ site.links.github }}/blob/main/docs/nature-bot-spec.md">docs/nature-bot-spec.md</a> ·
-    база знаний — <a href="/storylines/">40 сюжетов</a> ·
-    канон стиля — скилл <a href="{{ site.links.github }}/tree/main/skills/outdoor-scipop-architect">outdoor-scipop-architect</a>.
+    База знаний — <a href="/storylines/">сюжеты тропы</a>. Спроси бота голосом или текстом —
+    расскажет про любую точку и что рядом с тобой.
   </div>
 </div>
 {% endblock %}
