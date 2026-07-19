@@ -343,15 +343,57 @@ def patch_media(base):
     open(p, "w").write(m.replace(marker, add, 1))
 
 
-def patch_geolocation(base):
-    """Геолокация: handle_location + Haversine-матчинг + кнопка запроса локации.
+# Хендлер геолокации. Рассказывает про ЛЮБУЮ точку: если рядом наши сюжеты — предлагает их,
+# иначе определяет местность (Nominatim) и объекты вокруг (Overpass) и говорит про них.
+# Сетевые вызовы уходят в поток — иначе блокируют event loop бота на секунды.
+_HANDLE_LOCATION = (
+    "    async def handle_location(self, update: Update, context: ContextTypes.DEFAULT_TYPE):\n"
+    "        if not self._is_authorized(update):\n"
+    "            return\n"
+    "        loc = update.message.location if update.message else None\n"
+    "        if not loc:\n"
+    "            return\n"
+    "        import asyncio\n"
+    "        from claude_tg.geo_place import build_geo_prompt\n"
+    "        content_dir = os.path.join(self.config.work_dir, \"content\", \"storylines\")\n"
+    "        try:\n"
+    "            await update.message.reply_text(\"📍 Смотрю, что вокруг…\")\n"
+    "        except Exception:\n"
+    "            pass\n"
+    "        try:\n"
+    "            prompt = await asyncio.get_event_loop().run_in_executor(\n"
+    "                None, build_geo_prompt, loc.latitude, loc.longitude, content_dir\n"
+    "            )\n"
+    "        except Exception:\n"
+    "            prompt = (\n"
+    "                f\"[ГЕО] Пользователь прислал геолокацию ({loc.latitude:.5f}, {loc.longitude:.5f}), \"\n"
+    "                f\"но определить местность не удалось. Спроси, что его интересует рядом, \"\n"
+    "                f\"или предложи тему.\"\n"
+    "            )\n"
+    "        self._buffer.append(prompt)\n"
+    "        await self._schedule_debounce(context)\n\n"
+)
 
-    Идемпотентно по маркеру `async def handle_location`. Требует, чтобы рядом с bot.py
-    лежал модуль geo_match.py (деплоится отдельно). Запускать ПОСЛЕ patch_bot_multiaccount
-    (нужны приветствия cmd_start)."""
+
+def patch_geolocation(base):
+    """Геолокация: handle_location + рассказ про ЛЮБУЮ точку + кнопка запроса локации.
+
+    Идемпотентно по маркеру `build_geo_prompt`. Если стоит старая версия хендлера
+    (матчинг только по нашим сюжетам) — заменяет её на новую. Требует рядом с bot.py
+    модули geo_match.py и geo_place.py (деплоятся отдельно). Запускать ПОСЛЕ
+    patch_bot_multiaccount (нужны приветствия cmd_start)."""
     p = os.path.join(base, "bot.py")
     b = open(p).read()
+    if "build_geo_prompt" in b:
+        return                       # уже новая версия
     if "async def handle_location" in b:
+        # старая версия хендлера: меняем только его, остальное (cmd_location,
+        # регистрация, кнопка) уже стоит и трогать не нужно
+        start = b.index("    async def handle_location")
+        end = b.index("    async def cmd_location")
+        b = b[:start] + _HANDLE_LOCATION + b[end:]
+        open(p, "w").write(b)
+        print("  geo: handle_location обновлён (рассказ про любую точку)")
         return
 
     # 1) импорт клавиатур
@@ -367,31 +409,7 @@ def patch_geolocation(base):
     if anchor not in b:
         sys.exit("bot.py: handle_photo не найден (версия claude-tg изменилась)")
     method = (
-        "    async def handle_location(self, update: Update, context: ContextTypes.DEFAULT_TYPE):\n"
-        "        if not self._is_authorized(update):\n"
-        "            return\n"
-        "        loc = update.message.location if update.message else None\n"
-        "        if not loc:\n"
-        "            return\n"
-        "        from claude_tg.geo_match import nearest_storylines, format_distance\n"
-        "        content_dir = os.path.join(self.config.work_dir, \"content\", \"storylines\")\n"
-        "        near = nearest_storylines(loc.latitude, loc.longitude, content_dir, top=3)\n"
-        "        if near:\n"
-        "            items = \"; \".join(\n"
-        "                f\"{i}) {n['title']} — {format_distance(n['dist_m'])}\"\n"
-        "                for i, n in enumerate(near, 1)\n"
-        "            )\n"
-        "        else:\n"
-        "            items = \"(поблизости нет точек с координатами)\"\n"
-        "        prompt = (\n"
-        "            f\"[ГЕО] Пользователь прислал геолокацию ({loc.latitude:.5f}, {loc.longitude:.5f}). \"\n"
-        "            f\"Ближайшие точки: {items}. Покажи их списком с расстояниями, дай выбрать номер, \"\n"
-        "            f\"затем расскажи про выбранную. Если ближайшая дальше 3 км — честно скажи, \"\n"
-        "            f\"что рядом научных точек нет, назови ближайшую и предложи рассказать про неё \"\n"
-        "            f\"или задать любую тему.\"\n"
-        "        )\n"
-        "        self._buffer.append(prompt)\n"
-        "        await self._schedule_debounce(context)\n\n"
+        _HANDLE_LOCATION +
         "    async def cmd_location(self, update: Update, context: ContextTypes.DEFAULT_TYPE):\n"
         "        if not self._is_authorized(update):\n"
         "            return\n"
