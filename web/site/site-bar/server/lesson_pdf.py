@@ -93,10 +93,19 @@ def _tystr(s: str) -> str:
 
 def _esc(s: str) -> str:
     """Строковый рендер для заголовков: #(...) вставляет текст как есть."""
-    return f"#({_tystr(s)})"
+    return f"#({_tystr(_clean_md(s))})"
+
+
+_MD_JUNK = re.compile(r"(\*\*|__|`|^\s*[*_]\s+|\s+[*_]\s*$)")
+
+
+def _clean_md(s: str) -> str:
+    """Убирает markdown-маркеры, которые иначе печатаются в PDF как есть (**, __, `)."""
+    return _MD_JUNK.sub("", s or "").strip()
 
 
 def _run(s: str, bold: bool = False) -> str:
+    s = _clean_md(s)
     if not s:
         return ""
     body = f"#({_tystr(s)})"
@@ -224,12 +233,14 @@ def to_typst(doc: dict, math: bool = True) -> str:
             t.append(']')
             t.append('#v(0.4cm)')
         else:
-            t.append(f'#text(size: 14pt, weight: "semibold", fill: rgb("#7C7F6A"))[{_esc(hclean)}]')
+            t.append('#block(sticky: true)[' 
+                     f'#text(size: 14pt, weight: "semibold", fill: rgb("#7C7F6A"))[{_esc(hclean)}]]')
             t.append('#v(0.22cm)')
             for kind, txt in sec["blocks"]:
                 if kind == "sub":
                     t.append('#v(0.18cm)')
-                    t.append(f'#par(text(size: 11.5pt, weight: "bold", fill: rgb("#3E4038"))[{_esc(txt)}])')
+                    t.append('#block(sticky: true)['
+                             f'#text(size: 11.5pt, weight: "bold", fill: rgb("#3E4038"))[{_esc(txt)}]]')
                     t.append('#v(0.05cm)')
                 elif kind == "table":
                     t.append(_table_block(txt, math))
