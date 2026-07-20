@@ -124,6 +124,7 @@ class LessonIn(BaseModel):
     topic: str = ""       # тема (опц.)
     location: str = ""    # город/локация (опц.)
     season: str = ""      # сезон (опц.)
+    when: str = ""        # когда урок: «сейчас», «завтра утром» … (опц.)
 
 
 class LessonOut(BaseModel):
@@ -152,12 +153,7 @@ def _lesson_context(inp: "LessonIn"):
 
 @app.post("/api/lesson", response_model=LessonOut)
 def lesson(inp: LessonIn):
-    fields = [
-        ("Класс", inp.grade), ("Предмет", inp.subject),
-        ("Учебник/автор", inp.textbook), ("Тема", inp.topic),
-        ("Локация", inp.location), ("Сезон", inp.season),
-    ]
-    body = "\n".join(f"{k}: {v.strip()}" for k, v in fields if v and v.strip())
+    body = _form_body(inp)
     if not body:
         return LessonOut(lesson="Заполните хотя бы класс и предмет.", provider="none")
 
@@ -181,11 +177,23 @@ def lesson(inp: LessonIn):
         )
 
 
+def _weather_line(inp: "LessonIn") -> str:
+    """Погода на час урока по названию города. Нет города/сбой → "" (урок не страдает)."""
+    if not (inp.location or "").strip():
+        return ""
+    try:
+        from weather import weather_for
+        return weather_for(inp.location, inp.when)
+    except Exception:
+        return ""
+
+
 def _form_body(inp: "LessonIn") -> str:
     fields = [
         ("Класс", inp.grade), ("Предмет", inp.subject),
         ("Учебник/автор", inp.textbook), ("Тема", inp.topic),
         ("Локация", inp.location), ("Сезон", inp.season),
+        ("Когда урок", inp.when), ("Погода", _weather_line(inp)),
     ]
     return "\n".join(f"{k}: {v.strip()}" for k, v in fields if v and v.strip())
 

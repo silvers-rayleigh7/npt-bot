@@ -189,8 +189,19 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 
     <div class="t-row">
       <div class="t-field">
-        <label>Город / локация <span style="font-weight:400">(необязательно)</span></label>
+        <label>Город / локация <span style="font-weight:400">(для погоды и привязки к месту)</span></label>
         <input id="f-location" placeholder="напр. Казань">
+      </div>
+      <div class="t-field">
+        <label>Когда урок</label>
+        <select id="f-when">
+          <option value="сейчас">сейчас</option>
+          <option value="сегодня днём">сегодня днём</option>
+          <option value="сегодня вечером">сегодня вечером</option>
+          <option value="завтра утром">завтра утром</option>
+          <option value="завтра днём">завтра днём</option>
+          <option value="завтра вечером">завтра вечером</option>
+        </select>
       </div>
     </div>
     <div class="t-hint">Минимум — класс и предмет. Чем больше укажете, тем точнее урок.</div>
@@ -293,7 +304,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
     return {
       grade: grade.value, subject: subject.value, textbook: textbook.value,
       topic: topic.value, location: document.getElementById('f-location').value,
-      season: seasonNow()
+      season: seasonNow(), when: document.getElementById('f-when').value
     };
   }
 

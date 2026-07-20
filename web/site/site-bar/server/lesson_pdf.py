@@ -25,6 +25,7 @@ def parse_lesson(md: str) -> dict:
     title, meta = "", ""
     sections = []
     cur = None
+    in_math, math_buf = False, []      # состояние «забора» блочной формулы $$…$$
     for line in md.splitlines():
         s = line.rstrip()
         if s.startswith("## Урок:"):
@@ -39,6 +40,20 @@ def parse_lesson(md: str) -> dict:
             sections.append(cur)
         elif s.strip() and cur is not None:
             ls = s.lstrip()
+            # блочная формула $$...$$ — может быть на одной строке или в «заборе» из трёх
+            one = re.match(r"^\$\$(.+?)\$\$$", ls)
+            if one:
+                cur["blocks"].append(("math", one.group(1).strip()))
+                continue
+            if ls == "$$":
+                in_math = not in_math
+                if not in_math and math_buf:
+                    cur["blocks"].append(("math", " ".join(math_buf).strip()))
+                    math_buf = []
+                continue
+            if in_math:
+                math_buf.append(ls)
+                continue
             num = re.match(r"^\d+[.)]\s+(.+)$", ls)   # «1. …» / «2) …» — нумерованный пункт
             if ls.startswith(("- ", "* ", "• ")):
                 cur["blocks"].append(("li", ls[2:].strip()))
@@ -67,24 +82,54 @@ def _run(s: str, bold: bool = False) -> str:
     return f"#strong[{body}]" if bold else body
 
 
-def _inline(s: str) -> str:
-    """Markdown **жирный** → #strong[#("...")], остальное — строковые литералы."""
+_FORMULA_RE = re.compile(r"\$([^$\n]+)\$")   # LaTeX между долларами: $v = s/t$
+
+
+def has_math(md: str) -> bool:
+    return bool(_FORMULA_RE.search(md or ""))
+
+
+def _inline_bold(s: str) -> str:
     parts = re.split(r"\*\*(.+?)\*\*", s)
-    out = [_run(part, bold=(i % 2 == 1)) for i, part in enumerate(parts) if part]
-    return "".join(out) or '#("")'
+    return "".join(_run(p, bold=(i % 2 == 1)) for i, p in enumerate(parts) if p)
 
 
-def _bold_colon(it: str) -> str:
+def _inline(s: str, math: bool = True) -> str:
+    """**жирный** → #strong[…]; $формула$ → #mi("…") (mitex). Текст — строковыми литералами.
+    При math=False формула печатается как обычный текст (запасной путь сборки)."""
+    if not math:
+        s = _FORMULA_RE.sub(lambda m: m.group(1), s)
+        return _inline_bold(s) or '#("")'
+    out, pos = [], 0
+    for m in _FORMULA_RE.finditer(s):
+        out.append(_inline_bold(s[pos:m.start()]))
+        out.append(f"#mi({_tystr(m.group(1))})")
+        pos = m.end()
+    out.append(_inline_bold(s[pos:]))
+    return "".join(x for x in out if x) or '#("")'
+
+
+def _math_block(latex: str, math: bool = True) -> str:
+    """Блочная формула $$…$$ — по центру отдельной строкой."""
+    if not math:
+        return f'#align(center, text(style: "italic")[{_run(latex)}])'
+    return f'#v(0.15cm)\n#align(center, mitex({_tystr(latex)}))\n#v(0.15cm)'
+
+
+def _bold_colon(it: str, math: bool = True) -> str:
     """«Ключ: текст» → ключ жирным."""
     m = re.match(r"^(.+?):\s*(.+)$", it)
     if m:
-        return f"{_run(m.group(1) + ':', bold=True)} {_inline(m.group(2))}"
-    return _inline(it)
+        return f"{_run(m.group(1) + ':', bold=True)} {_inline(m.group(2), math)}"
+    return _inline(it, math)
 
 
 # ─────────────────────────── генерация Typst ───────────────────────────
-def to_typst(doc: dict) -> str:
+def to_typst(doc: dict, math: bool = True) -> str:
     t = []
+    if math:
+        # mitex подключаем только когда формулы есть — лишняя зависимость документу не нужна
+        t.append('#import "@preview/mitex:0.2.4": mi, mitex')
     t.append('#set page(width: 21cm, height: 29.7cm, margin: (x: 2.9cm, top: 1.9cm, bottom: 2.1cm), fill: white,')
     t.append('  footer: align(center, text(size: 7.5pt, fill: rgb("#A29B8C"), tracking: 1.6pt)[tropa.fmin.xyz · Научная тропа Иннополиса]))')
     t.append(f'#set text(font: ("{TEXT_FONT}"), size: 11.5pt, fill: rgb("#1A1A18"), lang: "ru", hyphenate: true)')
@@ -110,7 +155,10 @@ def to_typst(doc: dict) -> str:
             t.append(f'  #text(size: 13pt, weight: "bold", fill: rgb("#7C7F6A"))[ОПЫТ · {_esc(hclean.replace("Проведи опыт", "").strip() or "Проведи опыт")}]')
             t.append('  #v(0.2cm)')
             for kind, txt in sec["blocks"]:
-                inner = _inline(txt) if kind == "p" else f"• {_inline(txt)}"
+                if kind == "math":
+                    t.append(f'  {_math_block(txt, math)}')
+                    continue
+                inner = _inline(txt, math) if kind == "p" else f"• {_inline(txt, math)}"
                 t.append(f'  #par(text(size: 11pt)[{inner}])')
             t.append(']')
             t.append('#v(0.4cm)')
@@ -118,19 +166,34 @@ def to_typst(doc: dict) -> str:
             t.append(f'#text(size: 14pt, weight: "semibold", fill: rgb("#7C7F6A"))[{_esc(hclean)}]')
             t.append('#v(0.22cm)')
             for kind, txt in sec["blocks"]:
-                if kind == "p":
-                    t.append(f'#par[{_inline(txt)}]')
+                if kind == "math":
+                    t.append(_math_block(txt, math))
+                elif kind == "p":
+                    t.append(f'#par[{_inline(txt, math)}]')
                 else:
-                    t.append(f'#par[#text(fill: rgb("#7C7F6A"))[•] {_bold_colon(txt)}]')
+                    t.append(f'#par[#text(fill: rgb("#7C7F6A"))[•] {_bold_colon(txt, math)}]')
             t.append('#v(0.42cm)')
     return "\n".join(t)
 
 
 # ─────────────────────────── компиляция в PDF ───────────────────────────
 def render_lesson_pdf(md: str) -> bytes:
-    """markdown методички → PDF bytes. Бросает PdfError при проблеме."""
+    """markdown методички → PDF bytes.
+
+    Сначала пробуем с формулами (mitex). Если сборка сорвалась — например, пакет
+    недоступен или модель выдала кривой LaTeX — пересобираем без математики,
+    чтобы учитель в любом случае получил документ.
+    """
     doc = parse_lesson(md)
-    typ = to_typst(doc)
+    if has_math(md):
+        try:
+            return _compile(to_typst(doc, math=True))
+        except PdfError:
+            pass                      # формулы не собрались — отдаём без них
+    return _compile(to_typst(doc, math=False))
+
+
+def _compile(typ: str) -> bytes:
     with tempfile.TemporaryDirectory() as tmp:
         src = os.path.join(tmp, "lesson.typ")
         out = os.path.join(tmp, "lesson.pdf")
