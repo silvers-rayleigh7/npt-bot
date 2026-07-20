@@ -53,6 +53,100 @@ def _looks_like_scan_id(title: str) -> bool:
     return digits >= 6 and letters <= 4
 
 
+# Порог семантической близости темы и названия файла. Подобран по замерам:
+# релевантные названия дают 0.81–0.92, нерелевантные — 0.73–0.75.
+_MIN_SIM = float(os.environ.get("IMAGE_MIN_SIM", "0.79"))
+
+_emb_client = None
+
+
+def _embeddings():
+    """Ленивый клиент эмбеддингов. Нет ключа/ошибка → None (упадём на стем-фолбэк)."""
+    global _emb_client
+    if _emb_client is None:
+        try:
+            from retrieval.embeddings import EmbeddingsClient
+            key = os.environ.get("GIGACHAT_AUTH_KEY")
+            _emb_client = EmbeddingsClient(
+                auth_key=key,
+                scope=os.environ.get("GIGACHAT_SCOPE", "GIGACHAT_API_CORP"),
+            ) if key else False
+        except Exception:
+            _emb_client = False
+    return _emb_client or None
+
+
+def _semantic_pick(query: str, candidates: list):
+    """Лучший по смыслу кандидат: одним запросом эмбеддим тему и все названия,
+    берём максимум косинуса выше порога. Эмбеддинги многоязычны, поэтому английские
+    названия Викисклада сравниваются с русской темой напрямую.
+    → (кандидат, score) или (None, 0.0), если эмбеддинги недоступны или всё ниже порога."""
+    client = _embeddings()
+    if not client or not candidates:
+        return None, 0.0
+    try:
+        from retrieval.embeddings import cosine
+        titles = [c["title"] for c in candidates]
+        vecs = client.embed([query] + titles)
+        qv, tvs = vecs[0], vecs[1:]
+        scored = sorted(
+            ((cosine(qv, tv), c) for tv, c in zip(tvs, candidates)),
+            key=lambda x: x[0], reverse=True,
+        )
+        best_score, best = scored[0]
+        return (best, best_score) if best_score >= _MIN_SIM else (None, best_score)
+    except Exception:
+        return None, 0.0
+
+
+def _llm_pick(topic: str, subject: str, candidates: list):
+    """Выбор иллюстрации самой моделью — точнее косинуса.
+
+    Эмбеддинги считают «образование озёр» и «Образование облаков» близкими: формально
+    это так, но уроку нужна именно тема. Модель различает это без труда и умеет честно
+    ответить «ни одна не подходит».
+    → (кандидат, 'llm') или (None, None), если модель недоступна или отказалась выбирать."""
+    if not candidates:
+        return None, None
+    try:
+        from providers import build_providers, generate
+        listing = "\n".join(f"{i}. {c['title'][:90]}" for i, c in enumerate(candidates[:15], 1))
+        msg = (
+            f"Тема школьного урока: «{topic}»" + (f" (предмет: {subject})" if subject else "") + ".\n"
+            f"Ниже названия фотографий. Выбери номер ОДНОЙ, которая лучше всего иллюстрирует "
+            f"именно эту тему. Если ни одна не подходит по смыслу — ответь 0. "
+            f"Важно: близкая, но другая тема — это НЕ подходит.\n\n{listing}\n\n"
+            f"Ответь только числом."
+        )
+        out, _ = generate(
+            [{"role": "system", "content": "Ты помогаешь подобрать иллюстрацию к уроку. Отвечай одним числом."},
+             {"role": "user", "content": msg}],
+            build_providers(), max_tokens=6, temperature=0.0,
+        )
+        m = re.search(r"\d+", out or "")
+        if not m:
+            return None, None
+        idx = int(m.group(0))
+        if idx <= 0 or idx > len(candidates[:15]):
+            return None, "llm"         # модель сказала «ничего не подходит»
+        return candidates[idx - 1], "llm"
+    except Exception:
+        return None, None
+
+
+def _similarity(a: str, b: str) -> float:
+    """Косинус между двумя строками. 0.0 — если эмбеддинги недоступны (тогда не судим)."""
+    client = _embeddings()
+    if not client:
+        return 0.0
+    try:
+        from retrieval.embeddings import cosine
+        v = client.embed([a, b])
+        return cosine(v[0], v[1])
+    except Exception:
+        return 0.0
+
+
 def _stems(s: str) -> set:
     """Грубый стем (первые 4 буквы значимых слов) — снимает русскую морфологию."""
     import re
@@ -88,6 +182,33 @@ def find_image(query: str, timeout: float = 8.0, strict: bool = True) -> dict:
     except Exception:
         return {}
 
+    candidates = _filter_candidates(pages)
+    if not candidates:
+        return {}
+
+    # 2) смысловой отбор эмбеддингами — работает одинаково для русских и английских названий
+    best, score = _semantic_pick(query, candidates)
+    if best:
+        best["similarity"] = round(score, 3)
+        return best
+    if score:                          # эмбеддинги отработали, но всё ниже порога
+        return {}                      # лучше без картинки, чем не по теме
+
+    # 3) запасной путь, если эмбеддинги недоступны: грубый стем-матч
+    for c in candidates:
+        has_cyrillic = bool(re.search(r"[А-Яа-яЁё]", c["title"]))
+        if want and (strict or has_cyrillic) and not (want & _stems(c["title"])):
+            continue
+        return c
+    return {}
+
+
+def _filter_candidates(pages: dict) -> list:
+    """Жёсткие правила: формат, архивность, год съёмки, имя-код скана. Без семантики."""
+    def _m(meta, key):
+        return _strip_html((meta.get(key) or {}).get("value") or "")
+
+    candidates = []
     for p in sorted(pages.values(), key=lambda x: x.get("index", 99)):
         info = (p.get("imageinfo") or [{}])[0]
         url = info.get("thumburl") or info.get("url") or ""
@@ -101,27 +222,31 @@ def find_image(query: str, timeout: float = 8.0, strict: bool = True) -> dict:
         year = _year_of(meta)
         if year and year < _MIN_YEAR:
             continue                   # только современные материалы
-        # Релевантность. Строгий режим — обязательное смысловое пересечение с темой.
-        # Мягкий (короткий запрос): русскоязычное название всё равно обязано совпасть —
-        # иначе «образование» ловит школьное образование вместо образования озёр.
-        # Англоязычному названию доверяем: стем-матч по-русски для него невозможен,
-        # а ранжирование Викисклада на коротком запросе точное.
-        has_cyrillic = bool(re.search(r"[А-Яа-яЁё]", title))
-        if want and (strict or has_cyrillic) and not (want & _stems(title)):
-            continue
-
-        def _m(key):
-            v = (meta.get(key) or {}).get("value") or ""
-            return _strip_html(v)
-
-        return {
-            "url": url,
-            "title": title,
-            "author": _m("Artist")[:80],
-            "license": _m("LicenseShortName")[:40],
+        candidates.append({
+            "url": url, "title": title,
+            "author": _m(meta, "Artist")[:80],
+            "license": _m(meta, "LicenseShortName")[:40],
             "page": info.get("descriptionurl") or "",
-        }
-    return {}
+        })
+    return candidates
+
+
+def _search_candidates(query: str, timeout: float = 8.0) -> list:
+    """Поиск по Викискладу + жёсткие правила. Семантика применяется выше, к общему пулу."""
+    q = _clean_query(query)
+    if not q:
+        return []
+    try:
+        r = requests.get(_API, params={
+            "action": "query", "format": "json", "generator": "search",
+            "gsrsearch": q, "gsrnamespace": 6, "gsrlimit": 12,
+            "prop": "imageinfo", "iiprop": "url|extmetadata", "iiurlwidth": 900,
+        }, headers=_UA, timeout=timeout)
+        r.raise_for_status()
+        pages = ((r.json() or {}).get("query") or {}).get("pages") or {}
+    except Exception:
+        return []
+    return _filter_candidates(pages)
 
 
 def _strip_html(s: str) -> str:
@@ -151,42 +276,73 @@ def download(url: str, timeout: float = 10.0) -> str:
 
 
 def _query_variants(topic: str, subject: str) -> list:
-    """От точной темы к ключевым словам: длинная фраза-вопрос на Викискладе ищется плохо,
-    а по одному предмету находится случайный плакат — поэтому вариантов несколько,
-    и голого предмета среди них нет."""
-    import re
+    """От точной темы к отдельным ключевым словам.
+
+    Длинная фраза-вопрос на Викискладе ищется плохо, а какое слово темы окажется
+    удачным — заранее неизвестно: в «образовании озёр» работает «озёр», а «образование»
+    уводит в школьное образование. Поэтому пробуем каждое значимое слово; за качество
+    отвечает семантический отбор, поэтому лишние варианты безопасны."""
     words = [w for w in re.findall(r"\w+", (topic or "").lower())
              if len(w) > 3 and w not in _STOP]
     variants = []
     if topic and topic.strip():
         variants.append(_clean_query(topic))
     if len(words) > 2:
-        variants.append(" ".join(words[:2]))       # два ключевых слова
-    if words:
-        variants.append(words[0])                  # главное слово темы
-        if subject:
-            variants.append(f"{words[0]} {subject}")
+        variants.append(" ".join(words[:2]))
+    variants += words[:3]                          # каждое ключевое слово отдельно
+    if words and subject:
+        variants.append(f"{words[0]} {subject}")
     seen, out = set(), []
     for v in variants:
         v = (v or "").strip()
         if v and v not in seen:
             seen.add(v)
             out.append(v)
-    return out
+    return out[:5]                                 # хватит; идём параллельно с генерацией
 
 
 def illustration_for(topic: str, subject: str = "") -> dict:
     """Готовая иллюстрация к теме: качает файл и отдаёт метаданные для подписи.
+
+    Кандидатов собираем по всем вариантам запроса, но ранжируем ОДИН раз и строго
+    против исходной темы. Иначе вариант «образование» притягивает «Образование облаков»,
+    а «меняет» — «Анжа меняет русло»: совпадение с вариантом ещё не значит совпадение с темой.
+
     Нет релевантного — возвращает {}: лучше без картинки, чем не по теме.
-    → {'path','title','author','license','page'} или {}."""
+    → {'path','title','author','license','page','similarity'} или {}."""
+    seen, pool = set(), []
     for q in _query_variants(topic, subject):
-        # мягкий режим — только для запроса ровно из двух слов: он уже конкретен.
-        # Одиночное слово («образование») двусмысленно, длинная фраза ищется плохо.
-        found = find_image(q, strict=(len(q.split()) != 2))
-        if not found:
-            continue
-        path = download(found["url"])
-        if path:
-            found["path"] = path
-            return found
-    return {}
+        for c in _search_candidates(q):
+            if c["url"] in seen:
+                continue
+            seen.add(c["url"])
+            pool.append(c)
+        if len(pool) >= 20:
+            break
+    if not pool:
+        return {}
+
+    # Два независимых судьи: модель выбирает, эмбеддинги подтверждают. Согласия требуем,
+    # потому что поиск по слову-глаголу («меняет») тащит в пул мусор вроде «Виталик меняет
+    # лампочку», и модель иногда берёт наименее плохое вместо честного отказа.
+    goal = f"{topic} {subject}".strip() or topic
+    best, how = _llm_pick(topic, subject, pool)
+    score = 0.0
+    if how == "llm" and not best:
+        return {}                      # модель честно сказала «ничего не подходит»
+    if best:
+        score = _similarity(goal, best["title"])
+        if score and score < _MIN_SIM:
+            return {}                  # выбор модели не подтвердился по смыслу
+    else:
+        best, score = _semantic_pick(goal, pool)
+        if not best:
+            if score:
+                return {}              # эмбеддинги отработали, но всё ниже порога
+            best = pool[0]             # ничего не доступно — верхний из выдачи
+    path = download(best["url"])
+    if not path:
+        return {}
+    best["path"] = path
+    best["similarity"] = round(score, 3)
+    return best
