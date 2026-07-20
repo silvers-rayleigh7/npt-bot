@@ -27,3 +27,4 @@ bot/config/bot.yaml
 !site/audio/*_l[123].mp3
 .tools/
 site-bar/server/.env
+drafts/
