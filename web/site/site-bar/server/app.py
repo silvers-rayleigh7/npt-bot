@@ -221,7 +221,16 @@ def lesson_pdf(inp: LessonIn):
         return Response("Заполните хотя бы класс и предмет.", status_code=400,
                         media_type="text/plain; charset=utf-8")
     ctx, _titles, refs = _lesson_context(inp)
-    user_content = (f"{ctx}\n\n" if ctx else "") + "Данные формы учителя:\n" + body
+    try:                                   # возрастная градация подачи
+        from grade_levels import profile_for
+        age_block = profile_for(inp.grade)
+    except Exception:
+        age_block = ""
+    user_content = (
+        (f"{ctx}\n\n" if ctx else "")
+        + (f"{age_block}\n\n" if age_block else "")
+        + "Данные формы учителя:\n" + body
+    )
     messages = [
         {"role": "system", "content": METHODICHKA_PROMPT},
         {"role": "user", "content": user_content},
@@ -241,7 +250,7 @@ def lesson_pdf(inp: LessonIn):
     try:
         md, _ = generate(
             messages, _PROVIDERS,
-            max_tokens=int(os.environ.get("METHODICHKA_MAX_TOKENS", "2600")),
+            max_tokens=int(os.environ.get("METHODICHKA_MAX_TOKENS", "4000")),
             temperature=float(os.environ.get("METHODICHKA_TEMPERATURE", "0.5")),
         )
     except ProviderError:

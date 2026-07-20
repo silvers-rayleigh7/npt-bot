@@ -39,12 +39,18 @@ def parse_lesson(md: str) -> dict:
             title = s[3:].strip()
         elif s.startswith("**Класс:**") or (s.startswith("**") and "Класс" in s):
             meta = re.sub(r"\*\*", "", s).strip()
+        elif s.startswith("#### "):
+            # подзаголовок внутри раздела («Механизм явления» и т.п.) — модель их любит
+            if cur is not None:
+                cur["blocks"].append(("sub", s[5:].strip()))
         elif s.startswith("### "):
             # blocks сохраняет исходный порядок абзацев и пунктов (важно для логики методички)
             cur = {"h": s[4:].strip(), "blocks": []}
             sections.append(cur)
         elif s.strip() and cur is not None:
             ls = s.lstrip()
+            if re.fullmatch(r"([-*_])\1{2,}", ls):
+                continue                          # markdown-разделитель «---» — не текст
             # markdown-таблица: строки, начинающиеся с «|»; разделитель |---|---| пропускаем
             if ls.startswith("|") and ls.count("|") >= 2:
                 cells = [c.strip() for c in ls.strip("|").split("|")]
@@ -204,6 +210,9 @@ def to_typst(doc: dict, math: bool = True) -> str:
             t.append(f'  #text(size: 13pt, weight: "bold", fill: rgb("#7C7F6A"))[ОПЫТ · {_esc(hclean.replace("Проведи опыт", "").strip() or "Проведи опыт")}]')
             t.append('  #v(0.2cm)')
             for kind, txt in sec["blocks"]:
+                if kind == "sub":
+                    t.append(f'  #par(text(size: 11.5pt, weight: "bold", fill: rgb("#3E4038"))[{_esc(txt)}])')
+                    continue
                 if kind == "table":
                     t.append(f'  {_table_block(txt, math)}')
                     continue
@@ -218,7 +227,11 @@ def to_typst(doc: dict, math: bool = True) -> str:
             t.append(f'#text(size: 14pt, weight: "semibold", fill: rgb("#7C7F6A"))[{_esc(hclean)}]')
             t.append('#v(0.22cm)')
             for kind, txt in sec["blocks"]:
-                if kind == "table":
+                if kind == "sub":
+                    t.append('#v(0.18cm)')
+                    t.append(f'#par(text(size: 11.5pt, weight: "bold", fill: rgb("#3E4038"))[{_esc(txt)}])')
+                    t.append('#v(0.05cm)')
+                elif kind == "table":
                     t.append(_table_block(txt, math))
                 elif kind == "math":
                     t.append(_math_block(txt, math))
