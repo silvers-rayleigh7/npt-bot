@@ -133,22 +133,37 @@ class LessonOut(BaseModel):
     sources: list[str] = Field(default_factory=list)   # заголовки источников опоры (для показа)
 
 
+SITE_URL = os.environ.get("SITE_URL", "https://tropa.fmin.xyz")
+# Иллюстрация в методичке (Викисклад, свободные лицензии). Флаг — на случай отключения.
+IMAGES_ENABLED = os.environ.get("IMAGES_ENABLED", "1").strip() not in ("", "0", "false", "False")
+
+
 def _lesson_context(inp: "LessonIn"):
-    """Собирает блок опоры и список источников. Любая ошибка → ("", []): урок не ломается."""
+    """Блок опоры + источники. Возвращает (ctx, titles, refs), где refs — [{title,url}]
+    для блока «Источники» в PDF. Любая ошибка → пустые значения: урок не ломается."""
     if not (RETRIEVAL_ENABLED and _RETRIEVERS and RetrievalQuery):
-        return "", []
+        return "", [], []
     try:
+        from retrieval import collect_snippets
         q = RetrievalQuery(grade=inp.grade, subject=inp.subject, topic=inp.topic,
                            location=inp.location, season=inp.season, text=inp.textbook)
-        ctx = gather_context(q, retrievers=_RETRIEVERS)
-        sources = []
-        for line in ctx.splitlines()[1:]:
-            # «[сюжет] Заголовок — …» → берём заголовок для показа под уроком
-            if "]" in line and "—" in line:
-                sources.append(line.split("]", 1)[1].split("—", 1)[0].strip())
-        return ctx, sources[:6]
+        snippets = collect_snippets(q, retrievers=_RETRIEVERS)
+        ctx = gather_context(q, retrievers=_RETRIEVERS, snippets=snippets)
+        titles, refs, seen = [], [], set()
+        for s in snippets:
+            title = (getattr(s, "title", "") or "").strip()
+            url = (getattr(s, "url", "") or "").strip()
+            if url.startswith("/"):            # сюжеты хранят относительный путь
+                url = SITE_URL.rstrip("/") + url
+            key = (title, url)
+            if not title or key in seen:
+                continue
+            seen.add(key)
+            titles.append(title)
+            refs.append({"title": title, "url": url})
+        return ctx, titles[:6], refs[:8]
     except Exception:
-        return "", []
+        return "", [], []
 
 
 @app.post("/api/lesson", response_model=LessonOut)
@@ -157,7 +172,7 @@ def lesson(inp: LessonIn):
     if not body:
         return LessonOut(lesson="Заполните хотя бы класс и предмет.", provider="none")
 
-    ctx, sources = _lesson_context(inp)
+    ctx, sources, _refs = _lesson_context(inp)
     user_content = (f"{ctx}\n\n" if ctx else "") + "Данные формы учителя:\n" + body
     messages = [
         {"role": "system", "content": LESSON_PROMPT},
@@ -205,12 +220,24 @@ def lesson_pdf(inp: LessonIn):
     if not body:
         return Response("Заполните хотя бы класс и предмет.", status_code=400,
                         media_type="text/plain; charset=utf-8")
-    ctx, _ = _lesson_context(inp)
+    ctx, _titles, refs = _lesson_context(inp)
     user_content = (f"{ctx}\n\n" if ctx else "") + "Данные формы учителя:\n" + body
     messages = [
         {"role": "system", "content": METHODICHKA_PROMPT},
         {"role": "user", "content": user_content},
     ]
+    # Иллюстрацию качаем ПАРАЛЛЕЛЬНО с генерацией текста — она не должна добавлять секунд.
+    img_future = None
+    if IMAGES_ENABLED:
+        try:
+            from concurrent.futures import ThreadPoolExecutor
+            from images import illustration_for
+            _img_pool = ThreadPoolExecutor(max_workers=1)
+            img_future = _img_pool.submit(illustration_for, inp.topic or inp.subject, inp.subject)
+            _img_pool.shutdown(wait=False)
+        except Exception:
+            img_future = None
+
     try:
         md, _ = generate(
             messages, _PROVIDERS,
@@ -220,12 +247,34 @@ def lesson_pdf(inp: LessonIn):
     except ProviderError:
         return Response("Сейчас не удалось собрать методичку. Попробуйте позже.",
                         status_code=503, media_type="text/plain; charset=utf-8")
+
+    img = {}
+    if img_future is not None:
+        try:
+            img = img_future.result(timeout=float(os.environ.get("IMAGE_TIMEOUT", "12"))) or {}
+        except Exception:
+            img = {}
+    if img.get("page"):                       # автор и лицензия — в блок «Источники»
+        credit = f"Фото: {img.get('title', '')}".strip()
+        if img.get("author"):
+            credit += f" — {img['author']}"
+        if img.get("license"):
+            credit += f" ({img['license']})"
+        refs = list(refs) + [{"title": credit, "url": img["page"]}]
+
     try:
         from lesson_pdf import render_lesson_pdf
-        pdf = render_lesson_pdf(md)
+        pdf = render_lesson_pdf(md, sources=refs, image=img)
     except Exception:
         return Response("Не удалось сформировать PDF.", status_code=500,
                         media_type="text/plain; charset=utf-8")
+    finally:
+        p = img.get("path")
+        if p and os.path.exists(p):
+            try:
+                os.unlink(p)              # временный файл картинки за собой убираем
+            except Exception:
+                pass
     return Response(
         content=pdf, media_type="application/pdf",
         headers={"Content-Disposition": 'attachment; filename="urok-tropa.pdf"'},

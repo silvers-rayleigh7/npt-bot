@@ -20,6 +20,11 @@ class PdfError(Exception):
     pass
 
 
+# Имя файла иллюстрации внутри временного каталога сборки: Typst читает файлы
+# только рядом с исходником, поэтому картинку туда копируем.
+IMG_NAME = "illustration"
+
+
 # ─────────────────────────── парсинг markdown ───────────────────────────
 def parse_lesson(md: str) -> dict:
     title, meta = "", ""
@@ -40,6 +45,16 @@ def parse_lesson(md: str) -> dict:
             sections.append(cur)
         elif s.strip() and cur is not None:
             ls = s.lstrip()
+            # markdown-таблица: строки, начинающиеся с «|»; разделитель |---|---| пропускаем
+            if ls.startswith("|") and ls.count("|") >= 2:
+                cells = [c.strip() for c in ls.strip("|").split("|")]
+                if all(re.fullmatch(r":?-{2,}:?", c or "-") for c in cells):
+                    continue                      # строка-разделитель шапки
+                if cur["blocks"] and cur["blocks"][-1][0] == "table":
+                    cur["blocks"][-1][1].append(cells)
+                else:
+                    cur["blocks"].append(("table", [cells]))
+                continue
             # блочная формула $$...$$ — может быть на одной строке или в «заборе» из трёх
             one = re.match(r"^\$\$(.+?)\$\$$", ls)
             if one:
@@ -109,6 +124,27 @@ def _inline(s: str, math: bool = True) -> str:
     return "".join(x for x in out if x) or '#("")'
 
 
+def _table_block(rows: list, math: bool = True) -> str:
+    """Markdown-таблица → фирменная таблица Typst: шапка на подложке, тонкая сетка."""
+    if not rows:
+        return ""
+    ncols = max(len(r) for r in rows)
+    head, body = rows[0], rows[1:]
+    cells = []
+    for c in head + [""] * (ncols - len(head)):
+        cells.append(f'table.cell(fill: rgb("#F4F2EE"))[#strong[{_inline(c, math)}]]')
+    for r in body:
+        for c in r + [""] * (ncols - len(r)):
+            cells.append(f"[{_inline(c, math)}]")
+    return (
+        '#v(0.1cm)\n#table(\n'
+        f'  columns: {ncols}, inset: 7pt, align: left,\n'
+        '  stroke: 0.4pt + rgb("#E2DACE"),\n  '
+        + ",\n  ".join(cells)
+        + "\n)\n#v(0.25cm)"
+    )
+
+
 def _math_block(latex: str, math: bool = True) -> str:
     """Блочная формула $$…$$ — по центру отдельной строкой."""
     if not math:
@@ -145,6 +181,19 @@ def to_typst(doc: dict, math: bool = True) -> str:
     t.append('#line(length: 100%, stroke: 0.6pt + rgb("#E2DACE"))')
     t.append('#v(0.5cm)')
 
+    # Иллюстрация к теме (Викисклад) — сразу под заголовком, как в презентации
+    img = doc.get("image") or {}
+    if img.get("path"):
+        cap_bits = [b for b in (img.get("title"), img.get("author"), img.get("license")) if b]
+        caption = " · ".join(cap_bits)[:150]
+        t.append('#block(width: 100%, radius: 6pt, clip: true)[')
+        t.append(f'  #image("{img.get("name", "illustration.jpg")}", width: 100%)')
+        t.append(']')
+        if caption:
+            t.append('#v(0.12cm)')
+            t.append(f'#align(center, text(size: 7.5pt, fill: rgb("#A29B8C"))[{_esc(caption)}])')
+        t.append('#v(0.45cm)')
+
     for sec in doc["sections"]:
         h = sec["h"]
         low = h.lower()
@@ -155,6 +204,9 @@ def to_typst(doc: dict, math: bool = True) -> str:
             t.append(f'  #text(size: 13pt, weight: "bold", fill: rgb("#7C7F6A"))[ОПЫТ · {_esc(hclean.replace("Проведи опыт", "").strip() or "Проведи опыт")}]')
             t.append('  #v(0.2cm)')
             for kind, txt in sec["blocks"]:
+                if kind == "table":
+                    t.append(f'  {_table_block(txt, math)}')
+                    continue
                 if kind == "math":
                     t.append(f'  {_math_block(txt, math)}')
                     continue
@@ -166,39 +218,77 @@ def to_typst(doc: dict, math: bool = True) -> str:
             t.append(f'#text(size: 14pt, weight: "semibold", fill: rgb("#7C7F6A"))[{_esc(hclean)}]')
             t.append('#v(0.22cm)')
             for kind, txt in sec["blocks"]:
-                if kind == "math":
+                if kind == "table":
+                    t.append(_table_block(txt, math))
+                elif kind == "math":
                     t.append(_math_block(txt, math))
                 elif kind == "p":
                     t.append(f'#par[{_inline(txt, math)}]')
                 else:
                     t.append(f'#par[#text(fill: rgb("#7C7F6A"))[•] {_bold_colon(txt, math)}]')
             t.append('#v(0.42cm)')
+
+    # Источники — внизу документа, откуда бралась информация
+    srcs = doc.get("sources") or []
+    if srcs:
+        t.append('#v(0.3cm)')
+        t.append('#line(length: 100%, stroke: 0.5pt + rgb("#E2DACE"))')
+        t.append('#v(0.25cm)')
+        t.append('#text(size: 11pt, weight: "semibold", fill: rgb("#7C7F6A"))[Источники]')
+        t.append('#v(0.15cm)')
+        for s in srcs:
+            title, url = (s.get("title") or "").strip(), (s.get("url") or "").strip()
+            if not title and not url:
+                continue
+            # внутри #par(...) — контекст кода, поэтому у text() решётки быть не должно
+            line = f'text(size: 8.5pt, fill: rgb("#6E7163"))[• {_run(title)}'
+            if url:
+                line += f' #text(fill: rgb("#A29B8C"))[{_run(url)}]'
+            line += "]"
+            t.append(f"#par({line})")
     return "\n".join(t)
 
 
 # ─────────────────────────── компиляция в PDF ───────────────────────────
-def render_lesson_pdf(md: str) -> bytes:
+def render_lesson_pdf(md: str, sources: list = None, image: dict = None) -> bytes:
     """markdown методички → PDF bytes.
+
+    sources — [{'title','url'}]: печатаются блоком «Источники» внизу документа.
 
     Сначала пробуем с формулами (mitex). Если сборка сорвалась — например, пакет
     недоступен или модель выдала кривой LaTeX — пересобираем без математики,
     чтобы учитель в любом случае получил документ.
     """
     doc = parse_lesson(md)
+    doc["sources"] = sources or []
+    img_path = (image or {}).get("path") or ""
+    # расширение сохраняем — Typst определяет формат картинки по нему
+    img_name = IMG_NAME + (os.path.splitext(img_path)[1].lower() or ".jpg") if img_path else ""
+    doc["image"] = {**(image or {}), "name": img_name} if img_path else {}
     if has_math(md):
         try:
-            return _compile(to_typst(doc, math=True))
+            return _compile(to_typst(doc, math=True), img_path, img_name)
         except PdfError:
             pass                      # формулы не собрались — отдаём без них
-    return _compile(to_typst(doc, math=False))
+    try:
+        return _compile(to_typst(doc, math=False), img_path, img_name)
+    except PdfError:
+        if not img_path:
+            raise
+        doc["image"] = {}             # картинка мешает сборке — документ важнее
+        return _compile(to_typst(doc, math=False), "")
 
 
-def _compile(typ: str) -> bytes:
+def _compile(typ: str, img_path: str = "", img_name: str = "") -> bytes:
     with tempfile.TemporaryDirectory() as tmp:
         src = os.path.join(tmp, "lesson.typ")
         out = os.path.join(tmp, "lesson.pdf")
         with open(src, "w", encoding="utf-8") as f:
             f.write(typ)
+        if img_path and os.path.exists(img_path):
+            # Typst читает файлы только рядом с исходником — кладём картинку туда же
+            import shutil
+            shutil.copyfile(img_path, os.path.join(tmp, img_name or IMG_NAME))
         cmd = [TYPST_BIN, "compile", src, out]
         if TYPST_FONT_PATH:
             cmd += ["--font-path", TYPST_FONT_PATH]

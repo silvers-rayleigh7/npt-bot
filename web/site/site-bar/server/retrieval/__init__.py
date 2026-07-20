@@ -47,23 +47,21 @@ def build_retrievers() -> List:
 _LABEL = {"сюжет": "сюжет", "программа": "программа", "веб": "веб"}
 
 
-def gather_context(
+def collect_snippets(
     q: RetrievalQuery,
     retrievers: List = None,
     per_retriever_timeout: float = None,
-    char_budget: int = 2500,
     per_retriever_limit: int = 3,
-) -> str:
-    """Параллельно опрашивает ретриверы, мёржит и форматирует блок «Материалы для опоры».
-    Пусто/ошибка → "" (урок генерируется без опоры)."""
+) -> List[Snippet]:
+    """Сниппеты всех включённых ретриверов, отсортированы по релевантности.
+    Нужны отдельно от текста — из них строится блок «Источники» в PDF."""
     try:
         if retrievers is None:
             retrievers = build_retrievers()
         if not retrievers:
-            return ""
+            return []
         if per_retriever_timeout is None:
             per_retriever_timeout = float(os.environ.get("RETRIEVAL_TIMEOUT", "6"))
-
         snippets: List[Snippet] = []
         with ThreadPoolExecutor(max_workers=max(1, len(retrievers))) as ex:
             futures = {ex.submit(r.retrieve, q, per_retriever_limit): r for r in retrievers}
@@ -73,12 +71,29 @@ def gather_context(
                     if res:
                         snippets.extend(res)
                 except Exception:
-                    continue          # упавший/зависший ретривер просто не даёт вклада
+                    continue
+        snippets.sort(key=lambda s: s.score, reverse=True)
+        return snippets
+    except Exception:
+        return []
 
+
+def gather_context(
+    q: RetrievalQuery,
+    retrievers: List = None,
+    per_retriever_timeout: float = None,
+    char_budget: int = 2500,
+    per_retriever_limit: int = 3,
+    snippets: List = None,
+) -> str:
+    """Параллельно опрашивает ретриверы, мёржит и форматирует блок «Материалы для опоры».
+    Можно передать уже собранные snippets — тогда ретриверы не дёргаются повторно.
+    Пусто/ошибка → "" (урок генерируется без опоры)."""
+    try:
+        if snippets is None:
+            snippets = collect_snippets(q, retrievers, per_retriever_timeout, per_retriever_limit)
         if not snippets:
             return ""
-
-        snippets.sort(key=lambda s: s.score, reverse=True)
 
         lines = ["Материалы для опоры (используй по делу; веб-факт приводи с названием источника):"]
         used = len(lines[0])
