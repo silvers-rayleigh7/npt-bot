@@ -86,6 +86,7 @@ def _semantic_pick(query: str, candidates: list):
         return None, 0.0
     try:
         from retrieval.embeddings import cosine
+        # намеренно только название: длинное описание разбавляет косинус
         titles = [c["title"] for c in candidates]
         vecs = client.embed([query] + titles)
         qv, tvs = vecs[0], vecs[1:]
@@ -110,7 +111,7 @@ def _llm_pick(topic: str, subject: str, candidates: list):
         return None, None
     try:
         from providers import build_providers, generate
-        listing = "\n".join(f"{i}. {c['title'][:90]}" for i, c in enumerate(candidates[:15], 1))
+        listing = "\n".join(f"{i}. {_describe(c)[:160]}" for i, c in enumerate(candidates[:15], 1))
         msg = (
             f"Тема школьного урока: «{topic}»" + (f" (предмет: {subject})" if subject else "") + ".\n"
             f"Ниже названия фотографий. Выбери номер ОДНОЙ, которая лучше всего иллюстрирует "
@@ -222,13 +223,28 @@ def _filter_candidates(pages: dict) -> list:
         year = _year_of(meta)
         if year and year < _MIN_YEAR:
             continue                   # только современные материалы
+        # Описание и категории — дополнительный сигнал судьям: у файла «Chlorophyll
+        # (34285736050)» имя ничего не говорит, а категории говорят всё.
+        desc = _m(meta, "ImageDescription")[:180]
+        cats = _m(meta, "Categories").replace("|", ", ")[:180]
         candidates.append({
             "url": url, "title": title,
+            "desc": desc, "categories": cats,
             "author": _m(meta, "Artist")[:80],
             "license": _m(meta, "LicenseShortName")[:40],
             "page": info.get("descriptionurl") or "",
         })
     return candidates
+
+
+def _describe(c: dict) -> str:
+    """Как кандидат выглядит для судей: название + описание + категории."""
+    parts = [c.get("title", "")]
+    if c.get("desc"):
+        parts.append(c["desc"])
+    if c.get("categories"):
+        parts.append("категории: " + c["categories"])
+    return " · ".join(p for p in parts if p)[:320]
 
 
 def _search_candidates(query: str, timeout: float = 8.0) -> list:
@@ -275,6 +291,42 @@ def download(url: str, timeout: float = 10.0) -> str:
         return ""
 
 
+def wikipedia_lead_image(topic: str, lang: str = "ru", timeout: float = 8.0) -> dict:
+    """Заглавная иллюстрация статьи Википедии по теме.
+
+    Самый надёжный источник: редакторы уже подобрали к статье «Озеро» фотографию озера.
+    Промахнуться тут почти невозможно — в отличие от полнотекстового поиска по файлам.
+    → кандидат в формате пула или {}.
+    """
+    q = _clean_query(topic)
+    if not q:
+        return {}
+    api = f"https://{lang}.wikipedia.org/w/api.php"
+    try:
+        r = requests.get(api, params={
+            "action": "query", "format": "json", "generator": "search",
+            "gsrsearch": q, "gsrlimit": 1, "prop": "pageimages|info",
+            "piprop": "original", "inprop": "url",
+        }, headers=_UA, timeout=timeout)
+        r.raise_for_status()
+        pages = ((r.json() or {}).get("query") or {}).get("pages") or {}
+    except Exception:
+        return {}
+    for p in pages.values():
+        src = ((p.get("original") or {}).get("source") or "")
+        if not src or not src.lower().split("?")[0].endswith((".jpg", ".jpeg", ".png")):
+            continue
+        return {
+            "url": src,
+            "title": p.get("title") or "",
+            "author": "",
+            "license": "см. страницу файла",
+            "page": p.get("fullurl") or "",
+            "origin": "wikipedia",
+        }
+    return {}
+
+
 def _query_variants(topic: str, subject: str) -> list:
     """От точной темы к отдельным ключевым словам.
 
@@ -310,8 +362,17 @@ def illustration_for(topic: str, subject: str = "") -> dict:
 
     Нет релевантного — возвращает {}: лучше без картинки, чем не по теме.
     → {'path','title','author','license','page','similarity'} или {}."""
+    # Английский запрос — первым: Викисклад англоязычен, и «образование озёр» как русская
+    # фраза даёт архивные журналы, а `mountain lake` — реальные озёра.
+    q_en = ""
+    try:
+        from translate import search_query_en
+        q_en = search_query_en(topic, subject)
+    except Exception:
+        q_en = ""
+
     seen, pool = set(), []
-    for q in _query_variants(topic, subject):
+    for q in ([q_en] if q_en else []) + _query_variants(topic, subject):
         for c in _search_candidates(q):
             if c["url"] in seen:
                 continue
@@ -319,13 +380,23 @@ def illustration_for(topic: str, subject: str = "") -> dict:
             pool.append(c)
         if len(pool) >= 20:
             break
+    # Запасной источник: заглавное фото статьи Википедии — там подбор сделан редакторами
+    for lang, term in (("ru", topic), ("en", q_en)):
+        if len(pool) >= 3 or not term:
+            break
+        lead = wikipedia_lead_image(term, lang=lang)
+        if lead and lead["url"] not in seen:
+            seen.add(lead["url"])
+            pool.append(lead)
     if not pool:
         return {}
 
     # Два независимых судьи: модель выбирает, эмбеддинги подтверждают. Согласия требуем,
     # потому что поиск по слову-глаголу («меняет») тащит в пул мусор вроде «Виталик меняет
     # лампочку», и модель иногда берёт наименее плохое вместо честного отказа.
-    goal = f"{topic} {subject}".strip() or topic
+    # Сравниваем по-английски, если есть перевод: названия файлов англоязычные, а
+    # межъязыковая близость систематически ниже внутриязыковой (замеряли: 0.76 против 0.92).
+    goal = q_en or (f"{topic} {subject}".strip() or topic)
     best, how = _llm_pick(topic, subject, pool)
     score = 0.0
     if how == "llm" and not best:
