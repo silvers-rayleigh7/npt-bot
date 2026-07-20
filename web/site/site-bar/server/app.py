@@ -136,6 +136,8 @@ class LessonOut(BaseModel):
 SITE_URL = os.environ.get("SITE_URL", "https://tropa.fmin.xyz")
 # Иллюстрация в методичке (Викисклад, свободные лицензии). Флаг — на случай отключения.
 IMAGES_ENABLED = os.environ.get("IMAGES_ENABLED", "1").strip() not in ("", "0", "false", "False")
+# Если настоящего фото не нашлось — рисуем иллюстрацию сами (в подписи это помечается).
+IMAGES_GENERATE = os.environ.get("IMAGES_GENERATE", "1").strip() not in ("", "0", "false", "False")
 
 
 def _lesson_context(inp: "LessonIn"):
@@ -240,9 +242,19 @@ def lesson_pdf(inp: LessonIn):
     if IMAGES_ENABLED:
         try:
             from concurrent.futures import ThreadPoolExecutor
-            from images import illustration_for
+            from images import illustration_for, generate_illustration
+
+            def _find_or_draw(topic, subject):
+                """Сначала ищем настоящее фото; не нашли — рисуем сами (с пометкой в подписи)."""
+                got = illustration_for(topic, subject)
+                if got:
+                    return got
+                if IMAGES_GENERATE:
+                    return generate_illustration(topic, subject)
+                return {}
+
             _img_pool = ThreadPoolExecutor(max_workers=1)
-            img_future = _img_pool.submit(illustration_for, inp.topic or inp.subject, inp.subject)
+            img_future = _img_pool.submit(_find_or_draw, inp.topic or inp.subject, inp.subject)
             _img_pool.shutdown(wait=False)
         except Exception:
             img_future = None
@@ -260,10 +272,10 @@ def lesson_pdf(inp: LessonIn):
     img = {}
     if img_future is not None:
         try:
-            img = img_future.result(timeout=float(os.environ.get("IMAGE_TIMEOUT", "12"))) or {}
+            img = img_future.result(timeout=float(os.environ.get("IMAGE_TIMEOUT", "60"))) or {}
         except Exception:
             img = {}
-    if img.get("page"):                       # автор и лицензия — в блок «Источники»
+    if img.get("page") or img.get("origin") == "generated":   # автор и лицензия — в «Источники»
         credit = f"Фото: {img.get('title', '')}".strip()
         if img.get("author"):
             credit += f" — {img['author']}"

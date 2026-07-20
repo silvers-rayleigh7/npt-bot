@@ -327,6 +327,132 @@ def wikipedia_lead_image(topic: str, lang: str = "ru", timeout: float = 8.0) -> 
     return {}
 
 
+def openverse_images(query_en: str, limit: int = 6, timeout: float = 8.0) -> list:
+    """Openverse — агрегатор изображений со свободными лицензиями (Flickr, музеи, Викисклад).
+
+    Берёт то, чего нет на Викискладе: живые фотографии природы и явлений. Запрос — только
+    английский, каталог англоязычный. Ключ не нужен.
+    """
+    if not (query_en or "").strip():
+        return []
+    try:
+        r = requests.get("https://api.openverse.org/v1/images/",
+                         params={"q": query_en, "page_size": limit,
+                                 "license_type": "all-cc", "mature": "false"},
+                         headers=_UA, timeout=timeout)
+        r.raise_for_status()
+        results = (r.json() or {}).get("results") or []
+    except Exception:
+        return []
+    out = []
+    for it in results:
+        url = it.get("url") or ""
+        if not url.lower().split("?")[0].endswith((".jpg", ".jpeg", ".png")):
+            continue
+        title = (it.get("title") or "").strip()
+        if not title or _looks_like_scan_id(title):
+            continue
+        out.append({
+            "url": url, "title": title,
+            "desc": "", "categories": ", ".join(it.get("tags_list") or [])[:180],
+            "author": (it.get("creator") or "")[:80],
+            "license": (it.get("license") or "").upper()[:40],
+            "page": it.get("foreign_landing_url") or "",
+            "origin": "openverse",
+        })
+    return out
+
+
+def nasa_images(query_en: str, limit: int = 4, timeout: float = 8.0) -> list:
+    """Медиатека NASA — public domain. Незаменима для астрономии, геологии, атмосферы."""
+    if not (query_en or "").strip():
+        return []
+    try:
+        r = requests.get("https://images-api.nasa.gov/search",
+                         params={"q": query_en, "media_type": "image"},
+                         headers=_UA, timeout=timeout)
+        r.raise_for_status()
+        items = (((r.json() or {}).get("collection") or {}).get("items") or [])[:limit]
+    except Exception:
+        return []
+    out = []
+    for it in items:
+        links = it.get("links") or []
+        url = next((l.get("href") for l in links if (l.get("href") or "").lower()
+                    .split("?")[0].endswith((".jpg", ".jpeg", ".png"))), "")
+        data = (it.get("data") or [{}])[0]
+        title = (data.get("title") or "").strip()
+        if not url or not title:
+            continue
+        out.append({
+            "url": url, "title": title,
+            "desc": (data.get("description") or "")[:180],
+            "categories": ", ".join(data.get("keywords") or [])[:180],
+            "author": (data.get("center") or "NASA")[:80],
+            "license": "Public domain (NASA)",
+            "page": f"https://images.nasa.gov/details/{data.get('nasa_id', '')}",
+            "origin": "nasa",
+        })
+    return out
+
+
+def generate_illustration(topic: str, subject: str = "", timeout: float = 90.0) -> dict:
+    """Последний рубеж: рисуем иллюстрацию сами (GigaChat text2image), если фото не нашлось.
+
+    В подписи обязательно помечаем, что изображение сгенерировано: учебный документ должен
+    честно показывать происхождение материала.
+    → {'path','title','author','license','page','origin'} или {}.
+    """
+    if not (topic or "").strip():
+        return {}
+    try:
+        from providers import GigaChatProvider
+        key = os.environ.get("GIGACHAT_AUTH_KEY")
+        if not key:
+            return {}
+        p = GigaChatProvider(auth_key=key,
+                             scope=os.environ.get("GIGACHAT_SCOPE", "GIGACHAT_API_CORP"))
+        token = p._ensure_token()
+        base = "https://gigachat.devices.sberbank.ru/api/v1"
+        prompt = (f"Нарисуй наглядную иллюстрацию к школьному уроку по теме «{topic}»"
+                  + (f" ({subject})" if subject else "")
+                  + ". Реалистично, понятно, без надписей и текста на изображении.")
+        r = requests.post(
+            f"{base}/chat/completions",
+            headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+            json={"model": os.environ.get("GIGACHAT_MODEL", "GigaChat-2-Max"),
+                  "function_call": "auto",
+                  "messages": [
+                      {"role": "system", "content":
+                       "Ты — научный иллюстратор школьных материалов. Рисуй по запросу."},
+                      {"role": "user", "content": prompt}]},
+            timeout=timeout, verify=p._verify,
+        )
+        r.raise_for_status()
+        content = ((r.json().get("choices") or [{}])[0].get("message") or {}).get("content", "")
+        m = re.search(r'src="([^"]+)"', content or "")
+        if not m:
+            return {}
+        f = requests.get(f"{base}/files/{m.group(1)}/content",
+                         headers={"Authorization": f"Bearer {token}", "Accept": "application/jpg"},
+                         timeout=timeout, verify=p._verify)
+        f.raise_for_status()
+        if not f.content:
+            return {}
+        fd, path = tempfile.mkstemp(suffix=".jpg")
+        with os.fdopen(fd, "wb") as fh:
+            fh.write(f.content)
+        return {
+            "path": path, "url": "",
+            "title": f"Иллюстрация к теме «{topic}»",
+            "author": "GigaChat",
+            "license": "изображение сгенерировано ИИ",
+            "page": "", "origin": "generated",
+        }
+    except Exception:
+        return {}
+
+
 def _query_variants(topic: str, subject: str) -> list:
     """От точной темы к отдельным ключевым словам.
 
@@ -380,6 +506,16 @@ def illustration_for(topic: str, subject: str = "") -> dict:
             pool.append(c)
         if len(pool) >= 20:
             break
+    # Дополнительные источники со свободными лицензиями — тем больше шанс, что среди
+    # кандидатов окажется по-настоящему подходящий кадр.
+    if q_en and len(pool) < 14:
+        for extra in (openverse_images(q_en), nasa_images(q_en)):
+            for c in extra:
+                if c["url"] in seen:
+                    continue
+                seen.add(c["url"])
+                pool.append(c)
+
     # Запасной источник: заглавное фото статьи Википедии — там подбор сделан редакторами
     for lang, term in (("ru", topic), ("en", q_en)):
         if len(pool) >= 3 or not term:
