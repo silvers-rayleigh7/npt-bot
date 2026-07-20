@@ -93,15 +93,20 @@ def _tystr(s: str) -> str:
 
 def _esc(s: str) -> str:
     """Строковый рендер для заголовков: #(...) вставляет текст как есть."""
-    return f"#({_tystr(_clean_md(s))})"
+    return f"#({_tystr(_clean_md(s, strip=True))})"
 
 
 _MD_JUNK = re.compile(r"(\*\*|__|`|^\s*[*_]\s+|\s+[*_]\s*$)")
 
 
-def _clean_md(s: str) -> str:
-    """Убирает markdown-маркеры, которые иначе печатаются в PDF как есть (**, __, `)."""
-    return _MD_JUNK.sub("", s or "").strip()
+def _clean_md(s: str, strip: bool = False) -> str:
+    """Убирает markdown-маркеры, которые иначе печатаются в PDF как есть (**, __, `).
+
+    Пробелы по краям НЕ трогаем: текст режется на фрагменты вокруг формул, и strip()
+    съедал бы пробел перед `$…$` — получалось «высоту объекта$H$» без отбивки.
+    """
+    out = _MD_JUNK.sub("", s or "")
+    return out.strip() if strip else out
 
 
 def _run(s: str, bold: bool = False) -> str:
@@ -181,38 +186,66 @@ def to_typst(doc: dict, math: bool = True) -> str:
     if math:
         # mitex подключаем только когда формулы есть — лишняя зависимость документу не нужна
         t.append('#import "@preview/mitex:0.2.4": mi, mitex')
-    t.append('#set page(width: 21cm, height: 29.7cm, margin: (x: 2.9cm, top: 1.9cm, bottom: 2.1cm), fill: white,')
-    t.append('  footer: align(center, text(size: 7.5pt, fill: rgb("#A29B8C"), tracking: 1.6pt)[tropa.fmin.xyz · Научная тропа Иннополиса]))')
+    # Страница: на обложке колонтитулов нет, дальше — тема сверху и номер снизу
+    short_title = (doc["title"] or "")[:60]
+    t.append('#set page(width: 21cm, height: 29.7cm, margin: (x: 2.9cm, top: 2.2cm, bottom: 2.0cm), fill: white,')
+    t.append('  header: context { if counter(page).get().first() > 1 [')
+    t.append('    #grid(columns: (1fr, auto),')
+    t.append('      text(size: 7.5pt, fill: rgb("#A29B8C"), tracking: 1.4pt)[МЕТОДИЧКА УРОКА],')
+    t.append(f'      text(size: 7.5pt, fill: rgb("#A29B8C"))[{_esc(short_title)}])')
+    t.append('    #v(-0.18cm)')
+    t.append('    #line(length: 100%, stroke: 0.4pt + rgb("#EAE7E0"))')
+    t.append('  ] },')
+    t.append('  footer: context { align(center, text(size: 7.5pt, fill: rgb("#A29B8C"), tracking: 1.2pt)[')
+    t.append('    tropa.fmin.xyz · Научная тропа Иннополиса')
+    t.append('    #if counter(page).get().first() > 1 [ · #counter(page).display()]')
+    t.append('  ]) })')
     t.append(f'#set text(font: ("{TEXT_FONT}"), size: 11.5pt, fill: rgb("#1A1A18"), lang: "ru", hyphenate: true)')
     t.append('#set par(justify: true, leading: 0.72em, spacing: 0.85em)')
-    t.append('#show heading: set text(fill: rgb("#7C7F6A"), weight: "semibold")')
-    t.append('#align(center, text(size: 8.5pt, fill: rgb("#7C7F6A"), tracking: 3pt)[НАУЧНАЯ ТРОПА ИННОПОЛИСА · МЕТОДИЧКА УРОКА])')
-    t.append('#v(0.2cm)')
-    t.append(f'#align(center, text(size: 24pt, weight: "bold", fill: rgb("#3E4038"))[{_esc(doc["title"])}])')
-    if doc["meta"]:
-        t.append('#v(0.12cm)')
-        t.append(f'#align(center, text(size: 10.5pt, fill: rgb("#7C7F6A"))[{_esc(doc["meta"])}])')
-    t.append('#v(0.32cm)')
-    t.append('#line(length: 100%, stroke: 0.6pt + rgb("#E2DACE"))')
-    t.append('#v(0.5cm)')
 
-    # Иллюстрация к теме (Викисклад) — сразу под заголовком, как в презентации
+    # ── ОБЛОЖКА ──
     img = doc.get("image") or {}
+    t.append('#v(0.6cm)')
+    t.append('#align(center, text(size: 8.5pt, fill: rgb("#7C7F6A"), tracking: 3pt)[НАУЧНАЯ ТРОПА ИННОПОЛИСА])')
+    t.append('#v(0.5cm)')
+    t.append(f'#align(center, text(size: 28pt, weight: "bold", fill: rgb("#3E4038"))[{_esc(doc["title"])}])')
+    if doc["meta"]:
+        t.append('#v(0.25cm)')
+        t.append(f'#align(center, text(size: 11pt, fill: rgb("#7C7F6A"))[{_esc(doc["meta"])}])')
+    t.append('#v(0.7cm)')
     if img.get("path"):
+        # fit: "contain" — схему нельзя кадрировать, у неё по краям подписи и стрелки.
+        # Ограничиваем только высоту, ширина подстраивается сама.
+        t.append('#block(width: 100%, radius: 8pt, clip: true)[')
+        t.append(f'  #align(center, image("{img.get("name", "illustration.jpg")}", '
+                 f'height: 11cm, fit: "contain"))')
+        t.append(']')
         cap_bits = [b for b in (img.get("title"), img.get("author"), img.get("license")) if b]
         caption = " · ".join(cap_bits)[:150]
-        t.append('#block(width: 100%, radius: 6pt, clip: true)[')
-        t.append(f'  #image("{img.get("name", "illustration.jpg")}", width: 100%)')
-        t.append(']')
         if caption:
-            t.append('#v(0.12cm)')
+            t.append('#v(0.14cm)')
             t.append(f'#align(center, text(size: 7.5pt, fill: rgb("#A29B8C"))[{_esc(caption)}])')
-        t.append('#v(0.45cm)')
+        t.append('#v(0.8cm)')
 
-    for sec in doc["sections"]:
+    # Содержание на обложке — учитель сразу видит, что внутри
+    names = [s["h"].replace("🔬", "").strip() for s in doc["sections"] if s.get("h")]
+    if names:
+        t.append('#line(length: 100%, stroke: 0.5pt + rgb("#E2DACE"))')
+        t.append('#v(0.35cm)')
+        t.append('#text(size: 8pt, fill: rgb("#A29B8C"), tracking: 2pt)[В МЕТОДИЧКЕ]')
+        t.append('#v(0.22cm)')
+        for i, n in enumerate(names, 1):
+            t.append(f'#par(text(size: 10pt, fill: rgb("#6E7163"))'
+                     f'[#text(fill: rgb("#B8B5A6"))[{i:02d}]  {_esc(n)}])')
+    t.append('#pagebreak()')
+
+    for idx, sec in enumerate(doc["sections"], 1):
         h = sec["h"]
         low = h.lower()
         is_opyt = "опыт" in low or "🔬" in h
+        # свои цвета врезок: опыт — тёплый песочный, заблуждения — тревожный тёплый
+        is_card = ("заблужден" in low) or ("план урока" in low)
+        card_fill = '#FBF6EF' if "заблужден" in low else '#F7F8F4'
         hclean = h.replace("🔬", "").strip()
         if is_opyt:
             t.append('#block(fill: rgb("#F4F2EE"), inset: 13pt, radius: 6pt, width: 100%, breakable: false)[')
@@ -233,9 +266,14 @@ def to_typst(doc: dict, math: bool = True) -> str:
             t.append(']')
             t.append('#v(0.4cm)')
         else:
-            t.append('#block(sticky: true)[' 
-                     f'#text(size: 14pt, weight: "semibold", fill: rgb("#7C7F6A"))[{_esc(hclean)}]]')
-            t.append('#v(0.22cm)')
+            # заголовок с номером и акцентной чертой — держит ритм документа
+            t.append('#block(sticky: true)[#grid(columns: (auto, auto, 1fr), column-gutter: 7pt, align: horizon,')
+            t.append(f'  text(size: 9pt, weight: "bold", fill: rgb("#B8B5A6"))[{idx:02d}],')
+            t.append('  box(fill: rgb("#7C7F6A"), width: 2.5pt, height: 13pt, radius: 1pt),')
+            t.append(f'  text(size: 14pt, weight: "semibold", fill: rgb("#7C7F6A"))[{_esc(hclean)}])]')
+            t.append('#v(0.24cm)')
+            if is_card:
+                t.append(f'#block(fill: rgb("{card_fill}"), inset: 12pt, radius: 6pt, width: 100%)[')
             for kind, txt in sec["blocks"]:
                 if kind == "sub":
                     t.append('#v(0.18cm)')
@@ -250,6 +288,8 @@ def to_typst(doc: dict, math: bool = True) -> str:
                     t.append(f'#par[{_inline(txt, math)}]')
                 else:
                     t.append(f'#par[#text(fill: rgb("#7C7F6A"))[•] {_bold_colon(txt, math)}]')
+            if is_card:
+                t.append(']')
             t.append('#v(0.42cm)')
 
     # Источники — внизу документа, откуда бралась информация
