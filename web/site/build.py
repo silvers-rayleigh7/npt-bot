@@ -200,6 +200,19 @@ def walking_path(route_id, ordered_coords):
 FM_RE = re.compile(r"^---\n(.*?)\n---\n(.*)$", re.S)
 
 
+def _plural_ru(n, one, few, many):
+    """Русское склонение при числе: 1 ссылка, 2–4 ссылки, 5+ ссылок (и 11–14 — «ссылок»)."""
+    n = abs(int(n))
+    if n % 100 in (11, 12, 13, 14):
+        return many
+    last = n % 10
+    if last == 1:
+        return one
+    if last in (2, 3, 4):
+        return few
+    return many
+
+
 def load_storylines():
     """Единый источник: content/storylines/<slug>.md → список сюжетов с уровнями-табами."""
     d = os.path.join(CONTENT, "storylines")
@@ -230,12 +243,20 @@ def load_storylines():
             if os.path.exists(os.path.join(OUT, cand)):
                 icon = cand
                 break
+        # Уровень надёжности: экспертная проверка объявляется во frontmatter, наличие
+        # источников определяется автоматически по сноскам. Нужно, чтобы читатель видел,
+        # чем подкреплён текст (вопрос экспертизы — первый на демо министру).
+        n_sources = len(re.findall(r"^\[\^[^\]]+\]:", m.group(2), re.M))
+        verification = fm.get("verification") or ("sources" if n_sources else "draft")
         items.append({
             "slug": slug, "title": fm.get("title", slug), "code": fm.get("code"),
             "icon": icon, "tags": fm.get("tags", []), "geo": fm.get("geo"),
             "routes": fm.get("routes", []) or [], "topic": fm.get("topic", ""),
             "region": fm.get("region"),  # напр. «Калининградская область»; пусто → тропа Иннополиса
             "levels": levels, "fndefs": all_defs,
+            "verification": verification, "n_sources": n_sources,
+            "sources_word": _plural_ru(n_sources, "ссылка", "ссылки", "ссылок"),
+            "reviewer": fm.get("reviewer", ""), "reviewed": fm.get("reviewed", ""),
         })
     return items
 

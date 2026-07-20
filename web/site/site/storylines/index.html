@@ -86,6 +86,15 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   border:1px solid var(--sand,#DBD4C7);border-radius:999px;background:#fff;color:var(--gd);cursor:pointer;
   transition:background .12s,border-color .12s}
 .sl-toggle:hover{border-color:var(--olive);background:var(--gl,#F4F2EE)}
+/* Легенда уровней надёжности — отвечает на вопрос «чем это подкреплено» до чтения */
+.sl-verlegend{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:14px 0 2px;font-size:0.78rem}
+.sl-vl-title{color:var(--tm);font-weight:600}
+.sl-vl{padding:2px 9px;border-radius:20px;white-space:nowrap}
+.sl-vl-expert{background:#E8F0E4;color:#3E5836}
+.sl-vl-sources{background:#EDF0F5;color:#41506B}
+.sl-vl-draft{background:#F6EFE4;color:#7A5C2E}
+.sl-vl-note{color:var(--tm);opacity:.85}
+@media(max-width:640px){.sl-vl-note{width:100%}}
 .sl-toggle.open{background:var(--olive);color:#fff;border-color:var(--olive)}
 .sl-toggle .chev{width:13px;height:13px;transition:transform .2s}
 .sl-toggle.open .chev{transform:rotate(180deg)}
@@ -138,6 +147,14 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
       <h1>Сюжеты</h1>
       <p>Вычитанные научные сюжеты тропы — каждый с тремя уровнями глубины</p>
     </div>
+  </div>
+
+  <div class="sl-verlegend">
+    <span class="sl-vl-title">Надёжность материала:</span>
+    <span class="sl-vl sl-vl-expert">✓ проверено экспертом</span>
+    <span class="sl-vl sl-vl-sources">✓ со ссылками на источники</span>
+    <span class="sl-vl sl-vl-draft">● черновик</span>
+    <span class="sl-vl-note">Отметка стоит у каждого сюжета — видно, чем подкреплён текст.</span>
   </div>
 
   <div class="sl-filters" id="sl-filters">

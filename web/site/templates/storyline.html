@@ -9,6 +9,11 @@
 .sg-deck{font-family:var(--serif);font-style:italic;font-size:1.3rem;color:var(--tm);line-height:1.3;margin:0 auto 12px;max-width:560px}
 .sg-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:0.8rem}
 .sg-tag{padding:2px 9px;border-radius:20px;background:var(--gl);color:var(--tm)}
+/* Уровень надёжности материала — читатель должен видеть, чем подкреплён текст */
+.sg-ver{padding:2px 9px;border-radius:20px;font-size:0.78rem;cursor:help;white-space:nowrap}
+.sg-ver-expert{background:#E8F0E4;color:#3E5836}
+.sg-ver-sources{background:#EDF0F5;color:#41506B}
+.sg-ver-draft{background:#F6EFE4;color:#7A5C2E}
 .sg-geo{color:var(--olive);font-weight:600}
 .tabs{display:flex;align-items:center;gap:4px;border-bottom:1px solid var(--bd);margin:26px 0 0;flex-wrap:wrap}
 .tab{font-family:var(--serif);font-size:1.05rem;font-weight:600;padding:9px 16px;color:var(--tm);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
@@ -47,6 +52,13 @@
     <div class="sg-meta">
       {% if location %}<a class="sg-geo" href="{{ location }}" target="_blank" rel="noopener">📍 на карте</a>{% endif %}
       {% for t in s.tags %}<span class="sg-tag">{{ t }}</span>{% endfor %}
+      {% if s.verification == 'expert' %}
+        <span class="sg-ver sg-ver-expert" title="Материал проверен экспертом{% if s.reviewer %}: {{ s.reviewer }}{% endif %}{% if s.reviewed %}, {{ s.reviewed }}{% endif %}">✓ проверено экспертом</span>
+      {% elif s.verification == 'sources' %}
+        <span class="sg-ver sg-ver-sources" title="Утверждения подкреплены источниками — {{ s.n_sources }} {{ s.sources_word }} внизу страницы">✓ со ссылками на источники</span>
+      {% else %}
+        <span class="sg-ver sg-ver-draft" title="Черновик: материал ещё не подкреплён источниками и не проверен">● черновик</span>
+      {% endif %}
     </div>
   </div>
 
