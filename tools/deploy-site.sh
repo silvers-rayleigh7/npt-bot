@@ -32,7 +32,9 @@ else
   FILTERS=(--include='*/' --include='*.html' --exclude='*')  # только страницы
 fi
 
-sshpass -p "$PASS" rsync -rzc "${FILTERS[@]}" -e "ssh $SSH_OPTS" "$SRC" "$USER@$HOST:$DEST"
+# ${FILTERS[@]+...} — безопасное разворачивание: пустой массив под set -u иначе роняет
+# «unbound variable» в bash 3.2 (macOS). При --all массив пуст → передаём только rsync-флаги.
+sshpass -p "$PASS" rsync -rzc ${FILTERS[@]+"${FILTERS[@]}"} -e "ssh $SSH_OPTS" "$SRC" "$USER@$HOST:$DEST"
 
 echo "✓ Залито. Проверка боевого домена:"
 curl -s -o /dev/null -w "  /teacher/ → HTTP %{http_code}\n" https://tropa.fmin.xyz/teacher/

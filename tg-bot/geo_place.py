@@ -146,13 +146,18 @@ def nearby_objects(lat: float, lon: float, radius_m: int = 3000,
     return out[:limit]
 
 
-def build_geo_prompt(lat: float, lon: float, content_dir: str, near_km: float = NEAR_KM) -> str:
+def build_geo_prompt(lat: float, lon: float, content_dir: str, near_km: float = NEAR_KM,
+                     near: list = None) -> str:
     """Готовый [ГЕО]-промпт для модели. Всегда даёт, о чём говорить: либо наши сюжеты рядом,
-    либо сама местность с её объектами."""
-    try:
-        near = nearest_storylines(lat, lon, content_dir, top=3)
-    except Exception:
-        near = []
+    либо сама местность с её объектами.
+
+    `near` (опц.) — заранее посчитанный список ближайших сюжетов (сайт передаёт его из
+    geo_index.json, чтобы не сканировать markdown). Без него — сканируем `content_dir`."""
+    if near is None:
+        try:
+            near = nearest_storylines(lat, lon, content_dir, top=3)
+        except Exception:
+            near = []
     close = [n for n in near if n.get("dist_m", 9e9) <= near_km * 1000]
 
     # Ветка 1: рядом есть наши верифицированные сюжеты — предлагаем их.

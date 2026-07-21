@@ -35,18 +35,33 @@ def _parse_title_geo(path: str):
     return tm.group(1).strip(), (float(gm.group(1)), float(gm.group(2)))
 
 
-def nearest_storylines(lat: float, lon: float, content_dir: str, top: int = 3) -> list[dict]:
-    """Топ-N ближайших сюжетов с координатами, отсортированы по расстоянию."""
+def nearest_storylines(lat: float, lon: float, content_dir: str, top: int = 3,
+                       index: list = None) -> list[dict]:
+    """Топ-N ближайших сюжетов с координатами, отсортированы по расстоянию.
+
+    `index` (опц.) — заранее собранный список `[{slug, title, lat, lon}]`. Если задан,
+    берём координаты из него, а не сканируем `content_dir`/*.md. Нужно сайту: его бэкенд
+    живёт отдельно от markdown-сюжетов и читает лёгкий `geo_index.json`. Без `index`
+    поведение прежнее — бот сканирует свои файлы, обратная совместимость сохранена.
+    """
     pts = []
-    for p in glob.glob(os.path.join(content_dir, "*.md")):
-        title, geo = _parse_title_geo(p)
-        if not geo:
-            continue
-        pts.append({
-            "title": title,
-            "slug": os.path.basename(p)[:-3],
-            "dist_m": haversine_m(lat, lon, geo[0], geo[1]),
-        })
+    if index is not None:
+        for it in index:
+            pts.append({
+                "title": it.get("title"),
+                "slug": it.get("slug"),
+                "dist_m": haversine_m(lat, lon, it["lat"], it["lon"]),
+            })
+    else:
+        for p in glob.glob(os.path.join(content_dir, "*.md")):
+            title, geo = _parse_title_geo(p)
+            if not geo:
+                continue
+            pts.append({
+                "title": title,
+                "slug": os.path.basename(p)[:-3],
+                "dist_m": haversine_m(lat, lon, geo[0], geo[1]),
+            })
     pts.sort(key=lambda x: x["dist_m"])
     return pts[:top]
 
