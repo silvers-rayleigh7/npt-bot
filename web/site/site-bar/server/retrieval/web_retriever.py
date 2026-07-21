@@ -22,10 +22,14 @@ _UA = {"User-Agent": "TropaLessonBot/1.0 (+https://tropa.fmin.xyz)"}
 # Вопросительные и служебные слова — выкидываем из запроса.
 _STOP = {"почему", "как", "что", "такое", "зачем", "какой", "какие", "какая", "где", "когда",
          "для", "детей", "чем", "это", "при", "или", "если", "чтобы"}
-# Белый список авторитетных научпоп/энциклопедических источников (правится через WEB_ALLOWED_DOMAINS).
+# Белый список авторитетных научпоп/образовательных источников (правится через WEB_ALLOWED_DOMAINS).
+# Научпоп/энциклопедии: Элементы, Наука и жизнь, ПостНаука, N+1, БРЭ, Naked Science, Научная Россия,
+# Arzamas, Троицкий вариант, Индикатор. Учебные платформы: Khan Academy, Российская электронная школа.
 _DEFAULT_ALLOWED = [
     "elementy.ru", "nkj.ru", "postnauka.ru", "nplus1.ru", "bigenc.ru",
     "naked-science.ru", "scientificrussia.ru", "arzamas.academy",
+    "trv-science.ru", "indicator.ru",
+    "khanacademy.org", "resh.edu.ru",
 ]
 
 
