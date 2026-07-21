@@ -12,6 +12,7 @@ from __future__ import annotations
 import os
 import re
 from typing import List, Optional
+from urllib.parse import urlparse
 
 import requests
 
@@ -63,17 +64,31 @@ class WebRetriever:
     def enabled(self) -> bool:
         return bool(self.api_key) or self.use_wikipedia
 
+    def _host_allowed(self, url: str) -> bool:
+        """Хост URL входит в allowlist (сам домен или его поддомен). Пустой allowlist → всё разрешено."""
+        if not self.allowed_domains:
+            return True
+        try:
+            host = urlparse(url).netloc.lower().split("@")[-1].split(":")[0]
+        except Exception:
+            return False
+        return any(host == d or host.endswith("." + d) for d in self.allowed_domains)
+
     # ── провайдеры поиска (каждый может бросить — ловит retrieve) ──
     def _search_tavily(self, topic: str, subject: str) -> List[dict]:
         query = " ".join(p for p in (topic, subject) if p).strip() + " для детей научно-популярно"
-        payload = {"api_key": self.api_key, "query": query, "max_results": 3, "search_depth": "basic"}
-        if self.allowed_domains:                       # только доверенные домены
+        payload = {"api_key": self.api_key, "query": query, "max_results": 8, "search_depth": "basic"}
+        if self.allowed_domains:                       # просим Tavily ограничиться доверенными…
             payload["include_domains"] = self.allowed_domains
         r = requests.post("https://api.tavily.com/search", json=payload, timeout=self.timeout)
         r.raise_for_status()
+        # …но include_domains у Tavily — мягкое пожелание: при отсутствии контента в доверенных
+        # доменах он молча отдаёт общий веб (ловили kinogo.ec/wikipedia на «перемещении дюн»).
+        # Поэтому ЖЁСТКО фильтруем по хосту на своей стороне — гарантия, а не надежда.
         return [
             {"title": x.get("title", ""), "content": (x.get("content", "") or ""), "url": x.get("url", "")}
             for x in r.json().get("results", [])
+            if self._host_allowed(x.get("url", ""))
         ]
 
     def _search_wikipedia(self, topic: str, subject: str) -> List[dict]:
