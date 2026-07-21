@@ -164,7 +164,9 @@ def geo(inp: GeoIn):
             answer="Гео-подсказки временно недоступны — задайте вопрос обычным текстом.",
             provider="geo:disabled",
         )
-    near = nearest_storylines(inp.lat, inp.lon, "", top=3, index=_GEO_INDEX)
+    # top=6 (не 3): чтобы на «а другие рядом есть?» модель отвечала РЕАЛЬНЫМИ сюжетами,
+    # а не выдумывала. Промпт запрещает придумывать точки сверх этого списка.
+    near = nearest_storylines(inp.lat, inp.lon, "", top=6, index=_GEO_INDEX)
     site = os.environ.get("SITE_URL", "https://tropa.fmin.xyz")
     nearby = [NearbyItem(title=n["title"], slug=n["slug"],
                          url=f"{site}/storylines/{n['slug']}/", dist_m=n["dist_m"])
