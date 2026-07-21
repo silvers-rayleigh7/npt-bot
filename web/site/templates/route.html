@@ -12,6 +12,9 @@
 .tropa-geo-btn:hover{background:var(--gl,#f4f2ee)}
 .tropa-geo-btn:disabled{opacity:.65;cursor:default}
 .tropa-me{width:16px;height:16px;border-radius:50%;background:#2f6f63;border:3px solid #fff;box-shadow:0 0 0 2px #2f6f63,0 2px 6px rgba(0,0,0,.3)}
+.tropa-route-btn{margin-top:7px;background:#2f6f63;color:#fff;border:none;border-radius:7px;padding:6px 10px;font-size:0.78rem;font-weight:600;cursor:pointer}
+.tropa-route-btn:hover{background:#255a50}
+.tropa-route-btn:disabled{opacity:.6;cursor:default}
 .poi{padding:28px 0;border-bottom:1px solid var(--bd)}
 .poi:last-child{border-bottom:none}
 .poi-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:10px}
@@ -98,11 +101,49 @@
     var icon=L.divIcon({className:'',html:'<div style="width:28px;height:28px;border-radius:50%;background:#1a4a41;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.25)">'+p.n+'</div>',iconSize:[28,28],iconAnchor:[14,14]});
     L.marker([p.lat,p.lon],{icon:icon}).addTo(map).on('click',function(){document.querySelectorAll('.poi')[i].scrollIntoView({behavior:'smooth',block:'center'})});
   });
-  map.fitBounds(L.latLngBounds(trailPath && trailPath.length ? trailPath : coords).pad(0.1));
+  var initBounds=L.latLngBounds(trailPath && trailPath.length ? trailPath : coords).pad(0.1);
+  map.fitBounds(initBounds);
+  // Контейнер может ещё не иметь финального размера в момент инициализации → fitBounds
+  // иногда считает зум по нулевому размеру и застывает на «весь мир». Досчитываем размер
+  // и повторяем подгонку после первого кадра отрисовки.
+  setTimeout(function(){ map.invalidateSize(); map.fitBounds(initBounds); }, 200);
 
   // ── «Я здесь»: показываем пользователя на карте (фаза 2 гео) ──
   // Геолокация только по кнопке; координаты никуда не уходят — считаем расстояния в браузере.
   var meMarker=null, meCircle=null;
+
+  // Фаза 3: пеший маршрут от пользователя к точке через Valhalla (публичный, CORS открыт).
+  function decodePoly6(str){                 // Valhalla кодирует geometry с точностью 1e6
+    var idx=0,lat=0,lng=0,out=[];
+    while(idx<str.length){
+      var b,shift=0,res=0;
+      do{b=str.charCodeAt(idx++)-63;res|=(b&0x1f)<<shift;shift+=5;}while(b>=0x20);
+      lat+=(res&1)?~(res>>1):(res>>1);
+      shift=0;res=0;
+      do{b=str.charCodeAt(idx++)-63;res|=(b&0x1f)<<shift;shift+=5;}while(b>=0x20);
+      lng+=(res&1)?~(res>>1):(res>>1);
+      out.push([lat/1e6,lng/1e6]);
+    }
+    return out;
+  }
+  var routeLine=null;
+  function routeFromMe(ll, poi, btn){
+    if(btn){btn.disabled=true; btn.textContent='Прокладываю…';}
+    fetch('https://valhalla1.openstreetmap.de/route',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({locations:[{lat:ll[0],lon:ll[1]},{lat:poi.lat,lon:poi.lon}],costing:'pedestrian',directions_options:{units:'kilometers'}})})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        var leg=d.trip&&d.trip.legs&&d.trip.legs[0]; if(!leg)throw 0;
+        if(routeLine)map.removeLayer(routeLine);
+        routeLine=L.polyline(decodePoly6(leg.shape),{color:'#c26a2a',weight:4,dashArray:'7,7',opacity:0.9}).addTo(map);
+        var km=d.trip.summary.length, mins=Math.max(1,Math.round(d.trip.summary.time/60));
+        var dm=km<1?Math.round(km*1000)+' м':km.toFixed(1)+' км';
+        map.fitBounds(routeLine.getBounds().pad(0.25));
+        if(meMarker)meMarker.setPopupContent('Маршрут до «'+poi.name+'»: '+dm+' пешком, ~'+mins+' мин').openPopup();
+      })
+      .catch(function(){ if(btn){btn.disabled=false; btn.textContent='🧭 Проложить пеший маршрут';} alert('Не удалось проложить маршрут. Попробуйте ещё раз.'); });
+  }
+
   var GeoBtn=L.Control.extend({options:{position:'topright'},onAdd:function(){
     var b=L.DomUtil.create('button','tropa-geo-btn');
     b.type='button'; b.textContent='📍 Я здесь';
@@ -120,7 +161,16 @@
         pois.forEach(function(p){var d=map.distance(ll,[p.lat,p.lon]); if(best===null||d<best.d)best={d:d,p:p};});
         var label='Вы здесь';
         if(best){var dm=best.d<1000?Math.round(best.d)+' м':(best.d/1000).toFixed(1)+' км'; label='Вы здесь · ближайшая точка «'+best.p.name+'» — '+dm;}
-        meMarker.bindPopup(label).openPopup();
+        var popEl=document.createElement('div');
+        popEl.textContent=label;
+        if(best){
+          var rb=document.createElement('button');
+          rb.className='tropa-route-btn'; rb.type='button'; rb.textContent='🧭 Проложить пеший маршрут';
+          rb.onclick=function(){ routeFromMe(ll, best.p, rb); };
+          popEl.appendChild(document.createElement('br'));
+          popEl.appendChild(rb);
+        }
+        meMarker.bindPopup(popEl).openPopup();
         map.setView(ll,Math.max(map.getZoom(),15));
         b.disabled=false; b.textContent='📍 Я здесь';
       },function(){
