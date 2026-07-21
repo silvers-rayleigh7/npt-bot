@@ -218,6 +218,13 @@ def _filter_candidates(pages: dict) -> list:
         url = info.get("thumburl") or info.get("url") or ""
         if not url.lower().rsplit(".", 1)[-1].startswith(("jpg", "jpeg", "png")):
             continue                   # svg/gif/tiff в Typst не кладём
+        # Тип файла — по ИМЕНИ на Викискладе, а не по thumburl: у аудио/видео
+        # (File:…ogg) Commons отдаёт thumburl-заглушку с .png (иконка-волна) —
+        # она проходила проверку URL и попадала в PDF серым диском. Ловим на «Перестройке»,
+        # чьё произношение Ru-perestroika.ogg всплыло вместо иллюстрации.
+        src_ext = (p.get("title") or "").lower().rsplit(".", 1)[-1]
+        if src_ext not in ("jpg", "jpeg", "png", "gif", "svg", "webp", "tif", "tiff"):
+            continue                   # аудио/видео/документы — не иллюстрации
         title = (p.get("title") or "").replace("File:", "").rsplit(".", 1)[0]
         low = title.lower()
         if any(w in low for w in _ARCHIVAL) or _looks_like_scan_id(title):
