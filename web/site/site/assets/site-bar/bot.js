@@ -6,7 +6,9 @@
 
   // Эндпоинт можно переопределить через <body data-bot-api="https://...">. По умолчанию — тот же origin.
   var API = (document.body && document.body.dataset.botApi) || "/api/chat";
+  var GEO_API = (document.body && document.body.dataset.geoApi) || "/api/geo";
   var MAX_CTX = 6000;
+  var geo = null;   // {lat, lon} после того, как пользователь разрешил геолокацию
 
   // ---- Сбор контекста страницы --------------------------------------------
   function pageContext() {
@@ -64,6 +66,7 @@
     x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>'
   };
   var CHIPS = ["О чём этот сюжет?", "Объясни проще", "Где это можно увидеть?"];
+  var GEO_CHIP = "📍 Рядом со мной";
 
   var fab = document.createElement("button");
   fab.className = "sb-fab";
@@ -125,6 +128,10 @@
     log.appendChild(hint);
     var chips = document.createElement("div");
     chips.className = "sb-chips";
+    var gb = document.createElement("button");
+    gb.className = "sb-chip sb-chip-geo"; gb.type = "button"; gb.textContent = GEO_CHIP;
+    gb.onclick = requestGeo;                       // не текстовый вопрос — запрос геолокации
+    chips.appendChild(gb);
     CHIPS.forEach(function (c) {
       var b = document.createElement("button");
       b.className = "sb-chip"; b.type = "button"; b.textContent = c;
@@ -148,16 +155,21 @@
     typing.innerHTML = "<span></span><span></span><span></span>";
     log.appendChild(typing); log.scrollTop = log.scrollHeight;
 
-    fetch(API, {
+    // Пока геолокация задана — идём на /api/geo (ответ учитывает место + ближайшие точки).
+    var payload = { question: q, page_context: pageContext(), history: history.slice(-8) };
+    if (geo) { payload.lat = geo.lat; payload.lon = geo.lon; }
+
+    fetch(geo ? GEO_API : API, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: q, page_context: pageContext(), history: history.slice(-8) })
+      body: JSON.stringify(payload)
     })
       .then(function (r) { return r.json(); })
       .then(function (d) {
         typing.remove();
         var a = (d && d.answer) || "Извините, ответа не получилось. Попробуйте ещё раз.";
         addMsg("bot", a);
+        if (d && d.nearby && d.nearby.length) renderNearby(d.nearby);
         history.push({ role: "user", content: q });
         history.push({ role: "assistant", content: a });
       })
@@ -166,6 +178,50 @@
         addMsg("bot", "Не получилось связаться с сервером. Проверьте интернет и попробуйте снова.");
       })
       .finally(function () { busy = false; sendBtn.disabled = false; input.focus(); });
+  }
+
+  // ---- Геолокация ----------------------------------------------------------
+  function fmtDist(m) { return m < 1000 ? Math.round(m) + " м" : (m / 1000).toFixed(1) + " км"; }
+
+  function renderNearby(list) {
+    var wrap = document.createElement("div");
+    wrap.className = "sb-nearby";
+    var t = document.createElement("div");
+    t.className = "sb-nearby-t"; t.textContent = "Ближайшие точки тропы:";
+    wrap.appendChild(t);
+    list.forEach(function (n) {
+      var a = document.createElement("a");
+      a.className = "sb-nearby-link";
+      a.href = n.url; a.target = "_blank"; a.rel = "noopener";
+      a.innerHTML = esc(n.title) + ' <span class="sb-nearby-d">' + esc(fmtDist(n.dist_m)) + "</span>";
+      wrap.appendChild(a);
+    });
+    log.appendChild(wrap);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function requestGeo() {
+    document.querySelectorAll(".sb-chips,.sb-hint").forEach(function (n) { n.remove(); });
+    if (!navigator.geolocation) {
+      addMsg("bot", "Ваш браузер не поддерживает геолокацию — спросите обычным текстом.");
+      return;
+    }
+    var note = addMsg("bot", "Определяю, где вы…");
+    navigator.geolocation.getCurrentPosition(
+      function (pos) {
+        geo = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+        note.innerHTML = renderMd(
+          "Нашёл. Координаты уходят только на карты OpenStreetMap, чтобы найти ближайшие точки — ничего не сохраняем."
+        );
+        input.value = "Что интересного рядом со мной?"; submit();
+      },
+      function () {
+        note.innerHTML = renderMd(
+          "Не удалось определить местоположение — нет разрешения или сигнала. Можно спросить обычным текстом."
+        );
+      },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
+    );
   }
 
   // ---- События -------------------------------------------------------------

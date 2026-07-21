@@ -87,3 +87,16 @@
   .sb-panel{ right:8px; bottom:8px; width:calc(100vw - 16px); height:calc(100vh - 80px); }
   .sb-fab{ right:14px; bottom:14px; }
 }
+
+/* Геолокация: чип «Рядом» и блок ближайших точек тропы. */
+.sb-chip-geo{ border-color:var(--sb-olive); color:var(--sb-olive); font-weight:600; }
+.sb-chip-geo:hover{ background:var(--sb-olive); color:#fff; }
+.sb-nearby{ align-self:flex-start; max-width:86%; display:flex; flex-direction:column; gap:5px;
+  margin:-2px 0 2px; }
+.sb-nearby-t{ font-size:0.72rem; color:var(--sb-tm); padding-left:2px; }
+.sb-nearby-link{ display:flex; justify-content:space-between; align-items:center; gap:10px;
+  font-size:0.82rem; padding:8px 11px; border:1px solid var(--sb-sand); border-radius:11px;
+  background:#fff; color:var(--sb-ink); text-decoration:none;
+  transition:background .12s,border-color .12s; }
+.sb-nearby-link:hover{ background:var(--sb-gl); border-color:var(--sb-olive); }
+.sb-nearby-d{ flex:none; font-size:0.74rem; color:var(--sb-olive); font-weight:600; }

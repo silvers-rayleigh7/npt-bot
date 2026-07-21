@@ -36,6 +36,20 @@ except Exception:
     _RETRIEVERS = []
     RetrievalQuery = None
 
+# Гео-слой: тот же код, что у бота (site-bar/server/geo/, держится в синхроне sync-geo.sh).
+# Мягкий импорт: если модуль/индекс недоступны — /api/geo вернёт мягкую ошибку, остальное живёт.
+import sys as _sys  # noqa: E402
+_GEO_DIR = ROOT / "geo"
+try:
+    _sys.path.insert(0, str(_GEO_DIR))
+    from geo_place import build_geo_prompt, reverse_place  # noqa: E402
+    from geo_match import nearest_storylines               # noqa: E402
+    _GEO_INDEX = json.loads((_GEO_DIR / "geo_index.json").read_text(encoding="utf-8"))
+    GEO_ENABLED = bool(_GEO_INDEX)
+except Exception:
+    GEO_ENABLED = False
+    _GEO_INDEX = []
+
 # Заявки гидов копятся в jsonl (append-only), уведомление — в Telegram админу.
 GUIDE_APPLICATIONS = Path(os.environ.get("GUIDE_APPLICATIONS_PATH", ROOT / "guide_applications.jsonl"))
 TG_NOTIFY_TOKEN = os.environ.get("TG_NOTIFY_TOKEN", "")
@@ -115,6 +129,77 @@ def chat(inp: ChatIn):
             answer="Извините, сейчас не получилось ответить. Попробуйте ещё раз чуть позже.",
             provider=f"error:{e}",
         )
+
+
+class GeoIn(BaseModel):
+    lat: float
+    lon: float
+    question: str = ""
+    page_context: str = ""
+    history: list[Msg] = Field(default_factory=list)
+
+
+class NearbyItem(BaseModel):
+    title: str
+    slug: str
+    url: str
+    dist_m: float
+
+
+class GeoOut(BaseModel):
+    answer: str
+    provider: str
+    place: dict = Field(default_factory=dict)
+    nearby: list[NearbyItem] = Field(default_factory=list)
+
+
+@app.post("/api/geo", response_model=GeoOut)
+def geo(inp: GeoIn):
+    """Гео-ответ: где пользователь + ближайшие сюжеты тропы. Та же логика, что у бота.
+
+    Ближайшие сюжеты берём из geo_index.json (без сканирования markdown), а reverse_place/
+    nearby_objects опрашивают OSM внутри build_geo_prompt — отказоустойчиво (try/except+кэш)."""
+    if not GEO_ENABLED:
+        return GeoOut(
+            answer="Гео-подсказки временно недоступны — задайте вопрос обычным текстом.",
+            provider="geo:disabled",
+        )
+    near = nearest_storylines(inp.lat, inp.lon, "", top=3, index=_GEO_INDEX)
+    site = os.environ.get("SITE_URL", "https://tropa.fmin.xyz")
+    nearby = [NearbyItem(title=n["title"], slug=n["slug"],
+                         url=f"{site}/storylines/{n['slug']}/", dist_m=n["dist_m"])
+              for n in near if n.get("title") and n.get("slug")]
+
+    geo_prompt = build_geo_prompt(inp.lat, inp.lon, "", near=near)
+    q = inp.question.strip() or "Что интересного рядом со мной?"
+    ctx = inp.page_context.strip()[:MAX_CONTEXT_CHARS]
+    user_block = (
+        geo_prompt + "\n\n"
+        + (f"Текст открытой страницы:\n{ctx}\n\n" if ctx else "")
+        + f"Вопрос читателя: {q}"
+    )
+    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+    for m in inp.history[-MAX_HISTORY:]:
+        if m.role in ("user", "assistant") and m.content.strip():
+            messages.append({"role": m.role, "content": m.content})
+    messages.append({"role": "user", "content": user_block})
+    try:
+        answer, provider = generate(
+            messages, _PROVIDERS,
+            max_tokens=int(os.environ.get("MAX_TOKENS", "700")),
+            temperature=float(os.environ.get("TEMPERATURE", "0.4")),
+        )
+    except ProviderError as e:
+        answer, provider = (
+            "Извините, сейчас не получилось ответить. Попробуйте ещё раз чуть позже.",
+            f"error:{e}",
+        )
+    place = {}
+    try:
+        place = reverse_place(inp.lat, inp.lon) or {}   # для «вы рядом с …», кэшируется
+    except Exception:
+        place = {}
+    return GeoOut(answer=answer, provider=provider, place=place, nearby=nearby)
 
 
 class LessonIn(BaseModel):
