@@ -148,7 +148,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Загляни внутрь рамки. Сверху лежат свежие листья — их ещё можно узнать по форме и цвету. Ниже — старые, прошлогодние: потемневшие, ломкие. Под ними слой, в котором уже не отличить лист от коры или веточки. Ещё глубже — рыхлая тёмная масса без отдельных частей. Это и есть почва. На несколько сантиметров вглубь спрессованы годы: каждый слой темнее и однороднее предыдущего, и где-то по дороге листья перестают быть листьями и становятся землёй.</p>
@@ -215,7 +215,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 <script defer src="/assets/site-bar/bot.js"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Где проходит граница между живым и неживым?", "Почему под снегом теплее, чем кажется?", null];
 
 (function(){

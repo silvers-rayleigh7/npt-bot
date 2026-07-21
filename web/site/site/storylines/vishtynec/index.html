@@ -148,7 +148,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Нырни в жаркий день в глубокое озеро — у поверхности парное молоко, а копни ластами на пару метров вниз, и ноги обдаёт холодом. Озеро Виштынец, самое глубокое в области, живёт именно так: летом оно разделено на «этажи».</p>
@@ -203,7 +203,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 <script defer src="/assets/site-bar/bot.js"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Почему летом вода в озере тёплая только у поверхности, а на глубине — ледяная?", "Что держит слои раздельно — и почему озеро «переворачивается»?", "Почему придонной воде не холоднее +4 °C?"];
 
 (function(){

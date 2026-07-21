@@ -148,7 +148,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Лист, ветка, насекомое — всё, что падает в лесу, за год-другой съедают бактерии и грибы. А капля хвойной смолы иногда не сгнивает, а каменеет и доживает до наших дней, да ещё с мухой внутри. Прямо здесь, на пляже под Янтарным, после шторма такие капли — теперь жёлтые камешки — волны выбрасывают на песок.</p>
@@ -209,7 +209,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 <script defer src="/assets/site-bar/bot.js"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Почему капля смолы пережила сорок миллионов лет, а упавший рядом лист — нет?", "Что превращает мягкую смолу в вечный камень?", "Почему янтарь называют капсулой времени?"];
 
 (function(){

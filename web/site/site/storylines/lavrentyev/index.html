@@ -148,7 +148,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>В обычной жизни металл — образец твёрдости: его прочность решает, гнётся он или держит. Но при давлениях в сотни тысяч атмосфер прочностью можно попросту пренебречь — на её фоне она исчезающе мала, и металл начинает течь, как несжимаемая жидкость. На этом основан кумулятивный заряд: конический облицованный металлом заряд при взрыве <strong>схлопывается</strong> в тончайшую струю, разгоняемую до ~10 км/с, — и эта металлическая «струя воды» пробивает броню.</p>
@@ -200,7 +200,7 @@ $$</p>
 <script defer src="/assets/site-bar/bot.js"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Почему при взрыве твёрдый металл течёт, как вода?", "Когда металл перестаёт быть твёрдым?", null];
 
 (function(){

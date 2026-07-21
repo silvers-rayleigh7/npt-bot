@@ -148,7 +148,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Пересыпь песок между ладонями: пока струйка тонкая, песок течёт как вода. На Куршской косе он течёт так же, только медленно — и целый холм высотой с многоэтажку сдвигается на метры в год. Дюны здесь и вправду «идут»: за столетие подвижные пески успели засыпать не одну прибрежную деревню.</p>
@@ -215,7 +215,7 @@ $$</p>
 <script defer src="/assets/site-bar/bot.js"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Может ли холм песка идти — и куда?", "Когда песок трогается с места?", null];
 
 (function(){

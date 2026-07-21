@@ -148,7 +148,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><figure class="fig"><img src="/assets/figures/vodorazdel-1.svg" alt="Водораздел делит сток надвое: с гребня вода уходит в два соседних бассейна."><figcaption>Водораздел делит сток надвое: с гребня вода уходит в два соседних бассейна.</figcaption></figure>
@@ -218,7 +218,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 <script defer src="/assets/site-bar/bot.js"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Куда уходит вода?", "Откуда берётся речная сеть?", "Где ещё работает водораздел — и стоит ли он на месте?"];
 
 (function(){

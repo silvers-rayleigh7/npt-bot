@@ -148,7 +148,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Вытяни руку с поднятым пальцем и смотри на него поочерёдно то одним глазом, то другим. Палец прыгает на фоне дальней стены — а если поднести его ближе, прыгает сильнее. Это <strong>параллакс</strong>: чем ближе предмет, тем заметнее он смещается, когда меняешь точку зрения. По величине смещения можно вычислить расстояние, ни на шаг не приблизившись.</p>
@@ -229,7 +229,7 @@ $$</p>
 <script defer src="/assets/site-bar/bot.js"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Как измерить расстояние до звезды, не отправив к ней ничего?", "Как из крошечного угла рождается огромное расстояние?", null];
 
 (function(){

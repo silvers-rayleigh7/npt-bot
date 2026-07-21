@@ -148,7 +148,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Собаку от волка отделяют тысячи лет. А что, если повторить одомашнивание заново, на глазах у одного исследователя, и отбирать зверей всего по одному признаку? Такой опыт в 1959 году в новосибирском Академгородке начал генетик Дмитрий Беляев.</p>
@@ -196,7 +196,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 <script defer src="/assets/site-bar/bot.js"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Как из дикой лисы за несколько поколений вышла почти собака?", "Почему отбор по характеру изменил и внешность?", null];
 
 (function(){

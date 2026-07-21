@@ -148,7 +148,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Посмотри вниз. На металлическом кружке у тебя под ногами выбиты координаты этой точки — широта и долгота, измеренные геодезистами с точностью до сантиметров. Чтобы определить их, бригада с тяжёлой аппаратурой провела на этом самом месте долгие часы.</p>
@@ -244,7 +244,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 <script defer src="/assets/site-bar/bot.js"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Откуда смартфон знает, где ты?", "Как находят точку по расстояниям", "Почему спутников должно быть четыре, а не три"];
 
 (function(){

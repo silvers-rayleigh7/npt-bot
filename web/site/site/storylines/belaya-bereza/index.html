@@ -148,7 +148,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Выйди в жару в чёрной футболке — нагреешься быстрее, чем в белой. Светлая ткань возвращает большую часть света обратно, чёрная вбирает его почти целиком и оттого копит тепло. То же самое можно почувствовать прямо здесь.</p>
@@ -214,7 +214,7 @@ $$</p>
 <script defer src="/assets/site-bar/bot.js"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Почему берёза белая, а дуб — нет?", "Почему светлый цвет важен даже в мороз?", null];
 
 (function(){

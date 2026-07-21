@@ -148,7 +148,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Якутск стоит примерно на той же широте, что юг Аляски или юг Скандинавии, — солнце им достаётся почти поровну. А климат совершенно разный: средняя зимняя в Якутске около −38 °C, в норвежском Бергене около +2 °C. Разница доходит почти до <strong>40 градусов</strong> — при одинаковом солнце. Откуда?</p>
@@ -218,7 +218,7 @@ $$</p>
 <script defer src="/assets/site-bar/bot.js"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Почему в Якутске зимой −50 °C, а в Норвегии на той же широте всего +2 °C?", "Почему океан сглаживает климат, а суша — нет?", null];
 
 (function(){

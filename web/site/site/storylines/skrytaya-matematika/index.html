@@ -148,7 +148,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Казалось бы, возьми мышь, раздуй в тысячу раз — вот тебе и слон. Но живой организм так не масштабируется, и виной тому простая геометрия. Кислород для обмена веществ поступает <strong>через поверхность</strong> — стенки лёгких и капилляров, — а питать нужно весь <strong>объём</strong> тела. Поверхность и объём растут с размером по-разному, и это рассогласование перекраивает всё устройство животного.</p>
@@ -202,7 +202,7 @@ $$</p>
 <script defer src="/assets/site-bar/bot.js"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Почему слона нельзя просто «увеличить» из мыши?", "Откуда берётся «лишняя» четвертушка?", null];
 
 (function(){

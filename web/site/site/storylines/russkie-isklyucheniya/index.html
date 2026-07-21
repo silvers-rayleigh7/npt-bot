@@ -147,7 +147,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Поставьте глагол «идти» в прошедшее время. Правило знакомо с начальной школы: к основе прибавляется -л, как в чита-л или вёз. А получается шёл — форма от другого корня, без всякого -л на месте основы. У глагола «быть» расхождение ещё шире: в настоящем времени есть, в прошедшем был, в будущем будет. Три разных корня под одной крышей.</p>
@@ -241,7 +241,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 <script defer src="/assets/site-bar/bot.js"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Почему в русском столько исключений?", "Один закон — от глагола до белка", "Закон выравнивания"];
 
 (function(){

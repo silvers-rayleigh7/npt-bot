@@ -148,7 +148,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Посмотри через рамку на склон. Маленькая промоина сбоку по форме похожа на большую ветвь балки — только уменьшенную. Убери мысленно траву, кусты и крыши вдалеке, оставь один контур — и ответ будет «нет»: по одной форме уже не понять, метровая это промоина или стометровая балка. Масштаба у формы нет.</p>
@@ -219,7 +219,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 <script defer src="/assets/site-bar/bot.js"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Можно ли по форме отличить метровую промоину от стометровой балки?", "Как сосчитать форму, у которой нет «правильного» масштаба", null];
 
 (function(){

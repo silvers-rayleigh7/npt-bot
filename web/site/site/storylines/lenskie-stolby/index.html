@@ -148,7 +148,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Вдоль берега Лены тянется стена из тесно стоящих каменных колонн — будто кто-то нарезал скалу на вертикальные столбы. Камень здесь древнейший: это бывшее морское дно, в котором находят <strong>трилобитов</strong> и <strong>археоциат</strong> — одних из первых сложных животных. Возраст породы — около <strong>540 миллионов лет</strong>. А вот сами столбы куда моложе: им всего около <strong>400 тысяч лет</strong>. Получается важная вещь: возраст камня и возраст его формы — это совсем разные вещи. Породе сотни миллионов лет, а нынешнюю форму ей придал мороз — и сравнительно недавно.</p>
@@ -185,7 +185,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 <script defer src="/assets/site-bar/bot.js"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Почему скалы над Леной стоят как гигантский каменный частокол?", "Как обычная вода раскалывает скалу?", null];
 
 (function(){
