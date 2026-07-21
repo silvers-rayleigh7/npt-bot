@@ -74,6 +74,10 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 .route-hero h1{font-size:1.8rem;font-weight:700;margin-bottom:4px}
 .route-meta{font-size:0.88rem;color:var(--tm)}
 #map{width:100%;height:380px;border-radius:var(--r);border:1px solid var(--bd);margin:24px 0}
+.tropa-geo-btn{background:#fff;border:1px solid var(--bd);border-radius:8px;padding:7px 11px;font-size:0.8rem;font-weight:600;color:var(--g);cursor:pointer;box-shadow:0 1px 5px rgba(0,0,0,.18)}
+.tropa-geo-btn:hover{background:var(--gl,#f4f2ee)}
+.tropa-geo-btn:disabled{opacity:.65;cursor:default}
+.tropa-me{width:16px;height:16px;border-radius:50%;background:#2f6f63;border:3px solid #fff;box-shadow:0 0 0 2px #2f6f63,0 2px 6px rgba(0,0,0,.3)}
 .poi{padding:28px 0;border-bottom:1px solid var(--bd)}
 .poi:last-child{border-bottom:none}
 .poi-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:10px}
@@ -1327,6 +1331,38 @@ $$&lt;/p&gt;
     L.marker([p.lat,p.lon],{icon:icon}).addTo(map).on('click',function(){document.querySelectorAll('.poi')[i].scrollIntoView({behavior:'smooth',block:'center'})});
   });
   map.fitBounds(L.latLngBounds(trailPath && trailPath.length ? trailPath : coords).pad(0.1));
+
+  // ── «Я здесь»: показываем пользователя на карте (фаза 2 гео) ──
+  // Геолокация только по кнопке; координаты никуда не уходят — считаем расстояния в браузере.
+  var meMarker=null, meCircle=null;
+  var GeoBtn=L.Control.extend({options:{position:'topright'},onAdd:function(){
+    var b=L.DomUtil.create('button','tropa-geo-btn');
+    b.type='button'; b.textContent='📍 Я здесь';
+    L.DomEvent.disableClickPropagation(b);
+    L.DomEvent.on(b,'click',function(){
+      if(!navigator.geolocation){b.textContent='Геолокация недоступна';return;}
+      b.disabled=true; b.textContent='Определяю…';
+      navigator.geolocation.getCurrentPosition(function(pos){
+        var ll=[pos.coords.latitude,pos.coords.longitude], acc=pos.coords.accuracy||50;
+        if(meMarker)map.removeLayer(meMarker);
+        if(meCircle)map.removeLayer(meCircle);
+        meCircle=L.circle(ll,{radius:acc,color:'#2f6f63',weight:1,fillColor:'#2f6f63',fillOpacity:0.12}).addTo(map);
+        meMarker=L.marker(ll,{icon:L.divIcon({className:'',html:'<div class="tropa-me"></div>',iconSize:[16,16],iconAnchor:[8,8]}),zIndexOffset:1000}).addTo(map);
+        var best=null;
+        pois.forEach(function(p){var d=map.distance(ll,[p.lat,p.lon]); if(best===null||d<best.d)best={d:d,p:p};});
+        var label='Вы здесь';
+        if(best){var dm=best.d<1000?Math.round(best.d)+' м':(best.d/1000).toFixed(1)+' км'; label='Вы здесь · ближайшая точка «'+best.p.name+'» — '+dm;}
+        meMarker.bindPopup(label).openPopup();
+        map.setView(ll,Math.max(map.getZoom(),15));
+        b.disabled=false; b.textContent='📍 Я здесь';
+      },function(){
+        b.disabled=false; b.textContent='📍 Я здесь';
+        alert('Не удалось определить местоположение — нет разрешения или сигнала.');
+      },{enableHighAccuracy:true,timeout:10000,maximumAge:60000});
+    });
+    return b;
+  }});
+  map.addControl(new GeoBtn());
 
   var audio=null,playingBtn=null;
   document.getElementById('trail').addEventListener('click',function(e){
