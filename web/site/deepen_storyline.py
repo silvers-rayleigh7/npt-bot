@@ -108,6 +108,9 @@ VERIFY_PROMPT = """Ты — придирчивый научный рецензе
 6. Не сокращай текст ради сокращения: убрав недостоверное, разверни объяснение механизма,
    чтобы объём остался прежним.
 
+7. СНОСКИ [^метка] в тексте не удаляй — они указывают на источники утверждений.
+   Если убираешь утверждение целиком, ссылку убирай вместе с ним; в остальных случаях сохраняй.
+
 Верни ТОЛЬКО исправленный текст в markdown, без заголовков уровня и без комментариев.
 """
 
@@ -134,17 +137,92 @@ def deepen(slug, providers):
     it = load_one(slug)
     facts = facts_for(it["title"], providers)
     body_txt = "\n\n".join(f"## {n}\n{t.strip()}" for n, t in it["levels"])
+
+    # Сноски перечисляем явно и требуем сохранить: без этого модель систематически
+    # теряет их при переписывании, и сюжет лишается бейджа «со ссылками на источники».
+    # Ссылки берём из ПЕРЕПИСЫВАЕМОГО уровня. Раньше брал из всего сюжета — и требовал
+    # от «Глубже» ссылки, которые живут в «Как это работает»: инструмент рапортовал
+    # потери там, где ничего не терялось.
+    old_defs, _ = _footnotes(it["raw"])
+    _, old_refs = _footnotes(it["levels"][-1][1])
+    keep = ""
+    if old_refs:
+        listing = "\n".join(f"[^{k}] — {old_defs.get(k, '')[:120]}" for k in sorted(old_refs))
+        keep = ("\n\nОБЯЗАТЕЛЬНО сохрани в новом тексте ссылки на эти источники "
+                "(каждую поставь там, где утверждение на неё опирается):\n" + listing + "\n")
+
     user = (f"Сюжет «{it['title']}».\n\n"
             + (f"{facts}\n\n" if facts else "")
-            + f"Текущий текст сюжета:\n\n{body_txt}")
+            + f"Текущий текст сюжета:\n\n{body_txt}{keep}")
     out, _ = generate(
         [{"role": "system", "content": PROMPT}, {"role": "user", "content": user}],
         providers, max_tokens=4000, temperature=0.45,
     )
     draft = (out or "").strip()
     draft = verify(draft, facts, providers)          # вычищаем выдуманное
+    draft, restored = reattach_footnotes(draft, old_defs, old_refs, it["levels"][-1][1])
+    if restored:
+        print("      вернул ссылки: " + ", ".join(sorted(restored)))
     draft = polish(draft)
     return it, draft
+
+
+def reattach_footnotes(draft, old_defs, old_refs, old_body=""):
+    """Возвращает потерянные ссылки на источники в текст — кодом, а не просьбой к модели.
+
+    Явное требование в промпте не помогло: 12 черновиков из 12 всё равно теряли ссылки.
+    Поэтому ищем сами: берём значимые слова из определения сноски и ставим ссылку в конец
+    того абзаца, который сильнее всего с ними пересекается. Не нашли подходящего — значит
+    утверждения в тексте больше нет, и ссылку возвращать некуда.
+    """
+    _, have = _footnotes(draft)
+    lost = old_refs - have
+    if not lost:
+        return draft, set()
+
+    paras = [p for p in draft.split("\n\n")]
+    ok_idx = [i for i, p in enumerate(paras)
+              if not p.lstrip().startswith("[^") and not p.strip().startswith("$$")
+              and len(p.strip()) > 80]
+    if not ok_idx:
+        return draft, set()
+
+    # Ориентир — СТАРЫЙ абзац, который ссылался на источник, а не описание источника.
+    # Словарное совпадение здесь ошибается: у мамонтов ссылка на радиоуглеродный анализ
+    # встала на утверждение про уран-свинцовый метод — общие слова «датирование», «возраст»
+    # совпали, а смысл нет. Сравниваем смыслы эмбеддингами.
+    anchors = {}
+    for key in sorted(lost):
+        m = re.search(rf"[^\n]*\[\^{re.escape(key)}\](?!:)[^\n]*", old_body or "")
+        if m:
+            anchors[key] = m.group(0)
+
+    if not anchors:
+        return draft, set()
+
+    try:
+        from retrieval.embeddings import EmbeddingsClient, cosine
+        client = EmbeddingsClient(auth_key=os.environ["GIGACHAT_AUTH_KEY"],
+                                  scope=os.environ.get("GIGACHAT_SCOPE", "GIGACHAT_API_CORP"))
+        keys = list(anchors)
+        vecs = client.embed([anchors[k] for k in keys] + [paras[i] for i in ok_idx])
+    except Exception:
+        return draft, set()                   # без эмбеддингов не гадаем
+
+    restored = set()
+    av, pv = vecs[:len(keys)], vecs[len(keys):]
+    for key, a in zip(keys, av):
+        scored = sorted(((cosine(a, v), i) for v, i in zip(pv, ok_idx)), reverse=True)
+        score, idx = scored[0]
+        # Порог намеренно высокий. Пробовал 0.72 — радиоуглеродная ссылка встала на
+        # утверждение про уран-свинцовый метод: для эмбеддингов это близкие темы,
+        # а для читателя — ссылка на источник, который ничего не подтверждает.
+        # Привязка источника к утверждению остаётся редакторским решением.
+        if score < 0.88:
+            continue
+        paras[idx] = re.sub(r"([.!?])(\s*)$", rf"[^{key}]\1\2", paras[idx].rstrip(), count=1)
+        restored.add(key)
+    return "\n\n".join(paras), restored
 
 
 def polish(text: str) -> str:
@@ -170,6 +248,12 @@ def polish(text: str) -> str:
     text = re.sub(r'"([^"\n]{1,80})"', r"«\1»", text)
     # дефис как тире между словами → длинное тире; маркер списка в начале строки не трогаем
     text = re.sub(r"(?<!^)(?<!\n)(\S)\s+-\s+(\S)", r"\1 — \2", text, flags=re.M)
+    # среднее тире – модель ставит вместо длинного —
+    text = re.sub(r"(?<=[а-яё])\s+–\s+", " — ", text)
+    # ****жирный**** — модель дублирует маркеры, в вёрстке остаются лишние звёздочки
+    text = re.sub(r"\*{3,}", "**", text)
+    # голые --- как разделитель: в наших сюжетах горизонтальных линеек нет
+    text = re.sub(r"(?m)^\s*-{3,}\s*$\n?", "", text)
 
     for i, frag in enumerate(guard):          # возвращаем формулы как были
         text = text.replace(f"\x00{i}\x00", frag)
@@ -204,7 +288,11 @@ def write_draft(it, slug, new_deep):
 def _footnotes(text):
     """({метка: определение}, {метки-ссылки})."""
     defs = dict(re.findall(r"^\[\^([^\]]+)\]:\s*(.+)$", text, re.M))
-    refs = set(re.findall(r"\[\^([^\]]+)\](?!:)", text))
+    # Определение — только в начале строки. Ссылка в середине текста может стоять
+    # перед двоеточием (например, перед таблицей) — это по-прежнему ссылка.
+    refs = set(re.findall(r"(?<!\n)\[\^([^\]]+)\]", text)) | \
+           set(re.findall(r"(?m)(?<=.)\[\^([^\]]+)\]", text))
+    refs -= {k for k in defs if not re.search(r"(?m)[^\n]\[\^%s\]" % re.escape(k), text)}
     return defs, refs
 
 

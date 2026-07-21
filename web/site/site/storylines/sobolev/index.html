@@ -148,7 +148,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
+    
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Классический анализ молча считает мир гладким: производную берут там, где функция плавная, без изломов и скачков. Но настоящий мир щербат. Землетрясение, ударная волна, фронт горения, точечный заряд — это <strong>разрывы</strong>, в точке которых обычной производной просто нет. А отмахнуться от них нельзя: именно разрывные решения волнового уравнения позволяют читать недра Земли по сейсмическим волнам. Уйти от гладкости было не прихотью, а физической необходимостью.</p>
@@ -200,7 +200,7 @@ $$</p>
 <script defer src="/assets/site-bar/bot.js"></script>
 
 <script>
-var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
+var TROPA_PDFS = [null, null, null];
 var TROPA_DECKS = ["Как продифференцировать то, у чего нет производной?", "Как переложить производную с разрывной функции на гладкую?", null];
 
 (function(){

@@ -148,7 +148,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
+    
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Посмотри на мост перед тобой. Он сложен из десятка с лишним брёвен, и ни одно из них не прибито, не связано и не склеено с соседями, и тем не менее конструкция надёжно держит вес взрослого человека. Разберём, как это устроено.</p>
@@ -160,7 +160,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 <hr />
 <ol>
 <li id="fn:codex">
-<p>Самонесущий мост да Винчи (Атлантический кодекс, листы 69ar и 71v) держится только сжатием от собственного веса и трением между брёвнами, без гвоздей и верёвок (<a href="https://en.wikipedia.org/wiki/Da_Vinci's_self_supporting_bridge">Wikipedia, «Da Vinci's self supporting bridge»</a>).&#160;<a class="footnote-backref" href="#fnref:codex" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+<p>Самонесущий мост да Винчи (Атлантический кодекс, листы 69ar и 71v) держится только сжатием от собственного веса и трением между брёвнами, без гвоздей и верёвок (L. A. Geddes, «Drawing Bridges: Leonardo da Vinci on Mastering Nature», in: Illuminating Leonardo, <a href="https://doi.org/10.1163/9789004304130_022">Brill, 2016, 285–299</a>).&#160;<a class="footnote-backref" href="#fnref:codex" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div></div>
@@ -207,7 +207,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 <script defer src="/assets/site-bar/bot.js"></script>
 
 <script>
-var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
+var TROPA_PDFS = [null, null, null];
 var TROPA_DECKS = ["Как брёвна держат человека, если ни одно не скреплено с другими?", "Почему длинный мост из тех же брёвен развалится?", null];
 
 (function(){

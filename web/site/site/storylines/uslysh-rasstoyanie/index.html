@@ -148,7 +148,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
+    
   </div>
   
   <div class="body lvl" data-i="0" style=""><figure class="fig"><img src="/assets/figures/uslysh-rasstoyanie-1.svg" alt="Звук идёт до преграды и возвращается эхом: путь туда и обратно вдвое больше расстояния."><figcaption>Звук идёт до преграды и возвращается эхом: путь туда и обратно вдвое больше расстояния.</figcaption></figure>
@@ -177,7 +177,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 <p>Порог различения отдельного эха для речи и коротких сигналов наступает при задержке примерно 50 мс; при меньших задержках работает закон первого фронта (эффект предшествования), и звуки сливаются. <a href="https://en.wikipedia.org/wiki/Precedence_effect">Precedence effect</a>&#160;<a class="footnote-backref" href="#fnref:echo" title="Jump back to footnote 2 in the text">&#8617;</a></p>
 </li>
 <li id="fn:mersenne">
-<p>Марен Мерсенн (1588–1648) опубликовал измерения скорости звука около 1630 года: метод вспышки выстрела дал ≈ 448 м/с, метод эха — ≈ 315 м/с. <a href="https://en.wikipedia.org/wiki/Speed_of_sound">Speed of sound</a>&#160;<a class="footnote-backref" href="#fnref:mersenne" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+<p>Марен Мерсенн (1588–1648) опубликовал измерения скорости звука около 1630 года: метод вспышки выстрела дал ≈ 448 м/с, метод эха — ≈ 315 м/с.&#160;<a class="footnote-backref" href="#fnref:mersenne" title="Jump back to footnote 3 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div></div>
@@ -235,7 +235,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 <script defer src="/assets/site-bar/bot.js"></script>
 
 <script>
-var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
+var TROPA_PDFS = [null, null, null];
 var TROPA_DECKS = ["Хлопни в ладоши — эхо вернётся через секунду. Это линейка на 170 метров. Как?", "Откуда из задержки берутся метры?", "Скорость звука мы взяли как $340$ м/с — но насколько она постоянна?"];
 
 (function(){

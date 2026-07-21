@@ -148,7 +148,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
+    
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Вытяни руку с поднятым пальцем и смотри на него поочерёдно то одним глазом, то другим. Палец прыгает на фоне дальней стены — а если поднести его ближе, прыгает сильнее. Это <strong>параллакс</strong>: чем ближе предмет, тем заметнее он смещается, когда меняешь точку зрения. По величине смещения можно вычислить расстояние, ни на шаг не приблизившись.</p>
@@ -159,7 +159,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 <hr />
 <ol>
 <li id="fn:bessel">
-<p>Фридрих Бессель (1784–1846) в 1838 г. измерил годичный параллакс звезды 61 Лебедя (≈0,31″) — первое надёжное определение расстояния до звезды (<a href="https://en.wikipedia.org/wiki/Friedrich_Bessel">Wikipedia, «Friedrich Bessel»</a>; <a href="https://en.wikipedia.org/wiki/61_Cygni">«61 Cygni»</a>).&#160;<a class="footnote-backref" href="#fnref:bessel" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+<p>Фридрих Бессель (1784–1846) в 1838 г. измерил годичный параллакс звезды 61 Лебедя (≈0,31″) — первое надёжное определение расстояния до звезды (F. W. Bessel, «Bestimmung der Entfernung des 61sten Sterns des Schwans», <a href="https://doi.org/10.1002/asna.18390160502">Astronomische Nachrichten, Bd. 16, 1838, Sp. 65–96</a>).&#160;<a class="footnote-backref" href="#fnref:bessel" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div></div>
@@ -211,7 +211,7 @@ $$</p>
 <hr />
 <ol>
 <li id="fn:bessel">
-<p>Фридрих Бессель (1784–1846) в 1838 г. измерил годичный параллакс звезды 61 Лебедя (≈0,31″) — первое надёжное определение расстояния до звезды (<a href="https://en.wikipedia.org/wiki/Friedrich_Bessel">Wikipedia, «Friedrich Bessel»</a>; <a href="https://en.wikipedia.org/wiki/61_Cygni">«61 Cygni»</a>).&#160;<a class="footnote-backref" href="#fnref:bessel" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+<p>Фридрих Бессель (1784–1846) в 1838 г. измерил годичный параллакс звезды 61 Лебедя (≈0,31″) — первое надёжное определение расстояния до звезды (F. W. Bessel, «Bestimmung der Entfernung des 61sten Sterns des Schwans», <a href="https://doi.org/10.1002/asna.18390160502">Astronomische Nachrichten, Bd. 16, 1838, Sp. 65–96</a>).&#160;<a class="footnote-backref" href="#fnref:bessel" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
 <li id="fn:ell">
 <p>Эллипсоид Бесселя (1841): $a=6\,377\,397$ м, $b=6\,356\,079$ м, сжатие $f\approx 1/299$; оставался опорным в геодезии и картографии более века (<a href="https://en.wikipedia.org/wiki/Bessel_ellipsoid">Wikipedia, «Bessel ellipsoid»</a>).&#160;<a class="footnote-backref" href="#fnref:ell" title="Jump back to footnote 2 in the text">&#8617;</a></p>
@@ -229,7 +229,7 @@ $$</p>
 <script defer src="/assets/site-bar/bot.js"></script>
 
 <script>
-var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
+var TROPA_PDFS = [null, null, null];
 var TROPA_DECKS = ["Как измерить расстояние до звезды, не отправив к ней ничего?", "Как из крошечного угла рождается огромное расстояние?", null];
 
 (function(){
