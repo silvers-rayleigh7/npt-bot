@@ -237,14 +237,8 @@
         out.innerHTML = md(lastMd) + srcHtml +
           '<div class="t-actions">' +
             '<a class="t-dl t-pdf" id="t-pdf">📄 Скачать методичку (PDF)</a>' +
-            '<a class="t-dl" id="t-dl">⬇ Текст (.txt)</a>' +
           '</div>';
         out.classList.add('show');
-        document.getElementById('t-dl').onclick = function(){
-          var blob = new Blob([lastMd], {type:'text/plain;charset=utf-8'});
-          var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-          a.download = 'urok-tropa.txt'; a.click();
-        };
         var pdfBtn = document.getElementById('t-pdf');
         pdfBtn.onclick = function(){
           if(pdfBtn.dataset.busy) return;
