@@ -245,10 +245,6 @@
       </div>
       <div class="b-fields">
         <div class="b-field">
-          <label for="b-region">Местность</label>
-          <select class="field" id="b-region"><option value="">Любая местность</option></select>
-        </div>
-        <div class="b-field">
           <label for="b-field-sel">Дисциплина</label>
           <select class="field" id="b-field-sel"><option value="">Любая дисциплина</option></select>
         </div>
@@ -316,7 +312,7 @@
             {% for t in s.tags[:2] %}<span class="pcard-tag">{{ t }}</span>{% endfor %}
           </div>
           <h4>{{ s.title }}</h4>
-          {% if s.region %}<div class="pcard-meta">{{ s.region }}</div>{% endif %}
+          {% if s.tags %}<div class="pcard-meta">{{ s.tags|join(' · ') }}</div>{% endif %}
         </div>
       </a>
       {% endfor %}

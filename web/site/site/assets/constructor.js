@@ -23,11 +23,10 @@
   var root = document.getElementById('builder');
   if (!root) return;
 
-  var state = { track: 'place', region: '', field: '', minutes: 60 };
+  var state = { track: 'place', field: '', minutes: 60 };
   var bank = [];
 
   var elResult = document.getElementById('b-result');
-  var elRegion = document.getElementById('b-region');
   var elField = document.getElementById('b-field-sel');
   var elTime = document.getElementById('b-time');
   var elRun = document.getElementById('b-run');
@@ -45,14 +44,12 @@
     });
 
   function fillOptions() {
-    var regions = {}, fields = {};
+    var fields = {};
     bank.forEach(function (s) {
-      if (s.region) regions[s.region] = (regions[s.region] || 0) + 1;
       (s.tags || []).forEach(function (t) { fields[t] = (fields[t] || 0) + 1; });
     });
-    // В списки попадает только то, что реально есть в банке, с количеством —
+    // В список попадает только то, что реально есть в банке, с количеством —
     // человек сразу видит, где материала много, а где один сюжет.
-    add(elRegion, regions, 'Любая местность');
     add(elField, fields, 'Любая дисциплина', 3);
   }
 
@@ -71,9 +68,7 @@
       (state.minutes + MIN_BETWEEN) / (MIN_AT_POINT + MIN_BETWEEN)));
 
     var matched = bank.filter(function (s) {
-      if (state.region && s.region !== state.region) return false;
-      if (state.field && (s.tags || []).indexOf(state.field) < 0) return false;
-      return true;
+      return !state.field || (s.tags || []).indexOf(state.field) >= 0;
     });
 
     // Точки с привязкой к местности идут первыми: по ним маршрут можно пройти
@@ -124,7 +119,6 @@
           '<a href="/storylines/' + s.slug + '/">' + esc(s.title) + '</a>' +
           '<span class="b-point-meta">' +
             (s.tags || []).slice(0, 2).join(' · ') +
-            (s.region ? ' · ' + esc(s.region) : '') +
             (s.geo ? '' : ' · без точки на карте') +
           '</span>' +
         '</span></li>';
@@ -171,7 +165,6 @@
     root.style.setProperty('--accent', TRACKS[state.track].color);
   });
 
-  elRegion.addEventListener('change', function () { state.region = this.value; });
   elField.addEventListener('change', function () { state.field = this.value; });
   elTime.addEventListener('change', function () { state.minutes = parseInt(this.value, 10); });
   elRun.addEventListener('click', render);

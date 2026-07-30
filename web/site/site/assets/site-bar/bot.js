@@ -69,6 +69,32 @@
     return out.join("").replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
   }
 
+  // На что опирался ответ: свои сюжеты и доверенные научпоп-источники.
+  // Показываем ссылками — читателю есть куда пойти проверить и почитать дальше.
+  function renderSources(msg, list) {
+    var box = document.createElement("div");
+    box.className = "sb-src";
+    var head = document.createElement("div");
+    head.className = "sb-src-h";
+    head.textContent = "Опирается на:";
+    box.appendChild(head);
+    list.slice(0, 5).forEach(function (s) {
+      var title = (s && s.title) || "";
+      if (!title) return;
+      var el;
+      if (s.url) {
+        el = document.createElement("a");
+        el.href = s.url; el.target = "_blank"; el.rel = "noopener";
+      } else {
+        el = document.createElement("span");
+      }
+      el.className = "sb-src-i";
+      el.textContent = title;
+      box.appendChild(el);
+    });
+    if (box.children.length > 1) msg.appendChild(box);
+  }
+
   // ---- Построение DOM виджета ---------------------------------------------
   var SVG = {
     chat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 0 1-.9-3.8 8.38 8.38 0 0 1 8.5-8.5 8.5 8.5 0 0 1 8.5 8.5z"/></svg>',
@@ -179,7 +205,8 @@
       .then(function (d) {
         typing.remove();
         var a = (d && d.answer) || "Извините, ответа не получилось. Попробуйте ещё раз.";
-        addMsg("bot", a);
+        var msg = addMsg("bot", a);
+        if (d && d.sources && d.sources.length) renderSources(msg, d.sources);
         if (d && d.nearby && d.nearby.length) renderNearby(d.nearby);
         history.push({ role: "user", content: q });
         history.push({ role: "assistant", content: a });

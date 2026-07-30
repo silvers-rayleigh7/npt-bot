@@ -56,15 +56,28 @@ LEAD_APPLICATIONS = Path(os.environ.get("LEAD_APPLICATIONS_PATH", ROOT / "lead_a
 TG_NOTIFY_TOKEN = os.environ.get("TG_NOTIFY_TOKEN", "")
 TG_NOTIFY_CHAT = os.environ.get("TG_NOTIFY_CHAT", "")
 
+# Заявки с сайта идут ОТДЕЛЬНЫМ ботом, не тем, что обслуживает посетителей тропы:
+# личная переписка владельца не должна смешиваться с ботом, которым пользуются все.
+# Пока эти переменные не заданы, заявки только пишутся в файл и никуда не уходят —
+# в общий бот они не попадают ни при каких условиях.
+LEAD_TG_TOKEN = os.environ.get("LEAD_TG_TOKEN", "")
+LEAD_TG_CHAT = os.environ.get("LEAD_TG_CHAT", "")
 
-def _notify_telegram(text: str) -> bool:
-    """Шлёт уведомление админу через Bot API (stateless, без процесса бота)."""
-    if not (TG_NOTIFY_TOKEN and TG_NOTIFY_CHAT):
+
+def _notify_telegram(text: str, *, lead: bool = False) -> bool:
+    """Шлёт уведомление через Bot API (stateless, без процесса бота).
+
+    lead=True — заявки с сайта: только через отдельный бот. Если он не настроен,
+    молча не отправляем, но заявка уже сохранена в файл и не теряется.
+    """
+    token = LEAD_TG_TOKEN if lead else TG_NOTIFY_TOKEN
+    chat = LEAD_TG_CHAT if lead else TG_NOTIFY_CHAT
+    if not (token and chat):
         return False
     try:
         r = requests.post(
-            f"https://api.telegram.org/bot{TG_NOTIFY_TOKEN}/sendMessage",
-            json={"chat_id": TG_NOTIFY_CHAT, "text": text,
+            f"https://api.telegram.org/bot{token}/sendMessage",
+            json={"chat_id": chat, "text": text,
                   "parse_mode": "HTML", "disable_web_page_preview": True},
             timeout=10,
         )
@@ -98,6 +111,7 @@ class ChatIn(BaseModel):
 class ChatOut(BaseModel):
     answer: str
     provider: str
+    sources: list = []      # [{title, url}] — на что опирался ответ
 
 
 @app.get("/api/health")
@@ -105,12 +119,47 @@ def health():
     return {"ok": True, "providers": [p.name for p in _PROVIDERS]}
 
 
+def _chat_sources(question: str):
+    """Опора под ответ чата: сюжеты, школьная программа и доверенные веб-источники.
+
+    Возвращает (блок для промпта, список источников). Любая ошибка — пустые
+    значения: ответ важнее ссылок, чат не должен падать из-за поиска.
+    """
+    if not (RETRIEVAL_ENABLED and _RETRIEVERS and RetrievalQuery):
+        return "", []
+    try:
+        from retrieval import collect_snippets
+        q = RetrievalQuery(topic=question, text=question)
+        snippets = collect_snippets(q, retrievers=_RETRIEVERS)[:5]
+        if not snippets:
+            return "", []
+        lines, refs, seen = [], [], set()
+        for sn in snippets:
+            title = (getattr(sn, "title", "") or "").strip()
+            url = (getattr(sn, "url", "") or "").strip()
+            text = (getattr(sn, "text", "") or "").strip()
+            if url.startswith("/"):
+                url = SITE_URL.rstrip("/") + url
+            if not title or title in seen:
+                continue
+            seen.add(title)
+            lines.append(f"- {title}: {text[:400]}")
+            refs.append({"title": title, "url": url})
+        block = ("\n\nОпора из проверенных источников (используй, если по делу):\n"
+                 + "\n".join(lines)) if lines else ""
+        return block, refs
+    except Exception:
+        return "", []
+
+
 @app.post("/api/chat", response_model=ChatOut)
 def chat(inp: ChatIn):
     ctx = inp.page_context.strip()[:MAX_CONTEXT_CHARS]
+    support, sources = _chat_sources(inp.question.strip())
     user_block = (
         (f"Текст сюжета, который читатель сейчас открыл:\n{ctx}\n\n" if ctx else "")
         + f"Вопрос читателя: {inp.question.strip()}"
+        + support
     )
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
     for m in inp.history[-MAX_HISTORY:]:
@@ -124,7 +173,7 @@ def chat(inp: ChatIn):
             max_tokens=int(os.environ.get("CHAT_MAX_TOKENS", "1600")),
             temperature=float(os.environ.get("TEMPERATURE", "0.4")),
         )
-        return ChatOut(answer=answer, provider=provider)
+        return ChatOut(answer=answer, provider=provider, sources=sources)
     except ProviderError as e:
         return ChatOut(
             answer="Извините, сейчас не получилось ответить. Попробуйте ещё раз чуть позже.",
@@ -439,7 +488,8 @@ def guide_register(inp: GuideIn):
         f"<b>Аттестация:</b> {esc(rec['attestation'])}\n"
         f"<b>Темы:</b> {esc(rec['topics'])}\n"
         f"<b>Опыт:</b> {esc(rec['experience'])}\n"
-        f"<b>Ссылка:</b> {esc(rec['link'])}"
+        f"<b>Ссылка:</b> {esc(rec['link'])}",
+        lead=True,
     )
     return GuideOut(ok=True, message="Спасибо! Заявка отправлена — свяжемся по указанному контакту.")
 
@@ -491,6 +541,7 @@ def lead(inp: LeadIn):
         f"<b>Контакт:</b> {esc(contact)}\n"
         f"<b>Кто:</b> {esc(rec['role'])}\n"
         f"<b>Площадка:</b> {esc(rec['place'])}\n"
-        f"<b>Комментарий:</b> {esc(rec['comment'])}"
+        f"<b>Комментарий:</b> {esc(rec['comment'])}",
+        lead=True,
     )
     return LeadOut(ok=True, message="Заявка отправлена — свяжемся по указанному контакту.")

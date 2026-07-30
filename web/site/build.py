@@ -627,7 +627,7 @@ def build():
     # а не по выдуманному списку. Кладём рядом с ассетами, читается на клиенте.
     index = [{
         "slug": s["slug"], "title": s["title"], "tags": s.get("tags") or [],
-        "region": s.get("region") or "", "geo": bool(s.get("geo")),
+        "geo": bool(s.get("geo")),
         "routes": s.get("routes") or [],
     } for s in storylines]
     with open(os.path.join(OUT, "assets", "storylines-index.json"), "w") as f:

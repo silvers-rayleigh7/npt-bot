@@ -9,16 +9,9 @@
 .sl-filters{margin:22px 0 4px;display:flex;flex-direction:column;gap:8px}
 .sl-frow{display:flex;flex-wrap:wrap;align-items:center;gap:7px}
 .sl-flabel{font-size:0.8rem;color:var(--tm);min-width:64px}
-.sl-chip{font-size:0.8rem;padding:5px 12px;border:1px solid var(--sand,#DBD4C7);border-radius:999px;
-  background:#fff;color:var(--tm);cursor:pointer;transition:background .12s,color .12s,border-color .12s;user-select:none}
-.sl-chip:hover{border-color:var(--olive)}
-.sl-chip.active{background:var(--olive);color:#fff;border-color:var(--olive)}
+.sl-select{max-width:280px;flex:1}
 .sl-count{font-size:0.8rem;color:var(--tm);margin-left:auto}
 /* раскрывающаяся кнопка тем */
-.sl-toggle{display:inline-flex;align-items:center;gap:7px;font-size:0.8rem;padding:5px 13px;
-  border:1px solid var(--sand,#DBD4C7);border-radius:999px;background:#fff;color:var(--gd);cursor:pointer;
-  transition:background .12s,border-color .12s}
-.sl-toggle:hover{border-color:var(--olive);background:var(--gl,#F4F2EE)}
 /* Легенда уровней надёжности — отвечает на вопрос «чем это подкреплено» до чтения */
 .sl-verlegend{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:14px 0 2px;font-size:0.78rem}
 .sl-vl-title{color:var(--tm);font-weight:600}
@@ -28,13 +21,6 @@
 .sl-vl-draft{background:#F6EFE4;color:#7A5C2E}
 .sl-vl-note{color:var(--tm);opacity:.85}
 @media(max-width:640px){.sl-vl-note{width:100%}}
-.sl-toggle.open{background:var(--olive);color:#fff;border-color:var(--olive)}
-.sl-toggle .chev{width:13px;height:13px;transition:transform .2s}
-.sl-toggle.open .chev{transform:rotate(180deg)}
-.sl-toggle .picked{font-weight:600}
-.sl-subject-chips{display:flex;flex-wrap:wrap;gap:7px;overflow:hidden;max-height:0;opacity:0;
-  transition:max-height .28s ease,opacity .2s,margin .2s;margin-top:0}
-.sl-subject-chips.open{max-height:600px;opacity:1;margin-top:9px}
 .sl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px;margin:16px 0 60px}
 .sl-card{display:block;position:relative;aspect-ratio:2/1;border:1px solid #D6CFC1;border-radius:14px;overflow:hidden;background:#fff;transition:border-color .15s;text-decoration:none}
 .sl-card:hover{border-color:var(--olive);text-decoration:none}
@@ -45,7 +31,6 @@
 .sl-tags{position:absolute;top:12px;left:12px;right:12px;display:flex;flex-wrap:wrap;gap:5px;z-index:2}
 .sl-tag{font-size:0.68rem;line-height:1;padding:4px 8px;border-radius:6px;background:rgba(255,255,255,.82);
   color:var(--tm);border:1px solid rgba(0,0,0,.06);backdrop-filter:blur(2px)}
-.sl-tag.reg{background:rgba(124,127,106,.9);color:#fff;border-color:transparent}
 .sl-title{position:absolute;left:22px;right:22px;bottom:18px;font-family:var(--serif);font-size:1.75rem;font-weight:600;line-height:1.03;color:var(--ink);transition:color .15s}
 .sl-card:hover .sl-title{color:var(--gd)}
 .sl-empty{color:var(--tm);padding:30px 0 60px}
@@ -71,27 +56,20 @@
   </div>
 
   <div class="sl-filters rise" id="sl-filters">
-    <div class="sl-frow" data-group="region"><span class="sl-flabel">Регион</span></div>
     <div class="sl-frow">
-      <span class="sl-flabel">Тема</span>
-      <button class="sl-toggle" id="sl-toggle" type="button" aria-expanded="false" aria-controls="sl-subject-chips">
-        <span id="sl-toggle-txt">Все темы</span>
-        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-      </button>
+      <label class="sl-flabel" for="sl-subject">Тема</label>
+      <select class="field sl-select" id="sl-subject"><option value="">Все темы</option></select>
       <span class="sl-count" id="sl-count"></span>
     </div>
-    <div class="sl-subject-chips" id="sl-subject-chips" data-group="subject"></div>
   </div>
 
   <div class="sl-grid rise" id="sl-grid">
     {% for s in storylines %}
     <a class="sl-card" href="/storylines/{{ s.slug }}/"
-       data-region="{{ s.region or '' }}"
        data-tags="{{ s.tags|join('|') if s.tags else '' }}">
       <div class="sl-ic" style="background-image:url(/{{ s.icon or 'assets/glyphs/mountains.png' }})"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
-        {% if s.region %}<span class="sl-tag reg">{{ s.region }}</span>{% endif %}
         {% for t in (s.tags or [])[:2] %}<span class="sl-tag">{{ t }}</span>{% endfor %}
       </div>
       <span class="sl-title">{{ s.title }}</span>
@@ -105,55 +83,41 @@
 {% block scripts %}
 <script>
 (function(){
-  var grid=document.getElementById('sl-grid');
-  var cards=[].slice.call(grid.querySelectorAll('.sl-card'));
-  var countEl=document.getElementById('sl-count');
-  var emptyEl=document.getElementById('sl-empty');
-  var active={region:null,subject:null};
+  // Фильтр один — по теме. Привязки к региону у сюжетов больше нет:
+  // сюжет живёт темой, а не географией.
+  var grid = document.getElementById('sl-grid');
+  var cards = [].slice.call(grid.querySelectorAll('.sl-card'));
+  var countEl = document.getElementById('sl-count');
+  var emptyEl = document.getElementById('sl-empty');
+  var sel = document.getElementById('sl-subject');
 
-  // собрать уникальные значения
-  function uniq(list){return list.filter(function(v,i){return v&&list.indexOf(v)===i;}).sort(function(a,b){return a.localeCompare(b,'ru');});}
-  var regions=uniq(cards.map(function(c){return c.dataset.region;}));
-  var subjects=uniq([].concat.apply([],cards.map(function(c){return c.dataset.tags?c.dataset.tags.split('|'):[];})));
-
-  function buildRow(group,values){
-    var row=document.querySelector('[data-group="'+group+'"]');
-    function mk(label,val){
-      var b=document.createElement('span');b.className='sl-chip'+(val===null?' active':'');
-      b.textContent=label;b.dataset.val=(val===null?'':val);
-      b.onclick=function(){active[group]=val;
-        row.querySelectorAll('.sl-chip').forEach(function(x){x.classList.remove('active');});
-        b.classList.add('active');
-        if(group==='subject'){var t=document.getElementById('sl-toggle-txt');
-          t.innerHTML=val?('Тема: <span class="picked">'+val+'</span>'):'Все темы';}
-        apply();};
-      row.appendChild(b);
-    }
-    mk('Все',null);values.forEach(function(v){mk(v,v);});
-  }
-  buildRow('region',regions);
-  buildRow('subject',subjects);
-
-  // раскрывающаяся панель тем
-  var toggle=document.getElementById('sl-toggle');
-  var chips=document.getElementById('sl-subject-chips');
-  toggle.onclick=function(){
-    var open=chips.classList.toggle('open');
-    toggle.classList.toggle('open',open);
-    toggle.setAttribute('aria-expanded',open?'true':'false');
-  };
+  var subjects = {};
+  cards.forEach(function(c){
+    (c.dataset.tags ? c.dataset.tags.split('|') : []).forEach(function(t){
+      if (t) subjects[t] = (subjects[t] || 0) + 1;
+    });
+  });
+  // Порядок по числу сюжетов: сверху то, где материала больше.
+  Object.keys(subjects).sort(function(a,b){
+    return subjects[b] - subjects[a] || a.localeCompare(b,'ru');
+  }).forEach(function(t){
+    var o = document.createElement('option');
+    o.value = t; o.textContent = t + ' — ' + subjects[t];
+    sel.appendChild(o);
+  });
 
   function apply(){
-    var shown=0;
+    var val = sel.value, shown = 0;
     cards.forEach(function(c){
-      var okR=!active.region||c.dataset.region===active.region;
-      var tags=c.dataset.tags?c.dataset.tags.split('|'):[];
-      var okS=!active.subject||tags.indexOf(active.subject)>-1;
-      var vis=okR&&okS;c.classList.toggle('hidden',!vis);if(vis)shown++;
+      var tags = c.dataset.tags ? c.dataset.tags.split('|') : [];
+      var vis = !val || tags.indexOf(val) > -1;
+      c.classList.toggle('hidden', !vis);
+      if (vis) shown++;
     });
-    countEl.textContent=shown+' из '+cards.length;
-    emptyEl.classList.toggle('hidden',shown>0);
+    countEl.textContent = shown + ' из ' + cards.length;
+    emptyEl.classList.toggle('hidden', shown > 0);
   }
+  sel.addEventListener('change', apply);
   apply();
 })();
 </script>

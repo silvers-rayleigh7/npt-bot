@@ -276,7 +276,7 @@
 }
 .b-tab:hover { color: var(--ink); }
 .b-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-.b-fields { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: end; }
+.b-fields { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; align-items: end; }
 .b-field label {
   display: block; margin-bottom: 6px; font-family: var(--mono);
   font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft);
