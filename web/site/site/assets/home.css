@@ -237,3 +237,28 @@
   .stages { grid-template-columns: 1fr; }
   .cta-actions .btn { width: 100%; }
 }
+
+/* ── Форма заявки в финальной секции ── */
+.cta-form { display: grid; gap: 11px; }
+.cta-form .field {
+  background: rgba(251, 248, 241, .07); border-color: rgba(251, 248, 241, .28);
+  color: var(--paper);
+}
+.cta-form .field::placeholder { color: rgba(251, 248, 241, .45); }
+.cta-form .field:focus { border-color: var(--terra); background: rgba(251, 248, 241, .12); }
+.cta-form select.field option { color: var(--ink); }
+.cta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+.cta-consent {
+  display: flex; gap: 10px; align-items: flex-start; margin-top: 2px;
+  font-size: 13px; line-height: 1.45; color: rgba(251, 248, 241, .72);
+}
+.cta-consent input { margin-top: 2px; width: 17px; height: 17px; accent-color: var(--terra); flex-shrink: 0; }
+.cta-consent a { color: rgba(251, 248, 241, .95); text-decoration: underline; }
+.cta-msg { margin-top: 10px; font-size: 14px; display: none; }
+.cta-msg.show { display: block; }
+.cta-msg.ok { color: #9BE0A8; }
+.cta-msg.err { color: #FFB4A2; }
+/* honeypot: поле видно только ботам */
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+@media (max-width: 560px) { .cta-row { grid-template-columns: 1fr; } }

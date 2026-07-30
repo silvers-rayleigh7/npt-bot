@@ -52,6 +52,7 @@ except Exception:
 
 # Заявки гидов копятся в jsonl (append-only), уведомление — в Telegram админу.
 GUIDE_APPLICATIONS = Path(os.environ.get("GUIDE_APPLICATIONS_PATH", ROOT / "guide_applications.jsonl"))
+LEAD_APPLICATIONS = Path(os.environ.get("LEAD_APPLICATIONS_PATH", ROOT / "lead_applications.jsonl"))
 TG_NOTIFY_TOKEN = os.environ.get("TG_NOTIFY_TOKEN", "")
 TG_NOTIFY_CHAT = os.environ.get("TG_NOTIFY_CHAT", "")
 
@@ -441,3 +442,55 @@ def guide_register(inp: GuideIn):
         f"<b>Ссылка:</b> {esc(rec['link'])}"
     )
     return GuideOut(ok=True, message="Спасибо! Заявка отправлена — свяжемся по указанному контакту.")
+
+
+class LeadIn(BaseModel):
+    """Заявка с сайта: территория хочет научную тропу у себя."""
+    name: str = ""          # как обращаться
+    contact: str = ""       # телефон / @telegram / почта
+    role: str = ""          # кто обращается: территория, школа, гид, другое
+    place: str = ""         # регион и площадка
+    comment: str = ""       # что уже есть на площадке
+    consent: bool = False   # согласие на обработку ПД (152-ФЗ)
+    website: str = ""       # honeypot: у людей пусто, боты заполняют
+
+
+class LeadOut(BaseModel):
+    ok: bool
+    message: str
+
+
+@app.post("/api/lead", response_model=LeadOut)
+def lead(inp: LeadIn):
+    """Заявка на тропу. Отдельно от заявок гидов: другой файл и другой заголовок
+    в уведомлении, чтобы в телеграме их не приходилось разбирать глазами."""
+    if inp.website.strip():                    # honeypot — тихо принимаем и игнорируем
+        return LeadOut(ok=True, message="Заявка отправлена.")
+    name, contact = inp.name.strip(), inp.contact.strip()
+    if not name or not contact:
+        return LeadOut(ok=False, message="Укажите, пожалуйста, имя и контакт.")
+    if not inp.consent:
+        return LeadOut(ok=False, message="Нужно согласие на обработку персональных данных.")
+
+    rec = {
+        "ts": datetime.now(timezone.utc).isoformat(),
+        "name": name, "contact": contact, "role": inp.role.strip(),
+        "place": inp.place.strip(), "comment": inp.comment.strip(),
+    }
+    try:
+        LEAD_APPLICATIONS.parent.mkdir(parents=True, exist_ok=True)
+        with LEAD_APPLICATIONS.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    except Exception:
+        return LeadOut(ok=False, message="Не удалось сохранить заявку. Попробуйте позже.")
+
+    esc = lambda s: _html.escape(s or "—")
+    _notify_telegram(
+        "🌿 <b>Заявка на научную тропу</b>\n"
+        f"<b>Имя:</b> {esc(name)}\n"
+        f"<b>Контакт:</b> {esc(contact)}\n"
+        f"<b>Кто:</b> {esc(rec['role'])}\n"
+        f"<b>Площадка:</b> {esc(rec['place'])}\n"
+        f"<b>Комментарий:</b> {esc(rec['comment'])}"
+    )
+    return LeadOut(ok=True, message="Заявка отправлена — свяжемся по указанному контакту.")

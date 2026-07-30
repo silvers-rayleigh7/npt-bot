@@ -1,5 +1,46 @@
 {% extends "base.html" %}
 {% block title %}{{ site.title }} — научный аудиогид{% endblock %}
+
+{% block scripts %}
+<script>
+(function(){
+  // Заявка уходит на наш бэкенд и падает в телеграм отдельным типом от заявок гидов.
+  var API = (document.body.dataset.botApi
+    ? document.body.dataset.botApi.replace('/chat', '/lead') : '/api/lead');
+  var form = document.getElementById('leadForm');
+  if (!form) return;
+  var btn = document.getElementById('lead-submit');
+  var msg = document.getElementById('lead-msg');
+  var val = function(id){ return (document.getElementById(id).value || '').trim(); };
+  function show(kind, text){ msg.className = 'cta-msg show ' + kind; msg.textContent = text; }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (!val('lead-name') || !val('lead-contact')) {
+      return show('err', 'Укажите имя и контакт — иначе мы не сможем ответить.');
+    }
+    if (!document.getElementById('lead-consent').checked) {
+      return show('err', 'Нужно согласие на обработку персональных данных.');
+    }
+    btn.disabled = true; show('', 'Отправляю…');
+    fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
+      name: val('lead-name'), contact: val('lead-contact'), role: val('lead-role'),
+      place: val('lead-place'), comment: val('lead-comment'),
+      consent: true, website: val('lead-website')
+    })})
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (d.ok) { form.reset(); show('ok', d.message || 'Заявка отправлена.'); }
+        else { show('err', d.message || 'Не удалось отправить.'); btn.disabled = false; }
+      })
+      .catch(function(){
+        show('err', 'Не получилось связаться с сервером. Попробуйте ещё раз.');
+        btn.disabled = false;
+      });
+  });
+})();
+</script>
+{% endblock %}
 {% block head %}
 <link rel="stylesheet" href="/assets/home.css?v={{ asset_v }}">
 {% endblock %}
@@ -308,11 +349,31 @@
         <p>Расскажите про площадку: где она, кто туда приходит и что там уже есть.
            Вернёмся с предварительной ниткой маршрута и оценкой сроков.</p>
       </div>
-      <div class="cta-actions">
-        <a href="{{ site.links.telegram }}" class="btn btn-primary">Написать в телеграм</a>
-        <a href="/routes/" class="btn btn-ghost">Посмотреть готовый маршрут</a>
-        <p class="cta-note">Отвечаем в течение дня</p>
-      </div>
+      <form class="cta-form" id="leadForm" novalidate>
+        <div class="cta-row">
+          <input class="field" id="lead-name" placeholder="Как вас зовут" autocomplete="name" required>
+          <input class="field" id="lead-contact" placeholder="Телефон, почта или @телеграм"
+                 autocomplete="email" required>
+        </div>
+        <div class="cta-row">
+          <select class="field" id="lead-role">
+            <option value="">Кто вы</option>
+            <option>Территория, парк, музей</option>
+            <option>Школа или колледж</option>
+            <option>Гид, экскурсовод</option>
+            <option>Другое</option>
+          </select>
+          <input class="field" id="lead-place" placeholder="Регион и площадка">
+        </div>
+        <input class="field" id="lead-comment" placeholder="Что уже есть на площадке (необязательно)">
+        <div class="hp"><label>Не заполняйте<input id="lead-website" tabindex="-1" autocomplete="off"></label></div>
+        <label class="cta-consent">
+          <input type="checkbox" id="lead-consent">
+          <span>Согласен на обработку персональных данных</span>
+        </label>
+        <button class="btn btn-primary" id="lead-submit" type="submit">Отправить заявку</button>
+        <p class="cta-msg" id="lead-msg"></p>
+      </form>
     </div>
   </div>
 </section>
