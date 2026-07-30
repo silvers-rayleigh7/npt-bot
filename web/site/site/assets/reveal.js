@@ -1,0 +1,36 @@
+/* Появление блоков при скролле.
+
+   Элементам с классом .rev проставляется .in, когда они попадают в кадр.
+   Наблюдение снимается сразу после срабатывания: блок появляется один раз,
+   при обратном скролле не мигает.
+
+   initReveal() вызывается повторно после динамической отрисовки (фильтры
+   библиотеки, результат конструктора) — новые узлы тоже должны появиться. */
+(function () {
+  'use strict';
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function initReveal(root) {
+    var nodes = (root || document).querySelectorAll('.rev:not(.in)');
+    if (!nodes.length) return;
+
+    // Нет поддержки наблюдателя или анимации отключены системно —
+    // показываем сразу, без промежуточного невидимого состояния.
+    if (reduce || !('IntersectionObserver' in window)) {
+      nodes.forEach(function (n) { n.classList.add('in'); });
+      return;
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+
+    nodes.forEach(function (n) { io.observe(n); });
+  }
+
+  window.initReveal = initReveal;
+  document.addEventListener('DOMContentLoaded', function () { initReveal(); });
+})();

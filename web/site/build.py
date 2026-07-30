@@ -593,7 +593,9 @@ def build():
     # Версия ассетов виджета: без неё правки bot.js/bot.css не доезжают до тех,
     # у кого файл уже в кэше браузера (Cache-Control сервер не отдаёт).
     env.globals["asset_v"] = _assets_version(
-        os.path.join(SITE_ASSETS, "bot.js"), os.path.join(SITE_ASSETS, "bot.css")
+        os.path.join(SITE_ASSETS, "bot.js"), os.path.join(SITE_ASSETS, "bot.css"),
+        os.path.join(OUT, "assets", "tokens.css"), os.path.join(OUT, "assets", "reveal.js"),
+        os.path.join(OUT, "assets", "fonts", "fonts.css"),
     )
     storylines = load_storylines()
     by_slug = {s["slug"]: s for s in storylines}

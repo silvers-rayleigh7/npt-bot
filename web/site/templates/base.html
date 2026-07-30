@@ -15,6 +15,12 @@
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/{{ site.analytics.yandex_id }}" style="position:absolute;left:-9999px" alt=""></div></noscript>
 {% endif %}
+<!-- Дизайн-система: шрифты локально + токены. Подключается ДО постраничных
+     стилей — пока страница не переверстана, её собственные переменные
+     перекрывают одноимённые здесь, и вид не меняется. -->
+<link rel="stylesheet" href="/assets/fonts/fonts.css?v={{ asset_v }}">
+<link rel="stylesheet" href="/assets/tokens.css?v={{ asset_v }}">
+<script defer src="/assets/reveal.js?v={{ asset_v }}"></script>
 <link rel="stylesheet" href="/assets/site-bar/bot.css?v={{ asset_v }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>

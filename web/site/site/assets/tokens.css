@@ -1,0 +1,125 @@
+/* ============================================================================
+   Дизайн-система «Тропа» — по утверждённому эталону «Научные тропы».
+   Значения перенесены точно; менять их можно только вместе с эталоном.
+
+   Подключается ДО постраничных стилей: пока страницы не переверстаны, их
+   собственные переменные перекрывают одноимённые здесь, и вид не «плывёт».
+   По мере перевода страниц старые объявления удаляются.
+   ========================================================================= */
+
+:root {
+  /* — Поверхности — */
+  --paper: #FBF8F1;   /* фон страницы */
+  --milk:  #F6F1E6;   /* подложки: табы, чипы, пузыри чата */
+  --sand:  #EFE7D3;   /* фон выделенных секций */
+  --mist:  #EAF1F5;   /* «небо», фоны иконок */
+  --meadow:#EAF2E1;   /* фон секции «как это работает» */
+  --card:  #FFFFFF;
+
+  /* — Текст и линии — */
+  --ink:      #22333C;
+  --ink-soft: #5B6C75;
+  --line:     #DCD4C4;
+
+  /* — Акценты: пара «базовый / насыщенный» на каждый — */
+  --sky:    #2E9BD6;  --sky-600:    #1B7CB4;
+  --grass:  #4EA75D;  --grass-600:  #337E45;
+  --terra:  #E9863B;  --terra-600:  #C05F14;
+  --violet: #7A6FE0;  --violet-600: #5A4EC9;
+  --teal:   #23A79A;  --teal-600:   #0E7F74;
+  --sun:    #F6BB2E;
+  --coral:  #F26B57;  --coral-600:  #D94F37;
+
+  /* Текущий акцент — переключается по контексту (например, по типу аудитории) */
+  --accent:     var(--terra);
+  --accent-600: var(--terra-600);
+
+  /* — Тени — */
+  --sh-sm: 0 2px 10px rgba(34, 51, 60, .06);
+  --sh-md: 0 12px 32px rgba(34, 51, 60, .10);
+  --sh-lg: 0 24px 60px rgba(34, 51, 60, .14);
+
+  /* — Шрифты — */
+  --disp: 'Unbounded', 'Arial Black', system-ui, sans-serif;
+  --body: 'Golos Text', 'Segoe UI', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'Courier New', monospace;
+
+  /* Единый easing на все переходы и анимации */
+  --ease: cubic-bezier(.22, 1, .36, 1);
+}
+
+/* ── Типографика: размеры текучие, чтобы не плодить брейкпоинты ── */
+.h1     { font: 500 clamp(32px, 4.6vw, 56px)/1.09 var(--disp); }
+.h1-sub { font: 500 clamp(21px, 2.6vw, 30px)/1.24 var(--disp); }
+.h2     { font: 500 clamp(24px, 3.2vw, 38px)/1.14 var(--disp); }
+.h3     { font: 500 clamp(19px, 2.2vw, 25px)/1.2  var(--disp); }
+
+.lead { font-size: 19px; line-height: 1.6; color: var(--ink-soft); max-width: 58ch; }
+.mono { font-family: var(--mono); font-size: 14px; color: var(--ink-soft); }
+
+/* Надзаголовок-метка с точкой-маркером */
+.eyebrow {
+  font-family: var(--mono); font-size: 12.5px; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--ink-soft);
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.eyebrow::before {
+  content: ''; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent); flex-shrink: 0;
+}
+
+/* ── Кнопки ── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 13px 26px; border-radius: 999px; border: 1px solid transparent;
+  font: 500 16px/1 var(--body); cursor: pointer; text-decoration: none;
+  transition: background-color .2s var(--ease), border-color .2s var(--ease),
+              color .2s var(--ease), transform .2s var(--ease);
+}
+.btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-600); text-decoration: none; }
+.btn-ghost { background: transparent; color: var(--ink); border-color: var(--ink); }
+.btn-ghost:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
+
+/* ── Карточка ── */
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 20px;
+  padding: 24px; box-shadow: var(--sh-sm);
+  transition: box-shadow .25s var(--ease), transform .25s var(--ease);
+}
+.card-hover:hover { box-shadow: var(--sh-md); transform: translateY(-2px); }
+
+/* ── Чип ── */
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 999px; background: var(--milk);
+  border: 1px solid var(--line); font-size: 14px; color: var(--ink-soft);
+}
+
+/* ── Поле ввода ── */
+.field {
+  width: 100%; padding: 12px 14px; border: 1px solid var(--line);
+  border-radius: 12px; background: var(--card); color: var(--ink);
+  font: 400 16px/1.4 var(--body); outline: none;
+  transition: border-color .2s var(--ease);
+}
+.field:focus { border-color: var(--accent); }
+
+/* ── Появление при скролле ──
+   Класс .rev ставится в разметке, .in добавляет наблюдатель при попадании
+   элемента в кадр. Задержки .d1/.d2/.d3 дают каскад внутри группы. */
+.rev {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity .55s var(--ease), transform .55s var(--ease);
+}
+.rev.in { opacity: 1; transform: none; }
+.d1 { transition-delay: .07s; }
+.d2 { transition-delay: .14s; }
+.d3 { transition-delay: .21s; }
+
+/* Уважаем системную настройку: анимации выключены — показываем всё сразу */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .rev { opacity: 1; transform: none; }
+}

@@ -15,7 +15,13 @@
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/110637922" style="position:absolute;left:-9999px" alt=""></div></noscript>
 
-<link rel="stylesheet" href="/assets/site-bar/bot.css?v=a1856be0">
+<!-- Дизайн-система: шрифты локально + токены. Подключается ДО постраничных
+     стилей — пока страница не переверстана, её собственные переменные
+     перекрывают одноимённые здесь, и вид не меняется. -->
+<link rel="stylesheet" href="/assets/fonts/fonts.css?v=24e2476b">
+<link rel="stylesheet" href="/assets/tokens.css?v=24e2476b">
+<script defer src="/assets/reveal.js?v=24e2476b"></script>
+<link rel="stylesheet" href="/assets/site-bar/bot.css?v=24e2476b">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
@@ -215,7 +221,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 </div>
 
 <script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
-<script defer src="/assets/site-bar/bot.js?v=a1856be0"></script>
+<script defer src="/assets/site-bar/bot.js?v=24e2476b"></script>
 
 <script>
 var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
