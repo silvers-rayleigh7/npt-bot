@@ -43,19 +43,30 @@
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c];
     });
   }
+  // Построчный разбор: развёрнутые ответы приходят с заголовками (###) и
+  // нумерованным разбором механизма — регулярками по всему тексту это не собрать.
   function renderMd(text) {
-    var html = esc(text);
-    html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
-    // Маркированные списки
-    html = html.replace(/(?:^|\n)[-•] (.+)/g, "\n<li>$1</li>");
-    html = html.replace(/(<li>[\s\S]*?<\/li>)/g, "<ul>$1</ul>").replace(/<\/ul>\s*<ul>/g, "");
-    // Абзацы
-    html = html.split(/\n{2,}/).map(function (p) {
-      p = p.trim();
-      if (!p) return "";
-      return /^<(ul|li)/.test(p) ? p : "<p>" + p.replace(/\n/g, "<br>") + "</p>";
-    }).join("");
-    return html;
+    var out = [], para = [], list = null;
+    function flushPara() {
+      if (para.length) { out.push("<p>" + para.join("<br>") + "</p>"); para = []; }
+    }
+    function closeList() { if (list) { out.push("</" + list + ">"); list = null; } }
+    function openList(kind) {
+      if (list !== kind) { closeList(); out.push("<" + kind + ">"); list = kind; }
+    }
+    esc(text).split("\n").forEach(function (raw) {
+      var line = raw.trim();
+      if (!line) { flushPara(); closeList(); return; }
+      var head = line.match(/^#{1,4}\s+(.+)$/);
+      var num = line.match(/^\d+[.)]\s+(.+)$/);
+      var bul = line.match(/^[-•*]\s+(.+)$/);
+      if (head) { flushPara(); closeList(); out.push("<h4>" + head[1] + "</h4>"); return; }
+      if (num) { flushPara(); openList("ol"); out.push("<li>" + num[1] + "</li>"); return; }
+      if (bul) { flushPara(); openList("ul"); out.push("<li>" + bul[1] + "</li>"); return; }
+      closeList(); para.push(line);
+    });
+    flushPara(); closeList();
+    return out.join("").replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
   }
 
   // ---- Построение DOM виджета ---------------------------------------------

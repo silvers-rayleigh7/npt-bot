@@ -22,6 +22,19 @@ CONTENT = os.path.join(ROOT, "content")
 TEMPLATES = os.path.join(ROOT, "templates")
 OUT = os.path.join(ROOT, "site")
 CACHE = os.path.join(CONTENT, "cache")
+SITE_ASSETS = os.path.join(OUT, "assets", "site-bar")
+
+
+def _assets_version(*paths):
+    """Короткий хеш содержимого ассетов — суффикс ?v= против кэша браузера."""
+    h = hashlib.md5()
+    for p in paths:
+        try:
+            with open(p, "rb") as f:
+                h.update(f.read())
+        except OSError:
+            pass
+    return h.hexdigest()[:8]
 
 MD_EXT = ["extra", "sane_lists"]
 LEVEL_ROLE = {"Кратко": "a", "Как это работает": "b", "Глубже": "c"}
@@ -577,6 +590,11 @@ def build():
     # URL сайта — из переменной окружения (генератор подставляет), затем site.yaml, затем дефолт
     site["url"] = os.environ.get("TROPA_URL") or site.get("url") or "tropa.fmin.xyz"
     env = Environment(loader=FileSystemLoader(TEMPLATES), autoescape=False)
+    # Версия ассетов виджета: без неё правки bot.js/bot.css не доезжают до тех,
+    # у кого файл уже в кэше браузера (Cache-Control сервер не отдаёт).
+    env.globals["asset_v"] = _assets_version(
+        os.path.join(SITE_ASSETS, "bot.js"), os.path.join(SITE_ASSETS, "bot.css")
+    )
     storylines = load_storylines()
     by_slug = {s["slug"]: s for s in storylines}
 

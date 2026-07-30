@@ -54,6 +54,8 @@
 .sb-msg p{ margin:0 0 .5em; } .sb-msg p:last-child{ margin:0; }
 .sb-msg strong{ font-weight:700; }
 .sb-msg ul,.sb-msg ol{ margin:.3em 0; padding-left:1.2em; }
+.sb-msg h4{ margin:.7em 0 .25em; font-size:.95em; font-weight:600; }
+.sb-msg h4:first-child{ margin-top:0; }
 .sb-msg a{ color:var(--sb-olive); text-decoration:underline; }
 .sb-msg.sb-user a{ color:#fff; }
 

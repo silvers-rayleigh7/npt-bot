@@ -120,7 +120,7 @@ def chat(inp: ChatIn):
     try:
         answer, provider = generate(
             messages, _PROVIDERS,
-            max_tokens=int(os.environ.get("MAX_TOKENS", "700")),
+            max_tokens=int(os.environ.get("CHAT_MAX_TOKENS", "1600")),
             temperature=float(os.environ.get("TEMPERATURE", "0.4")),
         )
         return ChatOut(answer=answer, provider=provider)
@@ -188,7 +188,7 @@ def geo(inp: GeoIn):
     try:
         answer, provider = generate(
             messages, _PROVIDERS,
-            max_tokens=int(os.environ.get("MAX_TOKENS", "700")),
+            max_tokens=int(os.environ.get("CHAT_MAX_TOKENS", "1600")),
             temperature=float(os.environ.get("TEMPERATURE", "0.4")),
         )
     except ProviderError as e:

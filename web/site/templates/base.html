@@ -15,7 +15,7 @@
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/{{ site.analytics.yandex_id }}" style="position:absolute;left:-9999px" alt=""></div></noscript>
 {% endif %}
-<link rel="stylesheet" href="/assets/site-bar/bot.css">
+<link rel="stylesheet" href="/assets/site-bar/bot.css?v={{ asset_v }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
@@ -91,7 +91,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 </div></nav>
 {% block content %}{% endblock %}
 <script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
-<script defer src="/assets/site-bar/bot.js"></script>
+<script defer src="/assets/site-bar/bot.js?v={{ asset_v }}"></script>
 {% block scripts %}{% endblock %}
 </body>
 </html>
