@@ -18,12 +18,12 @@
 <!-- Дизайн-система: шрифты локально + токены. Подключается ДО постраничных
      стилей — пока страница не переверстана, её собственные переменные
      перекрывают одноимённые здесь, и вид не меняется. -->
-<link rel="stylesheet" href="/assets/fonts/fonts.css?v=799df7fa">
-<link rel="stylesheet" href="/assets/tokens.css?v=799df7fa">
-<link rel="stylesheet" href="/assets/layout.css?v=799df7fa">
-<script defer src="/assets/reveal.js?v=799df7fa"></script>
-<script defer src="/assets/layout.js?v=799df7fa"></script>
-<link rel="stylesheet" href="/assets/site-bar/bot.css?v=799df7fa">
+<link rel="stylesheet" href="/assets/fonts/fonts.css?v=54c4b358">
+<link rel="stylesheet" href="/assets/tokens.css?v=54c4b358">
+<link rel="stylesheet" href="/assets/layout.css?v=54c4b358">
+<script defer src="/assets/reveal.js?v=54c4b358"></script>
+<script defer src="/assets/layout.js?v=54c4b358"></script>
+<link rel="stylesheet" href="/assets/site-bar/bot.css?v=54c4b358">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
@@ -50,6 +50,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="/assets/home.css?v=54c4b358">
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html{overflow-x:clip}
@@ -66,11 +68,6 @@ h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:-0.01em}
 a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
 .w{max-width:760px;margin:0 auto;padding:0 24px}
 
-.hero{padding:80px 0 48px;text-align:center;position:relative;overflow:hidden}
-#contour-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:auto;cursor:crosshair;z-index:0}
-.hero>*{position:relative;z-index:1}
-.hero h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;letter-spacing:-0.03em;line-height:1.15;margin-bottom:12px}
-.hero h1 span{color:var(--g)}
 .section{padding:48px 0}
 .section-label{font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--g);margin-bottom:8px;display:block}
 .section h2{font-size:1.5rem;font-weight:700;margin-bottom:8px}
@@ -150,10 +147,76 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   </div>
 </header>
 
-<div class="hero">
-  <canvas id="contour-canvas"></canvas>
-  <h1>Научно-популярная <span>тропа</span></h1>
-</div>
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Научная тропа · Иннополис</span>
+      <h1 class="h1">Как устроен мир вокруг нас?</h1>
+      <span class="h1-sub">Можно понять, просто шагая по тропе</span>
+      <p class="hero-lead">Мы превращаем обычную прогулку в разговор о науке:
+        у каждой точки на маршруте — свой сюжет о том, почему здесь всё устроено
+        именно так.</p>
+      <div class="hero-actions">
+        <a href="/routes/" class="btn btn-primary">Посмотреть маршрут</a>
+        <a href="/teacher/" class="btn btn-ghost">Собрать урок</a>
+      </div>
+      <p class="hero-stats">
+        <b>42</b> научных сюжета ·
+        <b>36</b> областей знания ·
+        <b>37</b> точек с привязкой к местности
+      </p>
+    </div>
+
+    <div class="hero-art">
+      
+      <svg viewBox="0 0 520 470" role="img" aria-label="Тропа по холмам с точками научных сюжетов">
+        <defs><clipPath id="circ"><circle cx="260" cy="235" r="228"/></clipPath></defs>
+        <circle cx="260" cy="235" r="228" fill="#EAF1F5"/>
+        <g clip-path="url(#circ)">
+          <!-- солнце и облака -->
+          <circle class="an-sun" cx="372" cy="120" r="34" fill="#F6BB2E" opacity=".92"/>
+          <g class="an-cloud" fill="#fff" opacity=".95">
+            <ellipse cx="140" cy="112" rx="46" ry="21"/><ellipse cx="172" cy="104" rx="32" ry="24"/>
+          </g>
+          <g class="an-cloud2" fill="#fff" opacity=".8">
+            <ellipse cx="330" cy="72" rx="34" ry="15"/><ellipse cx="356" cy="66" rx="24" ry="18"/>
+          </g>
+          <!-- дальние холмы и луг -->
+          <path d="M0 300 C90 254 168 296 250 268 C338 238 424 288 520 258 L520 470 L0 470 Z" fill="#CFE0C6"/>
+          <path d="M0 344 C110 306 190 350 288 322 C388 294 452 336 520 314 L520 470 L0 470 Z" fill="#EAF2E1"/>
+          <!-- река -->
+          <path d="M520 336 C440 352 404 386 330 398 C258 410 214 442 150 470 L520 470 Z" fill="#D6E6F0"/>
+          <!-- ели -->
+          <g fill="#4EA75D">
+            <path d="M92 322 l19 40 h-38 Z"/><path d="M92 300 l15 34 h-30 Z"/>
+            <path d="M436 306 l17 36 h-34 Z"/><path d="M436 286 l13 30 h-26 Z"/>
+          </g>
+          <rect x="89" y="360" width="6" height="14" fill="#7C6A4E"/>
+          <rect x="433" y="340" width="6" height="13" fill="#7C6A4E"/>
+          <!-- тропа с точками сюжетов -->
+          <path class="an-path" d="M56 448 C150 402 168 356 268 340 C356 326 400 292 470 272"
+                fill="none" stroke="#22333C" stroke-width="2.4" stroke-linecap="round" opacity=".55"/>
+          <g>
+            <circle cx="126" cy="410" r="15" fill="#E9863B"/>
+            <text x="126" y="415" text-anchor="middle" font-size="14" font-weight="600" fill="#fff"
+                  font-family="ui-monospace, monospace">1</text>
+            <circle cx="268" cy="340" r="15" fill="#2E9BD6"/>
+            <text x="268" y="345" text-anchor="middle" font-size="14" font-weight="600" fill="#fff"
+                  font-family="ui-monospace, monospace">2</text>
+            <circle cx="404" cy="288" r="15" fill="#7A6FE0"/>
+            <text x="404" y="293" text-anchor="middle" font-size="14" font-weight="600" fill="#fff"
+                  font-family="ui-monospace, monospace">3</text>
+          </g>
+        </g>
+        <circle cx="260" cy="235" r="228" fill="none" stroke="#DCD4C4" stroke-width="1.5"/>
+      </svg>
+      
+      <div class="bubble bubble-1"><i style="background:#E9863B"></i>Почему река подмыла именно правый берег?</div>
+      <div class="bubble bubble-2"><i style="background:#2E9BD6"></i>Отчего небо к вечеру теплеет цветом?</div>
+      <div class="bubble bubble-3"><i style="background:#7A6FE0"></i>Как измерить высоту дерева по его тени?</div>
+    </div>
+  </div>
+</section>
 
 <div class="w">
 <div class="flow-section">
@@ -274,31 +337,7 @@ a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
   </div>
 </footer>
 <script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
-<script defer src="/assets/site-bar/bot.js?v=799df7fa"></script>
-
-<script>
-
-(function(){
-  var canvas=document.getElementById('contour-canvas');if(!canvas)return;
-  var ctx=canvas.getContext('2d'),W,H,dpr;
-  function resize(){var h=canvas.parentElement;dpr=window.devicePixelRatio||1;W=h.offsetWidth;H=h.offsetHeight;canvas.width=W*dpr;canvas.height=H*dpr;canvas.style.width=W+'px';canvas.style.height=H+'px';ctx.setTransform(dpr,0,0,dpr,0,0)}
-  function f(x,y){return -1.8*Math.exp(-((x-.3)**2+(y-.7)**2)/.08)-2.2*Math.exp(-((x-.75)**2+(y-.25)**2)/.06)-1*Math.exp(-((x-.6)**2+(y-.65)**2)/.12)+.6*Math.exp(-((x-.5)**2+(y-.5)**2)/.3)-.8*Math.exp(-((x-.15)**2+(y-.3)**2)/.1)}
-  function grad(x,y){var h=.001;return[(f(x+h,y)-f(x-h,y))/(2*h),(f(x,y+h)-f(x,y-h))/(2*h)]}
-  function gd(sx,sy){var p=[[sx,sy]],x=sx,y=sy,lr=.006;for(var i=0;i<500;i++){var g=grad(x,y),n=Math.sqrt(g[0]*g[0]+g[1]*g[1]);if(n<.01)break;x-=lr*g[0];y-=lr*g[1];x=Math.max(.01,Math.min(.99,x));y=Math.max(.01,Math.min(.99,y));p.push([x,y])}return p}
-  function contour(lv,res){var s=[],st=1/res;for(var i=0;i<res;i++)for(var j=0;j<res;j++){var x0=i*st,y0=j*st,x1=x0+st,y1=y0+st,v00=f(x0,y0)-lv,v10=f(x1,y0)-lv,v01=f(x0,y1)-lv,v11=f(x1,y1)-lv,idx=(v00>0?8:0)|(v10>0?4:0)|(v11>0?2:0)|(v01>0?1:0);if(!idx||idx==15)continue;var t=function(a,b){return a/(a-b)},tp=[x0+st*t(v00,v10),y0],bt=[x0+st*t(v01,v11),y1],lf=[x0,y0+st*t(v00,v01)],rt=[x1,y0+st*t(v10,v11)],cs={1:[[lf,bt]],2:[[bt,rt]],3:[[lf,rt]],4:[[tp,rt]],5:[[tp,lf],[bt,rt]],6:[[tp,bt]],7:[[tp,lf]],8:[[tp,lf]],9:[[tp,bt]],10:[[tp,rt],[bt,lf]],11:[[tp,rt]],12:[[lf,rt]],13:[[bt,rt]],14:[[lf,bt]]};if(cs[idx])s.push.apply(s,cs[idx])}return s}
-  var lvs=[],allC;for(var l=-2.4;l<=.6;l+=.12)lvs.push(l);allC=lvs.map(function(l){return contour(l,100)});
-  var trails=[],tick=0;trails.push({path:gd(.12,.85),frame:0,settled:false});
-  function ts(px,py){return[px*W,py*H]}
-  function fs(sx,sy){return[sx/W,sy/H]}
-  canvas.addEventListener('click',function(e){var r=canvas.getBoundingClientRect(),n=fs(e.clientX-r.left,e.clientY-r.top);if(n[0]>.01&&n[0]<.99&&n[1]>.01&&n[1]<.99){var p=gd(n[0],n[1]);if(p.length>2)trails.push({path:p,frame:0,settled:false})}});
-  canvas.addEventListener('touchstart',function(e){e.preventDefault();var t=e.touches[0],r=canvas.getBoundingClientRect(),n=fs(t.clientX-r.left,t.clientY-r.top);if(n[0]>.01&&n[0]<.99&&n[1]>.01&&n[1]<.99){var p=gd(n[0],n[1]);if(p.length>2)trails.push({path:p,frame:0,settled:false})}},{passive:false});
-  function draw(){ctx.clearRect(0,0,W,H);tick++;
-    for(var ci=0;ci<allC.length;ci++){var sg=allC[ci],a=.04+.08*(ci/allC.length);ctx.strokeStyle='rgba(47,111,99,'+a+')';ctx.lineWidth=.5;ctx.beginPath();for(var s=0;s<sg.length;s++){var p=ts(sg[s][0][0],sg[s][0][1]),q=ts(sg[s][1][0],sg[s][1][1]);ctx.moveTo(p[0],p[1]);ctx.lineTo(q[0],q[1])}ctx.stroke()}
-    var keep=[];for(var ti=0;ti<trails.length;ti++){var tr=trails[ti],p=tr.path,h=Math.min(tr.frame,p.length-1),is=h>=p.length-1;if(!tr.settled&&is){tr.settled=true;tr.sa=tick}var ga=1;if(tr.settled){var age=tick-tr.sa;if(age>300){ga=Math.max(0,1-(age-300)/120);if(ga<=0)continue}}var ts0=Math.max(0,h-50);for(var i=ts0;i<h;i++){var pr=(i-ts0)/Math.max(1,h-ts0),al=(0.05+.6*pr)*ga;ctx.strokeStyle='rgba(240,79,58,'+al+')';ctx.lineWidth=1+2*pr;ctx.beginPath();var a1=ts(p[i][0],p[i][1]),a2=ts(p[i+1][0],p[i+1][1]);ctx.moveTo(a1[0],a1[1]);ctx.lineTo(a2[0],a2[1]);ctx.stroke()}if(is&&p.length>1){ctx.strokeStyle='rgba(240,79,58,'+(0.1*ga)+')';ctx.lineWidth=1;ctx.beginPath();var s0=ts(p[0][0],p[0][1]);ctx.moveTo(s0[0],s0[1]);for(var i=1;i<p.length;i++){var si=ts(p[i][0],p[i][1]);ctx.lineTo(si[0],si[1])}ctx.stroke()}var hp=ts(p[h][0],p[h][1]);ctx.beginPath();var gl=ctx.createRadialGradient(hp[0],hp[1],0,hp[0],hp[1],16);gl.addColorStop(0,'rgba(240,79,58,'+(0.3*ga)+')');gl.addColorStop(1,'rgba(240,79,58,0)');ctx.fillStyle=gl;ctx.arc(hp[0],hp[1],16,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(hp[0],hp[1],3.5,0,Math.PI*2);ctx.fillStyle='rgba(240,79,58,'+ga+')';ctx.fill();if(!is)tr.frame+=2;keep.push(tr)}trails=keep;requestAnimationFrame(draw)}
-  window.addEventListener('resize',resize);resize();draw();
-})();
-
-</script>
+<script defer src="/assets/site-bar/bot.js?v=54c4b358"></script>
 
 </body>
 </html>

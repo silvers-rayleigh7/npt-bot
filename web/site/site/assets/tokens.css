@@ -108,12 +108,17 @@
 
 /* ── Появление при скролле ──
    Класс .rev ставится в разметке, .in добавляет наблюдатель при попадании
-   элемента в кадр. Задержки .d1/.d2/.d3 дают каскад внутри группы. */
-.rev {
+   элемента в кадр. Задержки .d1/.d2/.d3 дают каскад внутри группы.
+
+   Скрытие включается ТОЛЬКО под .js-reveal — этот класс скрипт ставит на <html>
+   сам, когда убедился, что умеет показать блоки обратно. Иначе любая осечка
+   (ошибка в скрипте, блокировщик, старый браузер) оставила бы посетителя
+   с пустой страницей. */
+.js-reveal .rev {
   opacity: 0; transform: translateY(24px);
   transition: opacity .55s var(--ease), transform .55s var(--ease);
 }
-.rev.in { opacity: 1; transform: none; }
+.js-reveal .rev.in { opacity: 1; transform: none; }
 .d1 { transition-delay: .07s; }
 .d2 { transition-delay: .14s; }
 .d3 { transition-delay: .21s; }
@@ -121,5 +126,5 @@
 /* Уважаем системную настройку: анимации выключены — показываем всё сразу */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .rev { opacity: 1; transform: none; }
+  .js-reveal .rev { opacity: 1; transform: none; }
 }

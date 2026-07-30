@@ -11,6 +11,13 @@
 
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Прячем блоки только если умеем их показать: наблюдатель есть и движение
+  // не отключено системно. Без этого класса стили появления не работают вовсе,
+  // и контент виден сразу — страница остаётся читаемой при любой осечке скрипта.
+  if (!reduce && 'IntersectionObserver' in window) {
+    document.documentElement.classList.add('js-reveal');
+  }
+
   function initReveal(root) {
     var nodes = (root || document).querySelectorAll('.rev:not(.in)');
     if (!nodes.length) return;

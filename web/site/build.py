@@ -596,6 +596,7 @@ def build():
         os.path.join(SITE_ASSETS, "bot.js"), os.path.join(SITE_ASSETS, "bot.css"),
         os.path.join(OUT, "assets", "tokens.css"), os.path.join(OUT, "assets", "reveal.js"),
         os.path.join(OUT, "assets", "layout.css"), os.path.join(OUT, "assets", "layout.js"),
+        os.path.join(OUT, "assets", "home.css"),
         os.path.join(OUT, "assets", "fonts", "fonts.css"),
     )
     storylines = load_storylines()
@@ -613,9 +614,18 @@ def build():
     for r in routes:
         poi = [s for s in storylines if r["id"] in s["routes"] and s["geo"]]
         cards.append({**r, "points": len(poi)})
+    # Цифры для главной считаем из контента, а не пишем руками: иначе они
+    # разъезжаются с реальностью при каждом новом сюжете.
+    stats = {
+        "storylines": len(storylines),
+        "fields": len({t for s in storylines for t in (s.get("tags") or [])}),
+        "routes": len(routes),
+        "points": len({s["slug"] for s in storylines if s.get("geo")}),
+    }
     with open(os.path.join(OUT, "index.html"), "w") as f:
-        f.write(env.get_template("index.html").render(site=site, routes=cards))
-    print(f"  index.html ({len(cards)} routes)")
+        f.write(env.get_template("index.html").render(site=site, routes=cards, stats=stats))
+    print(f"  index.html ({len(cards)} routes, {stats['storylines']} сюжетов, "
+          f"{stats['fields']} областей)")
 
     # ── отдельная вкладка «Маршруты» (карточки всех маршрутов)
     routes_out = os.path.join(OUT, "routes")
