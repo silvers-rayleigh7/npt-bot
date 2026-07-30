@@ -195,3 +195,45 @@
 @media (max-width: 520px) {
   .steps { grid-template-columns: 1fr; }
 }
+
+/* ── Этапы работы на площадке ── */
+.stages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.stage {
+  padding: 24px 22px; border-radius: 18px; background: var(--card);
+  border: 1px solid var(--line);
+  transition: box-shadow .3s var(--ease), transform .3s var(--ease);
+}
+.stage:hover { box-shadow: var(--sh-sm); transform: translateY(-2px); }
+.stage-n {
+  font: 500 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 12px; display: block;
+}
+.stage h4 { font: 500 17px/1.3 var(--disp); margin-bottom: 8px; }
+.stage p { font-size: 14.5px; line-height: 1.55; color: var(--ink-soft); }
+
+/* ── Финальный призыв ── */
+.cta {
+  background: var(--ink); color: var(--paper); border-radius: 28px;
+  padding: 52px 48px; display: grid; grid-template-columns: 1.3fr 1fr;
+  gap: 40px; align-items: center;
+}
+.cta h2 { color: var(--paper); margin-bottom: 14px; }
+.cta p { color: rgba(251, 248, 241, .8); font-size: 16.5px; line-height: 1.6; max-width: 48ch; }
+.cta-actions { display: flex; flex-direction: column; gap: 12px; }
+.cta .btn-primary { background: var(--terra); }
+.cta .btn-primary:hover { background: var(--terra-600); }
+.cta .btn-ghost { color: var(--paper); border-color: rgba(251, 248, 241, .5); }
+.cta .btn-ghost:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+.cta-note {
+  margin-top: 14px; font-family: var(--mono); font-size: 12.5px;
+  color: rgba(251, 248, 241, .6);
+}
+
+@media (max-width: 900px) {
+  .stages { grid-template-columns: repeat(2, 1fr); }
+  .cta { grid-template-columns: 1fr; padding: 38px 26px; gap: 26px; }
+}
+@media (max-width: 560px) {
+  .stages { grid-template-columns: 1fr; }
+  .cta-actions .btn { width: 100%; }
+}

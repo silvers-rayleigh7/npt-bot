@@ -21,14 +21,14 @@
 
 {% block content %}
 <div class="w">
-  <div class="page-hero">
+  <div class="page-hero rise">
     <img src="/assets/glyphs/mountains.png" alt="">
     <div>
       <h1>Маршруты</h1>
       <p>Научные тропы — каждая как набор сюжетов с точками на карте</p>
     </div>
   </div>
-  <div class="route-gallery">
+  <div class="route-gallery stagger">
   {% for route in routes %}
     <a href="/{{ route.id }}/" class="route-card">
       <div class="rc-map">

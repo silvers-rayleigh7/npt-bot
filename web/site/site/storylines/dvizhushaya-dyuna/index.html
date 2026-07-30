@@ -18,12 +18,12 @@
 <!-- Дизайн-система: шрифты локально + токены. Подключается ДО постраничных
      стилей — пока страница не переверстана, её собственные переменные
      перекрывают одноимённые здесь, и вид не меняется. -->
-<link rel="stylesheet" href="/assets/fonts/fonts.css?v=fb5874fd">
-<link rel="stylesheet" href="/assets/tokens.css?v=fb5874fd">
-<link rel="stylesheet" href="/assets/layout.css?v=fb5874fd">
-<script defer src="/assets/reveal.js?v=fb5874fd"></script>
-<script defer src="/assets/layout.js?v=fb5874fd"></script>
-<link rel="stylesheet" href="/assets/site-bar/bot.css?v=fb5874fd">
+<link rel="stylesheet" href="/assets/fonts/fonts.css?v=251fa6d4">
+<link rel="stylesheet" href="/assets/tokens.css?v=251fa6d4">
+<link rel="stylesheet" href="/assets/layout.css?v=251fa6d4">
+<script defer src="/assets/reveal.js?v=251fa6d4"></script>
+<script defer src="/assets/layout.js?v=251fa6d4"></script>
+<link rel="stylesheet" href="/assets/site-bar/bot.css?v=251fa6d4">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
@@ -46,24 +46,23 @@
 })();
 </script>
 <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html{overflow-x:clip}
 body{max-width:100%;overflow-x:clip}
-/* TROPA design system — палитра дизайн-пака */
+/* Прежние переменные страниц теперь ссылаются на дизайн-систему (tokens.css).
+   Вся вёрстка страниц написана через них, поэтому один этот блок переводит
+   все вкладки на новую палитру и шрифты — без переписывания каждой. */
 :root{
-  --sand:#DBD4C7;--sage:#B8B5A6;--olive:#7C7F6A;--char:#3E4038;--ink:#1A1A18;
-  --g:#7C7F6A;--gd:#3E4038;--gl:#F4F2EE;--bg:#FFFFFF;--card:#FFFFFF;
-  --tx:#1A1A18;--tm:#6E7163;--bd:#EAE7E0;--r:10px;
-  --serif:"Cormorant Garamond",Georgia,serif;
+  --sand:var(--milk);--sage:var(--line);--olive:var(--accent);--char:var(--ink);
+  --g:var(--accent);--gd:var(--accent-600);--gl:var(--milk);--bg:var(--paper);
+  --tx:var(--ink);--tm:var(--ink-soft);--bd:var(--line);--r:14px;
+  --serif:var(--disp);
 }
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
-h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:-0.01em}
-a{color:var(--gd);text-decoration:none}a:hover{text-decoration:underline}
+body{font-family:var(--body);color:var(--tx);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:var(--disp);font-weight:500;letter-spacing:-0.01em}
+a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline}
 .w{max-width:760px;margin:0 auto;padding:0 24px}
 
 .sg-hero{padding:48px 0 8px;text-align:center}
@@ -254,7 +253,7 @@ $$</p>
   </div>
 </footer>
 <script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
-<script defer src="/assets/site-bar/bot.js?v=fb5874fd"></script>
+<script defer src="/assets/site-bar/bot.js?v=251fa6d4"></script>
 
 <script>
 var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];

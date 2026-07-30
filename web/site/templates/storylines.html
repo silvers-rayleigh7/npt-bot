@@ -54,7 +54,7 @@
 
 {% block content %}
 <div class="w">
-  <div class="page-hero">
+  <div class="page-hero rise">
     <img src="/assets/glyphs/mountains.png" alt="">
     <div>
       <h1>Сюжеты</h1>
@@ -62,7 +62,7 @@
     </div>
   </div>
 
-  <div class="sl-verlegend">
+  <div class="sl-verlegend rise">
     <span class="sl-vl-title">Надёжность материала:</span>
     <span class="sl-vl sl-vl-expert">✓ проверено экспертом</span>
     <span class="sl-vl sl-vl-sources">✓ со ссылками на источники</span>
@@ -70,7 +70,7 @@
     <span class="sl-vl-note">Отметка стоит у каждого сюжета — видно, чем подкреплён текст.</span>
   </div>
 
-  <div class="sl-filters" id="sl-filters">
+  <div class="sl-filters rise" id="sl-filters">
     <div class="sl-frow" data-group="region"><span class="sl-flabel">Регион</span></div>
     <div class="sl-frow">
       <span class="sl-flabel">Тема</span>
@@ -83,7 +83,7 @@
     <div class="sl-subject-chips" id="sl-subject-chips" data-group="subject"></div>
   </div>
 
-  <div class="sl-grid" id="sl-grid">
+  <div class="sl-grid rise" id="sl-grid">
     {% for s in storylines %}
     <a class="sl-card" href="/storylines/{{ s.slug }}/"
        data-region="{{ s.region or '' }}"
