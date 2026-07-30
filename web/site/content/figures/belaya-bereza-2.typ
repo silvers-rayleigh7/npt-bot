@@ -1,5 +1,5 @@
 #import "/content/figures/_preamble.typ": *
-#set page(width: auto, height: auto, margin: 8pt, fill: white)
+#set page(width: auto, height: auto, margin: 8pt, fill: rgb("#FBF8F1"))
 #set text(font: "Libertinus Serif", size: 11pt, fill: INK)
 
 // Шкала альбедо: честное сравнение берёза ↔ тёмная кора (та же α≈0,1 из L2),

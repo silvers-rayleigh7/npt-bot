@@ -1,5 +1,5 @@
 <svg class="typst-doc" viewBox="0 0 191.748031496063 109.08233858267715" width="191.748031496063pt" height="109.08233858267715pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:h5="http://www.w3.org/1999/xhtml">
-    <path class="typst-shape" fill="#ffffff" fill-rule="nonzero" d="M 0 0 L 0 109.08234 L 191.74803 109.08234 L 191.74803 0 Z "/>
+    <path class="typst-shape" fill="#fbf8f1" fill-rule="nonzero" d="M 0 0 L 0 109.08234 L 191.74803 109.08234 L 191.74803 0 Z "/>
     <g>
         <g transform="translate(8 8)">
             <g class="typst-group">
@@ -18,11 +18,11 @@
                                         <g>
                                             <g transform="translate(0 5.264)">
                                                 <g class="typst-text" transform="scale(1, -1)">
-                                                    <use xlink:href="#g48CB452BC84EE7E1A0E9BB2D289D6E20" x="0" fill="#ffffff" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g8409406560E654831539A74ECB32BA27" x="3.328" fill="#ffffff" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g578B33A296E9B9AB3ACAB742780745DD" x="7.5440000000000005" fill="#ffffff" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g47F8A8501E2A2CC7C13E46B65837D3DE" x="12.232" fill="#ffffff" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g472EE45C71CBD8604D6782570CA62DC2" x="16.919999999999998" fill="#ffffff" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g48CB452BC84EE7E1A0E9BB2D289D6E20" x="0" fill="#fbf8f1" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g8409406560E654831539A74ECB32BA27" x="3.328" fill="#fbf8f1" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g578B33A296E9B9AB3ACAB742780745DD" x="7.5440000000000005" fill="#fbf8f1" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g47F8A8501E2A2CC7C13E46B65837D3DE" x="12.232" fill="#fbf8f1" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g472EE45C71CBD8604D6782570CA62DC2" x="16.919999999999998" fill="#fbf8f1" fill-rule="nonzero"/>
                                                 </g>
                                             </g>
                                         </g>

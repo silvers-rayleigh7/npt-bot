@@ -1,5 +1,5 @@
 #import "/content/figures/_preamble.typ": *
-#set page(width: auto, height: auto, margin: 8pt, fill: white)
+#set page(width: auto, height: auto, margin: 8pt, fill: rgb("#FBF8F1"))
 #set text(font: "Libertinus Serif", size: 10pt, fill: INK)
 
 // Разрез Земли: жидкое внешнее ядро гасит S-волны → теневая зона дальше ~103°. P-волны преломляются.
@@ -15,7 +15,7 @@
   circle(O, radius: R, fill: SAND.lighten(45%), stroke: INK)
   circle(O, radius: Rc, fill: OLIVE.lighten(15%), stroke: INK)
   circle(O, radius: 0.55, fill: OLIVE.darken(15%), stroke: INK)
-  content((0, -1.0), text(size: 8pt, fill: white)[ядро (жидкое)])
+  content((0, -1.0), text(size: 8pt, fill: rgb("#FBF8F1"))[ядро (жидкое)])
   content((0, 1.95), text(size: 8pt)[мантия])
 
   // очаг наверху

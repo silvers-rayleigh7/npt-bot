@@ -47,7 +47,7 @@
 {% block content %}
 <div class="w">
   <div class="sg-hero">
-    {% if s.icon %}<img class="sg-icon" src="/{{ s.icon }}?v={{ icons_v }}" alt="">
+    {% if s.icon %}<img class="sg-icon" src="/{{ s.icon }}?v={{ icons_v }}" alt="" width="440" height="200">
     {% else %}<img src="/assets/glyphs/{{ 'mountains' if s.geo else 'spruce' }}.png" alt="">{% endif %}
     <div class="sg-kicker">{{ s.region or 'Научная тропа Иннополиса' }}</div>
     <h1>{{ s.title }}</h1>

@@ -1,5 +1,5 @@
 #import "/content/figures/_preamble.typ": *
-#set page(width: auto, height: auto, margin: 8pt, fill: white)
+#set page(width: auto, height: auto, margin: 8pt, fill: rgb("#FBF8F1"))
 #set text(font: "Libertinus Serif", size: 11pt, fill: INK)
 
 // L1, ОДНА мысль — собственный хук уровня: «первое имя СТЁРТО».
@@ -16,7 +16,7 @@
   let cx = 0.0             // центр стопки по X
   let plate(yc, body, col, th, dash) = {
     content((cx, yc), body, frame: "rect", padding: 5pt,
-      fill: white, stroke: (paint: col, thickness: th, dash: dash))
+      fill: rgb("#FBF8F1"), stroke: (paint: col, thickness: th, dash: dash))
   }
 
   // ── ОДНА площадка-«место» снизу: неизменна, на неё ложатся имена.

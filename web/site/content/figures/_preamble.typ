@@ -5,7 +5,7 @@
 // перерисовывает весь набор.
 #import "@preview/cetz:0.4.2"
 
-#set page(width: auto, height: auto, margin: 8pt, fill: white)
+#set page(width: auto, height: auto, margin: 8pt, fill: rgb("#FBF8F1"))
 #set text(font: "Golos Text", size: 10pt, fill: rgb("#22333C"))
 
 // Палитра эталона. Имена оставлены прежними, чтобы не переписывать 83 схемы:

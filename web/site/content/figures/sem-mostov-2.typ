@@ -1,5 +1,5 @@
 #import "/content/figures/_preamble.typ": *
-#set page(width: auto, height: auto, margin: 8pt, fill: white)
+#set page(width: auto, height: auto, margin: 8pt, fill: rgb("#FBF8F1"))
 #set text(font: "Libertinus Serif", size: 10pt, fill: INK)
 
 // Восьмой мост: дополнительное ребро между нечётными вершинами Б(5) и А(3) делает их чётными
@@ -24,7 +24,7 @@
 
   // вершины: степень числом внутри, буква рядом; чётные — обведены оливой
   let node(p, deg, lab, even) = {
-    circle(p, radius: 0.30, fill: white,
+    circle(p, radius: 0.30, fill: rgb("#FBF8F1"),
       stroke: (paint: if even { OLIVE } else { INK }, thickness: if even { 1.6pt } else { 1pt }))
     content(p, text(size: 11pt, weight: "bold", fill: if even { OLIVE } else { INK })[#deg])
     content((p.at(0) + 0.34, p.at(1) + 0.30), anchor: "west", text(size: 8pt, fill: SAND)[#lab])

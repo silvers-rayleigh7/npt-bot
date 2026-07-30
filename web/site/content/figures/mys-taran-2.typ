@@ -1,5 +1,5 @@
 #import "/content/figures/_preamble.typ": *
-#set page(width: auto, height: auto, margin: 8pt, fill: white)
+#set page(width: auto, height: auto, margin: 8pt, fill: rgb("#FBF8F1"))
 #set text(font: "Libertinus Serif", size: 10pt, fill: INK)
 
 // Оползень: вода застаивается над водоупорной глиной, поровое давление растёт,
@@ -10,7 +10,7 @@
 
   // слой глины (водоупор) — наклонная подошва
   line((0, 0.3), (6.0, 0.3), (6.0, 0.0), (0, 0.0), close: true, fill: OLIVE.lighten(15%), stroke: INK)
-  content((3.0, 0.15), text(size: 8pt, fill: white)[глина · водоупор])
+  content((3.0, 0.15), text(size: 8pt, fill: rgb("#FBF8F1"))[глина · водоупор])
 
   // слой песка над ней
   line((0, 0.3), (6.0, 0.3), (6.0, 1.6), (0, 2.0), close: true, fill: SAND.lighten(35%), stroke: INK)

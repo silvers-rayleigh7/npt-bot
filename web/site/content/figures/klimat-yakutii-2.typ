@@ -1,5 +1,5 @@
 #import "/content/figures/_preamble.typ": *
-#set page(width: auto, height: auto, margin: 8pt, fill: white)
+#set page(width: auto, height: auto, margin: 8pt, fill: rgb("#FBF8F1"))
 #set text(font: "Libertinus Serif", size: 10pt, fill: INK)
 
 // Годовой ход T: приморский климат (малая амплитуда) vs резкоконтинентальный (огромный размах).

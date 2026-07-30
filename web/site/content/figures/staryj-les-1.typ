@@ -1,5 +1,5 @@
 #import "/content/figures/_preamble.typ": *
-#set page(width: auto, height: auto, margin: 8pt, fill: white)
+#set page(width: auto, height: auto, margin: 8pt, fill: rgb("#FBF8F1"))
 #set text(font: "Libertinus Serif", size: 10pt, fill: INK)
 
 // Лес связывает углерод не только в стволах: до половины — в корнях, подстилке и почве.
@@ -26,7 +26,7 @@
 
   // подписи запасов углерода
   content((3.6, 1.7), anchor: "west", text(size: 8pt)[углерод в древесине])
-  content((3.6, -0.7), anchor: "west", text(size: 8pt, fill: white)[корни])
-  content((-0.4, -0.8), anchor: "west", text(size: 8.5pt, fill: white)[почва и подстилка])
+  content((3.6, -0.7), anchor: "west", text(size: 8pt, fill: rgb("#FBF8F1"))[корни])
+  content((-0.4, -0.8), anchor: "west", text(size: 8.5pt, fill: rgb("#FBF8F1"))[почва и подстилка])
   content((2.5, -1.95), text(size: 9pt, fill: OLIVE)[до половины углерода — в почве, а не в стволах])
 })

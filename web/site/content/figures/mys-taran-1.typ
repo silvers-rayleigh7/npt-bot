@@ -1,5 +1,5 @@
 #import "/content/figures/_preamble.typ": *
-#set page(width: auto, height: auto, margin: 8pt, fill: white)
+#set page(width: auto, height: auto, margin: 8pt, fill: rgb("#FBF8F1"))
 #set text(font: "Libertinus Serif", size: 10pt, fill: INK)
 
 // Обрыв мыса Таран: слоистые отложения с валунами, волны бьют в подножие, берег отступает.
@@ -9,7 +9,7 @@
 
   // тело обрыва (слева), вертикальный срез у воды на x=3.4
   // слои снизу вверх: глина · песок · почва
-  rect((0, 0), (3.4, 0.8), fill: OLIVE.lighten(20%));   content((1.0, 0.4), text(size: 8pt, fill: white)[глина])
+  rect((0, 0), (3.4, 0.8), fill: OLIVE.lighten(20%));   content((1.0, 0.4), text(size: 8pt, fill: rgb("#FBF8F1"))[глина])
   rect((0, 0.8), (3.4, 2.4), fill: SAND.lighten(35%));  content((1.0, 1.6), text(size: 8pt)[песок])
   rect((0, 2.4), (3.4, 2.8), fill: INK.lighten(30%))
   // валуны в толще и у подножия

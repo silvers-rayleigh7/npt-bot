@@ -1,5 +1,5 @@
 #import "/content/figures/_preamble.typ": *
-#set page(width: auto, height: auto, margin: 8pt, fill: white)
+#set page(width: auto, height: auto, margin: 8pt, fill: rgb("#FBF8F1"))
 #set text(font: "Libertinus Serif", size: 10pt, fill: INK)
 
 // Океан — глубокий тепловой аккумулятор (стабильная T); суша — тонкий слой (резкие перепады).
@@ -12,7 +12,7 @@
   for y in (0.6, 1.4, 2.2) { line((0.3, y), (2.3, y), stroke: (paint: OLIVE, thickness: 0.5pt)) }
   content((1.3, 3.3), text(size: 8.5pt)[океан])
   content((1.3, -0.35), text(size: 7.5pt, fill: OLIVE)[греется/стынет медленно])
-  content((1.3, 1.5), text(size: 9pt, fill: white)[$c≈4200$])
+  content((1.3, 1.5), text(size: 9pt, fill: rgb("#FBF8F1"))[$c≈4200$])
 
   // термометр стабильный
   line((3.0, 0.4), (3.0, 2.6)); circle((3.0, 0.4), radius: 0.18, fill: SAND.darken(10%), stroke: INK)

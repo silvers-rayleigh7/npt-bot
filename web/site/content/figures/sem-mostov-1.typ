@@ -1,5 +1,5 @@
 #import "/content/figures/_preamble.typ": *
-#set page(width: auto, height: auto, margin: 8pt, fill: white)
+#set page(width: auto, height: auto, margin: 8pt, fill: rgb("#FBF8F1"))
 #set text(font: "Libertinus Serif", size: 10pt, fill: INK)
 
 // Абстракция Эйлера: реальная карта (4 участка суши + 7 мостов) → граф (4 вершины + 7 рёбер).
@@ -41,7 +41,7 @@
   line(B, D); line(A, D); line(C, D)                    // остров—Ломзе, Альтштадт—Ломзе, Форштадт—Ломзе
   // вершины
   for (p, lab) in ((A, "А"), (B, "Б"), (C, "В"), (D, "Г")) {
-    circle(p, radius: 0.28, fill: white, stroke: (paint: INK, thickness: 1pt))
+    circle(p, radius: 0.28, fill: rgb("#FBF8F1"), stroke: (paint: INK, thickness: 1pt))
     content(p, text(size: 10pt, weight: "bold")[#lab])
   }
 })

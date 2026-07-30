@@ -1,5 +1,5 @@
 #import "/content/figures/_preamble.typ": *
-#set page(width: auto, height: auto, margin: 8pt, fill: white)
+#set page(width: auto, height: auto, margin: 8pt, fill: rgb("#FBF8F1"))
 #set text(font: "Libertinus Serif", size: 11pt, fill: INK)
 
 // Шкала-маршрут модели (Солнце 2,5 м → Нептун 165 м). Реальные расстояния в

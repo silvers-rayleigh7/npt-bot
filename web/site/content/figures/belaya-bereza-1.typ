@@ -1,5 +1,5 @@
 #import "/content/figures/_preamble.typ": *
-#set page(width: auto, height: auto, margin: 8pt, fill: white)
+#set page(width: auto, height: auto, margin: 8pt, fill: rgb("#FBF8F1"))
 #set text(font: "Libertinus Serif", size: 11pt, fill: INK)
 
 #cetz.canvas(length: 1cm, {
@@ -10,7 +10,7 @@
   content((4.2, 5.1), image("icons/sun.svg", width: 1.05cm))
 
   // ── свотчи коры: светлая (контур) и тёмная (заливка), широко разнесены
-  rect((1.0, 1.0), (2.2, 3.0), stroke: INK, fill: white)
+  rect((1.0, 1.0), (2.2, 3.0), stroke: INK, fill: rgb("#FBF8F1"))
   // чечевички на светлой коре — короткие чёрточки, чтобы читалось как берёзовая кора
   for y in (1.5, 2.05, 2.6) { line((1.2, y), (1.46, y), stroke: (paint: INK, thickness: 1.3pt)) }
   content((1.6, 0.5), text(size: 10pt)[светлая кора])

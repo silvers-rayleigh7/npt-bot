@@ -1,5 +1,5 @@
 #import "/content/figures/_preamble.typ": *
-#set page(width: auto, height: auto, margin: 8pt, fill: white)
+#set page(width: auto, height: auto, margin: 8pt, fill: rgb("#FBF8F1"))
 #set text(font: "Libertinus Serif", size: 11pt, fill: INK)
 
 // L1: одни и те же координаты точки приходят двумя путями — выбиты на латунном
@@ -30,7 +30,7 @@
   // ── СМАРТФОН: скруглённый прямоугольник с экраном и теми же координатами
   let px = 4.8
   rect((px - 0.85, -1.5), (px + 0.85, 1.7), radius: 0.22,
-       fill: white, stroke: (paint: INK, thickness: 1.1pt))
+       fill: rgb("#FBF8F1"), stroke: (paint: INK, thickness: 1.1pt))
   rect((px - 0.62, -1.0), (px + 0.62, 1.3), radius: 0.06,
        fill: rgb("#EEF0EC"), stroke: (paint: SAND, thickness: 0.6pt))
   content((px, 0.45), text(size: 8pt)[55,751° N\

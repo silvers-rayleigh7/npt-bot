@@ -1,5 +1,5 @@
 #import "/content/figures/_preamble.typ": *
-#set page(width: auto, height: auto, margin: 8pt, fill: white)
+#set page(width: auto, height: auto, margin: 8pt, fill: rgb("#FBF8F1"))
 #set text(font: "Libertinus Serif", size: 10pt, fill: INK)
 
 // Путь янтаря: смола капает в лесу → река сносит в море → оседает в «голубой земле».
@@ -31,7 +31,7 @@
   // ── 3. разрез: песок над «голубой землёй» с янтарём
   rect((6.7, 1.3), (9.2, 2.0), fill: SAND.lighten(40%));  content((7.95, 1.65), text(size: 8pt)[песок])
   rect((6.7, 0.4), (9.2, 1.3), fill: OLIVE.lighten(20%))
-  content((7.95, 0.9), text(size: 8pt, fill: white)[голубая земля])
+  content((7.95, 0.9), text(size: 8pt, fill: rgb("#FBF8F1"))[голубая земля])
   for px in (7.2, 8.0, 8.7) { circle((px, 0.7), radius: 0.11, fill: SUN, stroke: (paint: INK, thickness: 0.5pt)) }
   content((7.95, -0.4), text(size: 8.5pt)[оседает янтарём])
 })
