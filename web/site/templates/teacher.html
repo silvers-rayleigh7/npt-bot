@@ -197,8 +197,55 @@
     suggest.classList.add('show');
   }
 
-  subject.addEventListener('change', function(){ refreshTextbooks(); refreshSuggestions(); });
-  grade.addEventListener('change', refreshSuggestions);
+  // ── В каких классах предмет реально преподаётся (ФГОС) ──
+  // Физики в 1 классе не бывает, химии — до 8-го, астрономии — до 10-го. Списки
+  // фильтруются в обе стороны, чтобы нельзя было собрать несуществующий урок.
+  // Экология — не обязательный предмет, диапазон взят по курируемому индексу программы.
+  var SUBJECT_GRADES = {
+    'окружающий мир': [1, 4],
+    'математика':     [1, 11],
+    'биология':       [5, 11],
+    'география':      [5, 11],
+    'история':        [5, 11],
+    'физика':         [7, 11],
+    'экология':       [7, 11],
+    'химия':          [8, 11],
+    'астрономия':     [10, 11]
+  };
+  var ALL_SUBJECTS = Object.keys(SUBJECT_GRADES);
+
+  function fits(subj, g){
+    var r = SUBJECT_GRADES[subj];
+    if (!r || !g) return true;          // пустой выбор ничего не ограничивает
+    var n = parseInt(g, 10);
+    return n >= r[0] && n <= r[1];
+  }
+
+  function fillSelect(sel, values, label){
+    var cur = sel.value;
+    sel.innerHTML = '<option value="">—</option>';
+    values.forEach(function(v){
+      var o = document.createElement('option');
+      o.value = v; o.textContent = label ? label(v) : v;
+      sel.appendChild(o);
+    });
+    sel.value = values.indexOf(cur) >= 0 ? cur : '';   // выбор сохраняем, если он ещё валиден
+  }
+
+  // Оставляем в каждом списке только совместимые варианты. Сброс любого поля
+  // возвращает второму полный список.
+  function syncGradeSubject(){
+    var g = grade.value, s = subject.value;
+    var subjects = ALL_SUBJECTS.filter(function(x){ return fits(x, g); });
+    var grades = [];
+    for (var n = 1; n <= 11; n++) if (fits(s, String(n))) grades.push(String(n));
+    fillSelect(subject, subjects);
+    fillSelect(grade, grades, function(n){ return n + ' класс'; });
+  }
+
+  subject.addEventListener('change', function(){ syncGradeSubject(); refreshTextbooks(); refreshSuggestions(); });
+  grade.addEventListener('change', function(){ syncGradeSubject(); refreshTextbooks(); refreshSuggestions(); });
+  syncGradeSubject();
 
   function esc(s){return s.replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
   function md(t){
