@@ -596,6 +596,12 @@ def build():
     env = Environment(loader=FileSystemLoader(TEMPLATES), autoescape=False)
     # Версия ассетов виджета: без неё правки bot.js/bot.css не доезжают до тех,
     # у кого файл уже в кэше браузера (Cache-Control сервер не отдаёт).
+    # Заставки живут своей жизнью: меняются, когда css и js не трогали.
+    # Без отдельной версии браузер отдаст старую картинку по тому же адресу.
+    env.globals["icons_v"] = _assets_version(
+        *sorted(os.path.join(OUT, "assets", "icons", f)
+                for f in os.listdir(os.path.join(OUT, "assets", "icons"))
+                if f.endswith((".svg", ".png"))))
     env.globals["asset_v"] = _assets_version(
         os.path.join(SITE_ASSETS, "bot.js"), os.path.join(SITE_ASSETS, "bot.css"),
         os.path.join(OUT, "assets", "tokens.css"), os.path.join(OUT, "assets", "reveal.js"),

@@ -1,0 +1,71 @@
+<svg class="typst-doc" viewBox="0 0 440 200" width="440pt" height="200pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:h5="http://www.w3.org/1999/xhtml">
+    <path class="typst-shape" fill="#fbf8f1" fill-rule="nonzero" d="M 0 0 L 0 200 L 440 200 L 440 0 Z "/>
+    <g>
+        <g transform="translate(0 0)">
+            <g class="typst-group">
+                <g>
+                    <g transform="translate(0 0.5)">
+                        <path class="typst-shape" fill="#fbf8f1" fill-rule="nonzero" d="M 0 0 L 0 200 L 440 200 L 440 0 L 0 0 Z "/>
+                    </g>
+                    <g transform="translate(220 116.5)">
+                        <path class="typst-shape" fill="none" stroke="#22333c" stroke-width="9" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 64 L 0 0 "/>
+                    </g>
+                    <g transform="translate(174 86.5)">
+                        <path class="typst-shape" fill="none" stroke="#f26b57" stroke-width="7" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 46 30 L 0 0 "/>
+                    </g>
+                    <g transform="translate(141.8 66.5)">
+                        <path class="typst-shape" fill="none" stroke="#f26b57" stroke-width="4.3" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 32.2 20 L 0 0 "/>
+                    </g>
+                    <g transform="translate(136.60000000000002 61.30000000000001)">
+                        <path class="typst-shape" fill="#f26b57" fill-rule="nonzero" d="M 5.2 0 C 2.3307233 0 0 2.3307233 0 5.2 C 0 8.069277 2.3307233 10.4 5.2 10.4 C 8.069277 10.4 10.4 8.069277 10.4 5.2 C 10.4 2.3307233 8.069277 0 5.2 0 Z "/>
+                    </g>
+                    <g transform="translate(220 86.5)">
+                        <path class="typst-shape" fill="none" stroke="#f26b57" stroke-width="7" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 30 L 46 0 "/>
+                    </g>
+                    <g transform="translate(266 66.5)">
+                        <path class="typst-shape" fill="none" stroke="#f26b57" stroke-width="4.3" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 20 L 32.2 0 "/>
+                    </g>
+                    <g transform="translate(293 61.30000000000001)">
+                        <path class="typst-shape" fill="#f26b57" fill-rule="nonzero" d="M 5.2 0 C 2.3307233 0 0 2.3307233 0 5.2 C 0 8.069277 2.3307233 10.4 5.2 10.4 C 8.069277 10.4 10.4 8.069277 10.4 5.2 C 10.4 2.3307233 8.069277 0 5.2 0 Z "/>
+                    </g>
+                    <g transform="translate(188 50.5)">
+                        <path class="typst-shape" fill="none" stroke="#7a6fe0" stroke-width="5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 32 30 L 0 0 "/>
+                    </g>
+                    <g transform="translate(165.6 30.5)">
+                        <path class="typst-shape" fill="none" stroke="#7a6fe0" stroke-width="3.1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 22.4 20 L 0 0 "/>
+                    </g>
+                    <g transform="translate(161.79999999999998 26.69999999999999)">
+                        <path class="typst-shape" fill="#7a6fe0" fill-rule="nonzero" d="M 3.8 0 C 1.7032208 0 0 1.7032208 0 3.8 C 0 5.896779 1.7032208 7.6 3.8 7.6 C 5.896779 7.6 7.6 5.896779 7.6 3.8 C 7.6 1.7032208 5.896779 0 3.8 0 Z "/>
+                    </g>
+                    <g transform="translate(220 50.5)">
+                        <path class="typst-shape" fill="none" stroke="#7a6fe0" stroke-width="5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 30 L 32 0 "/>
+                    </g>
+                    <g transform="translate(252 30.5)">
+                        <path class="typst-shape" fill="none" stroke="#7a6fe0" stroke-width="3.1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 20 L 22.4 0 "/>
+                    </g>
+                    <g transform="translate(270.59999999999997 26.69999999999999)">
+                        <path class="typst-shape" fill="#7a6fe0" fill-rule="nonzero" d="M 3.8 0 C 1.7032208 0 0 1.7032208 0 3.8 C 0 5.896779 1.7032208 7.6 3.8 7.6 C 5.896779 7.6 7.6 5.896779 7.6 3.8 C 7.6 1.7032208 5.896779 0 3.8 0 Z "/>
+                    </g>
+                    <g transform="translate(200 22.5)">
+                        <path class="typst-shape" fill="none" stroke="#f26b57" stroke-width="3.4" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 20 30 L 0 0 "/>
+                    </g>
+                    <g transform="translate(186 2.5)">
+                        <path class="typst-shape" fill="none" stroke="#f26b57" stroke-width="2.1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 14 20 L 0 0 "/>
+                    </g>
+                    <g transform="translate(183.5 0)">
+                        <path class="typst-shape" fill="#f26b57" fill-rule="nonzero" d="M 2.5 0 C 1.12054 0 0 1.12054 0 2.5 C 0 3.87946 1.12054 5 2.5 5 C 3.87946 5 5 3.87946 5 2.5 C 5 1.12054 3.87946 0 2.5 0 Z "/>
+                    </g>
+                    <g transform="translate(220 22.5)">
+                        <path class="typst-shape" fill="none" stroke="#f26b57" stroke-width="3.4" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 30 L 20 0 "/>
+                    </g>
+                    <g transform="translate(240 2.5)">
+                        <path class="typst-shape" fill="none" stroke="#f26b57" stroke-width="2.1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 20 L 14 0 "/>
+                    </g>
+                    <g transform="translate(251.5 0)">
+                        <path class="typst-shape" fill="#f26b57" fill-rule="nonzero" d="M 2.5 0 C 1.12054 0 0 1.12054 0 2.5 C 0 3.87946 1.12054 5 2.5 5 C 3.87946 5 5 3.87946 5 2.5 C 5 1.12054 3.87946 0 2.5 0 Z "/>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

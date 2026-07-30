@@ -89,8 +89,10 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
 .sl-card{display:block;position:relative;aspect-ratio:2/1;border:1px solid #D6CFC1;border-radius:14px;overflow:hidden;background:#fff;transition:border-color .15s;text-decoration:none}
 .sl-card:hover{border-color:var(--olive);text-decoration:none}
 .sl-card.hidden{display:none}
-.sl-ic{position:absolute;inset:0;background-position:center 20%;background-size:122%;background-repeat:no-repeat;opacity:.9}
-.sl-veil{position:absolute;inset:0;background:linear-gradient(to top,#ffffff 0%,#ffffff 26%,rgba(255,255,255,.82) 48%,rgba(255,255,255,0) 78%)}
+/* Заставки теперь векторные и в палитре — вписываем целиком, не кадрируем */
+.sl-ic{position:absolute;inset:0;background-position:center 22%;background-size:86%;background-repeat:no-repeat;opacity:1}
+/* Вуаль под заголовок — из бумаги, а не из белого: белый спорил бы с фоном карточки */
+.sl-veil{position:absolute;inset:0;background:linear-gradient(to top,var(--card) 0%,var(--card) 22%,rgba(255,255,255,.72) 44%,rgba(255,255,255,0) 72%)}
 /* чипы на карточке — сверху слева, до 3 */
 .sl-tags{position:absolute;top:12px;left:12px;right:12px;display:flex;flex-wrap:wrap;gap:5px;z-index:2}
 .sl-tag{font-size:0.68rem;line-height:1;padding:4px 8px;border-radius:6px;background:rgba(255,255,255,.82);
@@ -165,7 +167,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/almazy/"
        data-tags="физика|геология">
-      <div class="sl-ic" style="background-image:url(/assets/icons/almazy.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/almazy.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">физика</span><span class="sl-tag">геология</span>
@@ -175,7 +177,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/batagay/"
        data-tags="математика|геология">
-      <div class="sl-ic" style="background-image:url(/assets/icons/batagay.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/batagay.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">математика</span><span class="sl-tag">геология</span>
@@ -185,7 +187,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/belaya-bereza/"
        data-tags="биология|оптика">
-      <div class="sl-ic" style="background-image:url(/assets/icons/belaya-bereza.svg)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/belaya-bereza.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">биология</span><span class="sl-tag">оптика</span>
@@ -195,7 +197,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/belyaev/"
        data-tags="биология|генетика">
-      <div class="sl-ic" style="background-image:url(/assets/icons/belyaev.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/belyaev.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">биология</span><span class="sl-tag">генетика</span>
@@ -205,7 +207,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/bessel/"
        data-tags="астрономия|геодезия">
-      <div class="sl-ic" style="background-image:url(/assets/icons/bessel.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/bessel.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">астрономия</span><span class="sl-tag">геодезия</span>
@@ -215,7 +217,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/dendrohronologiya/"
        data-tags="биология|история">
-      <div class="sl-ic" style="background-image:url(/assets/icons/dendrohronologiya.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/dendrohronologiya.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">биология</span><span class="sl-tag">история</span>
@@ -225,7 +227,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/dvizhushaya-dyuna/"
        data-tags="механика|география">
-      <div class="sl-ic" style="background-image:url(/assets/icons/dvizhushaya-dyuna.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/dvizhushaya-dyuna.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">механика</span><span class="sl-tag">география</span>
@@ -235,7 +237,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/fraktalnaya-ramka/"
        data-tags="математика|фракталы">
-      <div class="sl-ic" style="background-image:url(/assets/icons/fraktalnaya-ramka.svg)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/fraktalnaya-ramka.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">математика</span><span class="sl-tag">фракталы</span>
@@ -245,7 +247,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/geo-srez/"
        data-tags="геология|время">
-      <div class="sl-ic" style="background-image:url(/assets/icons/geo-srez.svg)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/geo-srez.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">геология</span><span class="sl-tag">время</span>
@@ -255,7 +257,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/kant-sistema/"
        data-tags="астрономия|механика">
-      <div class="sl-ic" style="background-image:url(/assets/icons/kant-sistema.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/kant-sistema.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">астрономия</span><span class="sl-tag">механика</span>
@@ -265,7 +267,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/kantorovich/"
        data-tags="математика|экономика">
-      <div class="sl-ic" style="background-image:url(/assets/icons/kantorovich.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/kantorovich.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">математика</span><span class="sl-tag">экономика</span>
@@ -275,7 +277,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/kazhetsya-ponimaet/"
        data-tags="искусственный интеллект|психология|история науки">
-      <div class="sl-ic" style="background-image:url(/assets/glyphs/mountains.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/kazhetsya-ponimaet.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">искусственный интеллект</span><span class="sl-tag">психология</span>
@@ -285,7 +287,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/klimat-yakutii/"
        data-tags="физика|география">
-      <div class="sl-ic" style="background-image:url(/assets/icons/klimat-yakutii.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/klimat-yakutii.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">физика</span><span class="sl-tag">география</span>
@@ -295,7 +297,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/kraevedenie/"
        data-tags="история|место">
-      <div class="sl-ic" style="background-image:url(/assets/icons/kraevedenie.svg)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/kraevedenie.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">история</span><span class="sl-tag">место</span>
@@ -305,7 +307,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/kvadrat-zhizni/"
        data-tags="биология|экология">
-      <div class="sl-ic" style="background-image:url(/assets/icons/kvadrat-zhizni.svg)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/kvadrat-zhizni.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">биология</span><span class="sl-tag">экология</span>
@@ -315,7 +317,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/lavrentyev/"
        data-tags="механика|математика">
-      <div class="sl-ic" style="background-image:url(/assets/icons/lavrentyev.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/lavrentyev.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">механика</span><span class="sl-tag">математика</span>
@@ -325,7 +327,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/lenskie-stolby/"
        data-tags="геология|физика">
-      <div class="sl-ic" style="background-image:url(/assets/icons/lenskie-stolby.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/lenskie-stolby.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">геология</span><span class="sl-tag">физика</span>
@@ -335,7 +337,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/mamonty/"
        data-tags="биология|физика">
-      <div class="sl-ic" style="background-image:url(/assets/icons/mamonty.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/mamonty.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">биология</span><span class="sl-tag">физика</span>
@@ -345,7 +347,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/mayatniki/"
        data-tags="физика|колебания">
-      <div class="sl-ic" style="background-image:url(/assets/icons/mayatniki.svg)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/mayatniki.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">физика</span><span class="sl-tag">колебания</span>
@@ -355,7 +357,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/mikrobiom/"
        data-tags="биология|генетика">
-      <div class="sl-ic" style="background-image:url(/assets/icons/mikrobiom.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/mikrobiom.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">биология</span><span class="sl-tag">генетика</span>
@@ -365,7 +367,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/minkovsky/"
        data-tags="математика|физика">
-      <div class="sl-ic" style="background-image:url(/assets/icons/minkovsky.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/minkovsky.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">математика</span><span class="sl-tag">физика</span>
@@ -375,7 +377,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/most-leonardo/"
        data-tags="инженерия|геометрия">
-      <div class="sl-ic" style="background-image:url(/assets/icons/most-leonardo.svg)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/most-leonardo.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">инженерия</span><span class="sl-tag">геометрия</span>
@@ -385,7 +387,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/mys-taran/"
        data-tags="геология|механика">
-      <div class="sl-ic" style="background-image:url(/assets/icons/mys-taran.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/mys-taran.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">геология</span><span class="sl-tag">механика</span>
@@ -395,7 +397,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/obratnye-zadachi/"
        data-tags="математика|геофизика">
-      <div class="sl-ic" style="background-image:url(/assets/icons/obratnye-zadachi.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/obratnye-zadachi.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">математика</span><span class="sl-tag">геофизика</span>
@@ -405,7 +407,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/observatoriya/"
        data-tags="астрономия|геометрия">
-      <div class="sl-ic" style="background-image:url(/assets/icons/observatoriya.svg)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/observatoriya.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">астрономия</span><span class="sl-tag">геометрия</span>
@@ -415,7 +417,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/russkie-isklyucheniya/"
        data-tags="лингвистика|эволюция|статистика">
-      <div class="sl-ic" style="background-image:url(/assets/glyphs/mountains.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/russkie-isklyucheniya.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">лингвистика</span><span class="sl-tag">эволюция</span>
@@ -425,7 +427,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/sem-mostov/"
        data-tags="математика|графы">
-      <div class="sl-ic" style="background-image:url(/assets/icons/sem-mostov.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/sem-mostov.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">математика</span><span class="sl-tag">графы</span>
@@ -435,7 +437,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/seysmograf-viherta/"
        data-tags="физика|геофизика">
-      <div class="sl-ic" style="background-image:url(/assets/icons/seysmograf-viherta.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/seysmograf-viherta.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">физика</span><span class="sl-tag">геофизика</span>
@@ -445,7 +447,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/skrytaya-matematika/"
        data-tags="биология|математика">
-      <div class="sl-ic" style="background-image:url(/assets/icons/skrytaya-matematika.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/skrytaya-matematika.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">биология</span><span class="sl-tag">математика</span>
@@ -455,7 +457,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/sobolev/"
        data-tags="математика|физика">
-      <div class="sl-ic" style="background-image:url(/assets/icons/sobolev.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/sobolev.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">математика</span><span class="sl-tag">физика</span>
@@ -465,7 +467,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/solnechnaya-sistema/"
        data-tags="астрономия|масштаб">
-      <div class="sl-ic" style="background-image:url(/assets/icons/solnechnaya-sistema.svg)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/solnechnaya-sistema.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">астрономия</span><span class="sl-tag">масштаб</span>
@@ -475,7 +477,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/solnechnye-chasy/"
        data-tags="астрономия|время">
-      <div class="sl-ic" style="background-image:url(/assets/icons/solnechnye-chasy.svg)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/solnechnye-chasy.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">астрономия</span><span class="sl-tag">время</span>
@@ -485,7 +487,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/sputnik/"
        data-tags="навигация|геометрия">
-      <div class="sl-ic" style="background-image:url(/assets/icons/sputnik.svg)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/sputnik.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">навигация</span><span class="sl-tag">геометрия</span>
@@ -495,7 +497,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/staryj-les/"
        data-tags="экология|биология">
-      <div class="sl-ic" style="background-image:url(/assets/icons/staryj-les.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/staryj-les.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">экология</span><span class="sl-tag">биология</span>
@@ -505,7 +507,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/tancuyushiy-les/"
        data-tags="биология|механика">
-      <div class="sl-ic" style="background-image:url(/assets/icons/tancuyushiy-les.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/tancuyushiy-les.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">биология</span><span class="sl-tag">механика</span>
@@ -515,7 +517,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/terrasy-vremeni/"
        data-tags="геология|рельеф">
-      <div class="sl-ic" style="background-image:url(/assets/icons/terrasy-vremeni.svg)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/terrasy-vremeni.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">геология</span><span class="sl-tag">рельеф</span>
@@ -525,7 +527,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/uslysh-rasstoyanie/"
        data-tags="акустика|физика">
-      <div class="sl-ic" style="background-image:url(/assets/icons/uslysh-rasstoyanie.svg)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/uslysh-rasstoyanie.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">акустика</span><span class="sl-tag">физика</span>
@@ -535,7 +537,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/valun-termometr/"
        data-tags="физика|тепло">
-      <div class="sl-ic" style="background-image:url(/assets/icons/valun-termometr.svg)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/valun-termometr.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">физика</span><span class="sl-tag">тепло</span>
@@ -545,7 +547,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/vhod/"
        data-tags="навигация|методология">
-      <div class="sl-ic" style="background-image:url(/assets/icons/vhod.svg)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/vhod.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">навигация</span><span class="sl-tag">методология</span>
@@ -555,7 +557,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/vishtynec/"
        data-tags="физика|экология">
-      <div class="sl-ic" style="background-image:url(/assets/icons/vishtynec.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/vishtynec.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">физика</span><span class="sl-tag">экология</span>
@@ -565,7 +567,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/vodorazdel/"
        data-tags="гидрология|геоморфология">
-      <div class="sl-ic" style="background-image:url(/assets/icons/vodorazdel.svg)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/vodorazdel.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">гидрология</span><span class="sl-tag">геоморфология</span>
@@ -575,7 +577,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
     
     <a class="sl-card" href="/storylines/yantar/"
        data-tags="химия|геология">
-      <div class="sl-ic" style="background-image:url(/assets/icons/yantar.png)"></div>
+      <div class="sl-ic" style="background-image:url(/assets/icons/yantar.svg?v=ec76bcd5)"></div>
       <div class="sl-veil"></div>
       <div class="sl-tags">
         <span class="sl-tag">химия</span><span class="sl-tag">геология</span>

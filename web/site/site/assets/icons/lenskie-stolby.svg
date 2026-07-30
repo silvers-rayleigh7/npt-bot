@@ -1,0 +1,53 @@
+<svg class="typst-doc" viewBox="0 0 440 200" width="440pt" height="200pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:h5="http://www.w3.org/1999/xhtml">
+    <path class="typst-shape" fill="#fbf8f1" fill-rule="nonzero" d="M 0 0 L 0 200 L 440 200 L 440 0 Z "/>
+    <g>
+        <g transform="translate(0 0)">
+            <g class="typst-group">
+                <g>
+                    <g transform="translate(0 0)">
+                        <path class="typst-shape" fill="#fbf8f1" fill-rule="nonzero" d="M 0 0 L 0 200 L 440 200 L 440 0 L 0 0 Z "/>
+                    </g>
+                    <g transform="translate(80 154)">
+                        <path class="typst-shape" fill="#22333c" fill-rule="nonzero" d="M 0 16 L 156 16 L 156 0 L 0 0 L 0 16 Z "/>
+                    </g>
+                    <g transform="translate(236 165)">
+                        <path class="typst-shape" fill="#22333c" fill-rule="nonzero" d="M 0 16 L 124 16 L 124 0 L 0 0 L 0 16 Z "/>
+                    </g>
+                    <g transform="translate(80 141)">
+                        <path class="typst-shape" fill="#e9863b" fill-rule="nonzero" d="M 0 10 L 156 10 L 156 0 L 0 0 L 0 10 Z "/>
+                    </g>
+                    <g transform="translate(236 152)">
+                        <path class="typst-shape" fill="#e9863b" fill-rule="nonzero" d="M 0 10 L 124 10 L 124 0 L 0 0 L 0 10 Z "/>
+                    </g>
+                    <g transform="translate(80 118)">
+                        <path class="typst-shape" fill="#f6bb2e" fill-rule="nonzero" d="M 0 20 L 156 20 L 156 0 L 0 0 L 0 20 Z "/>
+                    </g>
+                    <g transform="translate(236 129)">
+                        <path class="typst-shape" fill="#f6bb2e" fill-rule="nonzero" d="M 0 20 L 124 20 L 124 0 L 0 0 L 0 20 Z "/>
+                    </g>
+                    <g transform="translate(80 107)">
+                        <path class="typst-shape" fill="#e9863b" fill-rule="nonzero" d="M 0 8 L 156 8 L 156 0 L 0 0 L 0 8 Z "/>
+                    </g>
+                    <g transform="translate(236 118)">
+                        <path class="typst-shape" fill="#e9863b" fill-rule="nonzero" d="M 0 8 L 124 8 L 124 0 L 0 0 L 0 8 Z "/>
+                    </g>
+                    <g transform="translate(80 90)">
+                        <path class="typst-shape" fill="#22333c" fill-rule="nonzero" d="M 0 14 L 156 14 L 156 0 L 0 0 L 0 14 Z "/>
+                    </g>
+                    <g transform="translate(236 101)">
+                        <path class="typst-shape" fill="#22333c" fill-rule="nonzero" d="M 0 14 L 124 14 L 124 0 L 0 0 L 0 14 Z "/>
+                    </g>
+                    <g transform="translate(80 76)">
+                        <path class="typst-shape" fill="#f6bb2e" fill-rule="nonzero" d="M 0 11 L 156 11 L 156 0 L 0 0 L 0 11 Z "/>
+                    </g>
+                    <g transform="translate(236 87)">
+                        <path class="typst-shape" fill="#f6bb2e" fill-rule="nonzero" d="M 0 11 L 124 11 L 124 0 L 0 0 L 0 11 Z "/>
+                    </g>
+                    <g transform="translate(236 28)">
+                        <path class="typst-shape" fill="none" stroke="#fbf8f1" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 158 L 0 0 "/>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

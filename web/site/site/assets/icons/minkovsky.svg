@@ -1,0 +1,26 @@
+<svg class="typst-doc" viewBox="0 0 440 200" width="440pt" height="200pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:h5="http://www.w3.org/1999/xhtml">
+    <path class="typst-shape" fill="#fbf8f1" fill-rule="nonzero" d="M 0 0 L 0 200 L 440 200 L 440 0 Z "/>
+    <g>
+        <g transform="translate(0 0)">
+            <g class="typst-group">
+                <g>
+                    <g transform="translate(0 0)">
+                        <path class="typst-shape" fill="#fbf8f1" fill-rule="nonzero" d="M 0 0 L 0 200 L 440 200 L 440 0 L 0 0 Z "/>
+                    </g>
+                    <g transform="translate(70 48)">
+                        <path class="typst-shape" fill="none" stroke="#2e9bd6" stroke-width="1.6" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-dashoffset="0" stroke-dasharray="3 3" d="M 0 0 L 12 1.4 L 24 2.7 L 36 4.1 L 48 5.4 L 60 6.8 L 72 8.1 L 84 9.5 L 96 10.9 L 108 12.2 L 120 13.6 L 132 14.9 L 144 16.3 L 156 17.6 L 168 19 L 180 20.3 L 192 21.7 L 204 23.1 L 216 24.4 L 228 25.8 L 240 27.1 L 252 28.5 L 264 29.8 L 276 31.2 L 288 32.6 L 300 33.9 "/>
+                    </g>
+                    <g transform="translate(70 63.099999999999994)">
+                        <path class="typst-shape" fill="none" stroke="#7a6fe0" stroke-width="3.4" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 14.3 L 6 25.8 L 12 37.5 L 18 48.9 L 24 59.4 L 30 68.4 L 36 75.5 L 42 80.3 L 48 82.8 L 54 82.7 L 60 80.3 L 66 75.6 L 72 69 L 78 61 L 84 51.9 L 90 42.3 L 96 32.7 L 102 23.7 L 108 15.7 L 114 9 L 120 4.1 L 126 1 L 132 0 L 138 0.9 L 144 3.7 L 150 8.1 L 156 13.9 L 162 20.7 L 168 28.1 L 174 35.6 L 180 42.9 L 186 49.6 L 192 55.3 L 198 59.8 L 204 62.9 L 210 64.4 L 216 64.5 L 222 63.1 L 228 60.3 L 234 56.5 L 240 51.8 L 246 46.6 L 252 41.2 L 258 35.8 L 264 30.8 L 270 26.4 L 276 22.9 L 282 20.3 L 288 18.8 L 294 18.3 L 300 18.9 "/>
+                    </g>
+                    <g transform="translate(70 100)">
+                        <path class="typst-shape" fill="none" stroke="#22333c" stroke-width="1.4" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 0 L 302 0 "/>
+                    </g>
+                    <g transform="translate(64 94)">
+                        <path class="typst-shape" fill="#22333c" fill-rule="nonzero" d="M 6 0 C 2.689296 0 0 2.689296 0 6 C 0 9.310704 2.689296 12 6 12 C 9.310704 12 12 9.310704 12 6 C 12 2.689296 9.310704 0 6 0 Z "/>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

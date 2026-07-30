@@ -1,0 +1,35 @@
+<svg class="typst-doc" viewBox="0 0 440 200" width="440pt" height="200pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:h5="http://www.w3.org/1999/xhtml">
+    <path class="typst-shape" fill="#fbf8f1" fill-rule="nonzero" d="M 0 0 L 0 200 L 440 200 L 440 0 Z "/>
+    <g>
+        <g transform="translate(0 0)">
+            <g class="typst-group">
+                <g>
+                    <g transform="translate(0 0)">
+                        <path class="typst-shape" fill="#fbf8f1" fill-rule="nonzero" d="M 0 0 L 0 200 L 440 200 L 440 0 L 0 0 Z "/>
+                    </g>
+                    <g transform="translate(154 48)">
+                        <path class="typst-shape" fill="#2e9bd6" fill-rule="nonzero" d="M 0 38 L 33 0 L 99 0 L 132 38 L 0 38 Z "/>
+                    </g>
+                    <g transform="translate(187 48)">
+                        <path class="typst-shape" fill="#7a6fe0" fill-rule="nonzero" d="M 0 0 L 36.96 0 L 22.44 38 L 0 0 Z "/>
+                    </g>
+                    <g transform="translate(154 86)">
+                        <path class="typst-shape" fill="#22333c" fill-rule="nonzero" d="M 0 0 L 132 0 L 66 82 L 0 0 Z "/>
+                    </g>
+                    <g transform="translate(200.2 86)">
+                        <path class="typst-shape" fill="#7a6fe0" fill-rule="nonzero" d="M 0 0 L 39.6 0 L 19.8 82 L 0 0 Z "/>
+                    </g>
+                    <g transform="translate(154 86)">
+                        <path class="typst-shape" fill="none" stroke="#fbf8f1" stroke-width="3" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 0 L 132 0 "/>
+                    </g>
+                    <g transform="translate(187 48)">
+                        <path class="typst-shape" fill="none" stroke="#fbf8f1" stroke-width="3" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 0 L 22.44 38 "/>
+                    </g>
+                    <g transform="translate(230.56 48)">
+                        <path class="typst-shape" fill="none" stroke="#fbf8f1" stroke-width="3" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 22.44 0 L 0 38 "/>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

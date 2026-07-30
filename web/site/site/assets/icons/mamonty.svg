@@ -1,0 +1,23 @@
+<svg class="typst-doc" viewBox="0 0 440 200" width="440pt" height="200pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:h5="http://www.w3.org/1999/xhtml">
+    <path class="typst-shape" fill="#fbf8f1" fill-rule="nonzero" d="M 0 0 L 0 200 L 440 200 L 440 0 Z "/>
+    <g>
+        <g transform="translate(0 0)">
+            <g class="typst-group">
+                <g>
+                    <g transform="translate(0 0)">
+                        <path class="typst-shape" fill="#fbf8f1" fill-rule="nonzero" d="M 0 0 L 0 200 L 440 200 L 440 0 L 0 0 Z "/>
+                    </g>
+                    <g transform="translate(274 42)">
+                        <path class="typst-shape" fill="#22333c" fill-rule="nonzero" d="M 26 0 C 11.653616 0 0 11.653616 0 26 C 0 40.346382 11.653616 52 26 52 C 40.346382 52 52 40.346382 52 26 C 52 11.653616 40.346382 0 26 0 Z "/>
+                    </g>
+                    <g transform="translate(60 72)">
+                        <path class="typst-shape" fill="#2e9bd6" fill-rule="nonzero" d="M 0 32 L 90 0 L 172 36 L 252 6 L 320 32 L 320 68 L 0 68 L 0 32 Z "/>
+                    </g>
+                    <g transform="translate(60 112)">
+                        <path class="typst-shape" fill="#22333c" fill-rule="nonzero" d="M 0 26 L 68 0 L 148 32 L 228 4 L 320 34 L 320 64 L 0 64 L 0 26 Z "/>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
