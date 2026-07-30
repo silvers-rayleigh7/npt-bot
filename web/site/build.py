@@ -595,6 +595,7 @@ def build():
     env.globals["asset_v"] = _assets_version(
         os.path.join(SITE_ASSETS, "bot.js"), os.path.join(SITE_ASSETS, "bot.css"),
         os.path.join(OUT, "assets", "tokens.css"), os.path.join(OUT, "assets", "reveal.js"),
+        os.path.join(OUT, "assets", "layout.css"), os.path.join(OUT, "assets", "layout.js"),
         os.path.join(OUT, "assets", "fonts", "fonts.css"),
     )
     storylines = load_storylines()
