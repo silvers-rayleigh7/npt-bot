@@ -574,7 +574,11 @@ def build_figures():
             continue
         svg = os.path.join(out, fn[:-4] + ".svg")
         try:
-            subprocess.run(["typst", "compile", "--root", ROOT, os.path.join(src, fn), svg],
+            # --font-path: шрифты дизайн-системы лежат в проекте, а не в системе,
+            # иначе схемы соберутся на подменном шрифте и разъедутся с сайтом.
+            subprocess.run(["typst", "compile", "--root", ROOT,
+                            "--font-path", os.path.join(src, "fonts"),
+                            os.path.join(src, fn), svg],
                            check=True, capture_output=True, timeout=60)
             n += 1
         except Exception as e:

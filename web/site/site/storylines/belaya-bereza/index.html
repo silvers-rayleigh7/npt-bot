@@ -75,9 +75,9 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
 .sg-tag{padding:2px 9px;border-radius:20px;background:var(--gl);color:var(--tm)}
 /* Уровень надёжности материала — читатель должен видеть, чем подкреплён текст */
 .sg-ver{padding:2px 9px;border-radius:20px;font-size:0.78rem;cursor:help;white-space:nowrap}
-.sg-ver-expert{background:#E8F0E4;color:#3E5836}
-.sg-ver-sources{background:#EDF0F5;color:#41506B}
-.sg-ver-draft{background:#F6EFE4;color:#7A5C2E}
+.sg-ver-expert{background:var(--meadow);color:var(--grass-600)}
+.sg-ver-sources{background:var(--mist);color:var(--sky-600)}
+.sg-ver-draft{background:var(--sand);color:var(--terra-600)}
 .sg-geo{color:var(--olive);font-weight:600}
 .tabs{display:flex;align-items:center;gap:4px;border-bottom:1px solid var(--bd);margin:26px 0 0;flex-wrap:wrap}
 .tab{font-family:var(--serif);font-size:1.05rem;font-weight:600;padding:9px 16px;color:var(--tm);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
@@ -87,8 +87,11 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
 .tab-pdf:hover{color:var(--olive);text-decoration:none}
 .tab-pdf i{width:15px;height:15px;stroke-width:1.4}
 /* читается как книжная статья */
-.body{padding:26px 0 8px;font-family:Georgia,"PT Serif","Times New Roman",serif;font-size:1.16rem;line-height:1.84;max-width:660px;color:#262521}
-.body p{margin:0 0 1.05em}.body p:first-of-type{font-size:1.22rem;color:#1c1b17}
+/* Текст сюжета — гротеск дизайн-системы: книжная засечная гарнитура осталась
+   от прежнего оформления и выбивалась из нового языка. Кегль и интерлиньяж
+   сохранены крупными: сюжеты читают подряд, это длинное чтение. */
+.body{padding:26px 0 8px;font-family:var(--body);font-size:1.09rem;line-height:1.78;max-width:660px;color:var(--ink)}
+.body p{margin:0 0 1.05em}.body p:first-of-type{font-size:1.16rem;color:var(--ink)}
 .body strong{color:var(--ink);font-weight:600}
 .body h2,.body h3,.body h4{font-family:var(--serif);font-weight:600;color:var(--char);margin:1.6em 0 .5em;font-size:1.4rem;line-height:1.25;text-align:center}
 .body ul,.body ol{margin:1em 0 1em 22px}.body li{margin:.4em 0}

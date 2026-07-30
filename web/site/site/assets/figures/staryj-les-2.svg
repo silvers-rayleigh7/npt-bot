@@ -5,13 +5,13 @@
             <g class="typst-group">
                 <g>
                     <g transform="translate(0 86.5845472440945)">
-                        <path class="typst-shape" fill="none" stroke="#1a1a18" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 0 L 300.47244 0 "/>
+                        <path class="typst-shape" fill="none" stroke="#22333c" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 0 L 300.47244 0 "/>
                     </g>
                     <g transform="translate(0 100.75777559055119)">
-                        <path class="typst-shape" fill="none" stroke="#1a1a18" stroke-width="0.8" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 0 L 293.66394 0 "/>
+                        <path class="typst-shape" fill="none" stroke="#22333c" stroke-width="0.8" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 0 L 293.66394 0 "/>
                     </g>
                     <g transform="translate(293.6639491653544 98.63179133858269)">
-                        <path class="typst-shape" fill="#1a1a18" fill-rule="nonzero" stroke="#1a1a18" stroke-width="0.8" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 5.6692915 2.1259842 L 0 4.2519684 L 0 0 L 5.6692915 2.1259842 Z "/>
+                        <path class="typst-shape" fill="#22333c" fill-rule="nonzero" stroke="#22333c" stroke-width="0.8" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 5.6692915 2.1259842 L 0 4.2519684 L 0 0 L 5.6692915 2.1259842 Z "/>
                     </g>
                     <g transform="translate(279.624440944882 107.11103543307088)">
                         <path class="typst-shape" fill="none" d="M 0 0 L 20.848 0 L 20.848 7.136 L 0 7.136 L 0 0 Z "/>
@@ -24,11 +24,11 @@
                                         <g>
                                             <g transform="translate(0 5.264)">
                                                 <g class="typst-text" transform="scale(1, -1)">
-                                                    <use xlink:href="#g53709EE1E30F1D60B5B9598D0792A0F3" x="0" fill="#7c7f6a" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gD700849F026C9C7CFC274A634114D6A6" x="3.832" fill="#7c7f6a" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gB0BEE5DF3CE1D392DA80AA08C490E4E5" x="7.984" fill="#7c7f6a" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gA99AF062EDFC7EADA94A1508A366BE3D" x="11.56" fill="#7c7f6a" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g1919437AC0296E9CA54715DD497F8831" x="17" fill="#7c7f6a" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g53709EE1E30F1D60B5B9598D0792A0F3" x="0" fill="#2e9bd6" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gD700849F026C9C7CFC274A634114D6A6" x="3.832" fill="#2e9bd6" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gB0BEE5DF3CE1D392DA80AA08C490E4E5" x="7.984" fill="#2e9bd6" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gA99AF062EDFC7EADA94A1508A366BE3D" x="11.56" fill="#2e9bd6" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g1919437AC0296E9CA54715DD497F8831" x="17" fill="#2e9bd6" fill-rule="nonzero"/>
                                                 </g>
                                             </g>
                                         </g>
@@ -38,13 +38,13 @@
                         </g>
                     </g>
                     <g transform="translate(24.944881889763774 78.08061023622048)">
-                        <path class="typst-shape" fill="none" stroke="#1a1a18" stroke-width="0.6" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 8.503937 L 0 0 "/>
+                        <path class="typst-shape" fill="none" stroke="#22333c" stroke-width="0.9" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 8.503937 L 0 0 "/>
                     </g>
                     <g transform="translate(28.346456692913385 78.08061023622048)">
-                        <path class="typst-shape" fill="none" stroke="#1a1a18" stroke-width="0.6" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 8.503937 L 0 0 "/>
+                        <path class="typst-shape" fill="none" stroke="#22333c" stroke-width="0.9" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 8.503937 L 0 0 "/>
                     </g>
                     <g transform="translate(31.74803149606299 78.08061023622048)">
-                        <path class="typst-shape" fill="none" stroke="#1a1a18" stroke-width="0.6" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 8.503937 L 0 0 "/>
+                        <path class="typst-shape" fill="none" stroke="#22333c" stroke-width="0.9" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 8.503937 L 0 0 "/>
                     </g>
                     <g transform="translate(18.506456692913385 114.42064960629922)">
                         <path class="typst-shape" fill="none" d="M 0 0 L 19.68 0 L 19.68 6.69 L 0 6.69 L 0 0 Z "/>
@@ -57,11 +57,11 @@
                                         <g>
                                             <g transform="translate(0 4.935)">
                                                 <g class="typst-text" transform="scale(1, -1)">
-                                                    <use xlink:href="#g83235F8599C32C22344876901707D8C2" x="0" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g4B6A6BA459BB1918D6BA91CFCC5FBFE3" x="3.3375" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gDC328C9BC699C2129D3FF1CC3A4E6043" x="7.23" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g9C854CF28247E5DE8B4285761E14FB84" x="10.6575" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gA0ACB123143960580F0160DE8E5A82D4" x="14.25" fill="#1a1a18" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g83235F8599C32C22344876901707D8C2" x="0" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g4B6A6BA459BB1918D6BA91CFCC5FBFE3" x="3.3375" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gDC328C9BC699C2129D3FF1CC3A4E6043" x="7.23" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g9C854CF28247E5DE8B4285761E14FB84" x="10.6575" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gA0ACB123143960580F0160DE8E5A82D4" x="14.25" fill="#22333c" fill-rule="nonzero"/>
                                                 </g>
                                             </g>
                                         </g>
@@ -71,10 +71,10 @@
                         </g>
                     </g>
                     <g transform="translate(77.10236220472441 71.5609251968504)">
-                        <path class="typst-shape" fill="none" stroke="#1a1a18" stroke-width="0.6" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 7.937008 0 C 3.557494 0 0 3.557494 0 7.937008 C 0 12.316522 3.557494 15.874016 7.937008 15.874016 C 12.316522 15.874016 15.874016 12.316522 15.874016 7.937008 C 15.874016 3.557494 12.316522 0 7.937008 0 Z "/>
+                        <path class="typst-shape" fill="none" stroke="#22333c" stroke-width="0.9" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 7.937008 0 C 3.557494 0 0 3.557494 0 7.937008 C 0 12.316522 3.557494 15.874016 7.937008 15.874016 C 12.316522 15.874016 15.874016 12.316522 15.874016 7.937008 C 15.874016 3.557494 12.316522 0 7.937008 0 Z "/>
                     </g>
                     <g transform="translate(85.03937007874016 83.74990157480316)">
-                        <path class="typst-shape" fill="none" stroke="#1a1a18" stroke-width="0.6" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 2.8346457 L 0 0 "/>
+                        <path class="typst-shape" fill="none" stroke="#22333c" stroke-width="0.9" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 2.8346457 L 0 0 "/>
                     </g>
                     <g transform="translate(68.01437007874014 114.42064960629922)">
                         <path class="typst-shape" fill="none" d="M 0 0 L 34.05 0 L 34.05 6.69 L 0 6.69 L 0 0 Z "/>
@@ -87,15 +87,15 @@
                                         <g>
                                             <g transform="translate(0 4.935)">
                                                 <g class="typst-text" transform="scale(1, -1)">
-                                                    <use xlink:href="#gDBD9988ABC4057ABECD846DCD65A9F50" x="0" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g73534A99FBFDF931FC232BE1A3321D62" x="3.765" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g6D36A68516CBEE03A2DD8B366FBF4CB7" x="7.6275" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g83235F8599C32C22344876901707D8C2" x="10.8375" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gDC328C9BC699C2129D3FF1CC3A4E6043" x="14.175" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g4B6A6BA459BB1918D6BA91CFCC5FBFE3" x="17.6025" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gEFC0DCCF8EE71C8D63AF41E85B1EC376" x="21.494999999999997" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gF33BCA568611109E7F2E9B43B5FC788" x="25.889999999999997" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gDBD9988ABC4057ABECD846DCD65A9F50" x="30.284999999999997" fill="#1a1a18" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gDBD9988ABC4057ABECD846DCD65A9F50" x="0" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g73534A99FBFDF931FC232BE1A3321D62" x="3.765" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g6D36A68516CBEE03A2DD8B366FBF4CB7" x="7.6275" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g83235F8599C32C22344876901707D8C2" x="10.8375" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gDC328C9BC699C2129D3FF1CC3A4E6043" x="14.175" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g4B6A6BA459BB1918D6BA91CFCC5FBFE3" x="17.6025" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gEFC0DCCF8EE71C8D63AF41E85B1EC376" x="21.494999999999997" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gF33BCA568611109E7F2E9B43B5FC788" x="25.889999999999997" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gDBD9988ABC4057ABECD846DCD65A9F50" x="30.284999999999997" fill="#22333c" fill-rule="nonzero"/>
                                                 </g>
                                             </g>
                                         </g>
@@ -105,10 +105,10 @@
                         </g>
                     </g>
                     <g transform="translate(150.23622047244095 49.734153543307094)">
-                        <path class="typst-shape" fill="none" stroke="#1a1a18" stroke-width="1.4" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 36.850395 L 0 0 "/>
+                        <path class="typst-shape" fill="none" stroke="#22333c" stroke-width="1.4" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 36.850395 L 0 0 "/>
                     </g>
                     <g transform="translate(133.6535433070866 51.57667322834647)">
-                        <path class="typst-shape" fill="none" stroke="#1a1a18" stroke-width="0.6" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 16.582678 L 16.582678 0 L 33.165356 16.582678 "/>
+                        <path class="typst-shape" fill="none" stroke="#22333c" stroke-width="0.9" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 16.582678 L 16.582678 0 L 33.165356 16.582678 "/>
                     </g>
                     <g transform="translate(129.62997047244093 114.80314960629923)">
                         <path class="typst-shape" fill="none" d="M 0 0 L 41.2125 0 L 41.2125 5.925 L 0 5.925 L 0 0 Z "/>
@@ -121,16 +121,16 @@
                                         <g>
                                             <g transform="translate(0 4.935)">
                                                 <g class="typst-text" transform="scale(1, -1)">
-                                                    <use xlink:href="#gE886804D18163F31D133F26ED2B800AE" x="0" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gA210BA53B7E65B659B972528E8ED741E" x="5.1000000000000005" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gB0BFCC62D352F67446992032ECB8AFAD" x="8.88" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gA210BA53B7E65B659B972528E8ED741E" x="12.832500000000001" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g15FE0F0925FA5E6A36D4D26023E77429" x="16.6125" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gA210BA53B7E65B659B972528E8ED741E" x="20.6475" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gC4F3015A92F4472CF8EAD37425178B73" x="24.427500000000002" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gB0BFCC62D352F67446992032ECB8AFAD" x="30.6975" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g4A5F0B34BA8706AA1D49E24D8330F667" x="34.65" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g6D36A68516CBEE03A2DD8B366FBF4CB7" x="38.0025" fill="#1a1a18" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gE886804D18163F31D133F26ED2B800AE" x="0" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gA210BA53B7E65B659B972528E8ED741E" x="5.1000000000000005" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gB0BFCC62D352F67446992032ECB8AFAD" x="8.88" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gA210BA53B7E65B659B972528E8ED741E" x="12.832500000000001" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g15FE0F0925FA5E6A36D4D26023E77429" x="16.6125" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gA210BA53B7E65B659B972528E8ED741E" x="20.6475" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gC4F3015A92F4472CF8EAD37425178B73" x="24.427500000000002" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gB0BFCC62D352F67446992032ECB8AFAD" x="30.6975" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g4A5F0B34BA8706AA1D49E24D8330F667" x="34.65" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g6D36A68516CBEE03A2DD8B366FBF4CB7" x="38.0025" fill="#22333c" fill-rule="nonzero"/>
                                                 </g>
                                             </g>
                                         </g>
@@ -140,22 +140,22 @@
                         </g>
                     </g>
                     <g transform="translate(223.9370078740157 29.891633858267724)">
-                        <path class="typst-shape" fill="none" stroke="#1a1a18" stroke-width="1.4" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 56.692913 L 0 0 "/>
+                        <path class="typst-shape" fill="none" stroke="#22333c" stroke-width="1.4" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 56.692913 L 0 0 "/>
                     </g>
                     <g transform="translate(198.42519685039366 32.726279527559065)">
-                        <path class="typst-shape" fill="none" stroke="#1a1a18" stroke-width="0.6" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 25.51181 L 25.51181 0 L 51.02362 25.51181 "/>
+                        <path class="typst-shape" fill="none" stroke="#22333c" stroke-width="0.9" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 25.51181 L 25.51181 0 L 51.02362 25.51181 "/>
                     </g>
                     <g transform="translate(243.77952755905514 18.553051181102376)">
-                        <path class="typst-shape" fill="none" stroke="#1a1a18" stroke-width="1.4" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 68.031494 L 0 0 "/>
+                        <path class="typst-shape" fill="none" stroke="#22333c" stroke-width="1.4" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 68.031494 L 0 0 "/>
                     </g>
                     <g transform="translate(213.16535433070865 21.954625984251983)">
-                        <path class="typst-shape" fill="none" stroke="#1a1a18" stroke-width="0.6" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 30.614174 L 30.614174 0 L 61.228348 30.614174 "/>
+                        <path class="typst-shape" fill="none" stroke="#22333c" stroke-width="0.9" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 30.614174 L 30.614174 0 L 61.228348 30.614174 "/>
                     </g>
                     <g transform="translate(260.7874015748032 32.726279527559065)">
-                        <path class="typst-shape" fill="none" stroke="#1a1a18" stroke-width="1.4" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 53.85827 L 0 0 "/>
+                        <path class="typst-shape" fill="none" stroke="#22333c" stroke-width="1.4" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 53.85827 L 0 0 "/>
                     </g>
                     <g transform="translate(236.55118110236222 35.419192913385835)">
-                        <path class="typst-shape" fill="none" stroke="#1a1a18" stroke-width="0.6" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 24.236221 L 24.236221 0 L 48.472443 24.236221 "/>
+                        <path class="typst-shape" fill="none" stroke="#22333c" stroke-width="0.9" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" d="M 0 24.236221 L 24.236221 0 L 48.472443 24.236221 "/>
                     </g>
                     <g transform="translate(225.73827755905515 114.42064960629922)">
                         <path class="typst-shape" fill="none" d="M 0 0 L 36.0825 0 L 36.0825 6.69 L 0 6.69 L 0 0 Z "/>
@@ -168,15 +168,15 @@
                                         <g>
                                             <g transform="translate(0 4.935)">
                                                 <g class="typst-text" transform="scale(1, -1)">
-                                                    <use xlink:href="#g6D36A68516CBEE03A2DD8B366FBF4CB7" x="0" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g83235F8599C32C22344876901707D8C2" x="3.21" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gDC328C9BC699C2129D3FF1CC3A4E6043" x="6.547499999999999" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g4B6A6BA459BB1918D6BA91CFCC5FBFE3" x="9.975" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gA0ACB123143960580F0160DE8E5A82D4" x="13.8675" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gC4F3015A92F4472CF8EAD37425178B73" x="19.2975" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gB0BFCC62D352F67446992032ECB8AFAD" x="25.5675" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g4A5F0B34BA8706AA1D49E24D8330F667" x="29.52" fill="#1a1a18" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g6D36A68516CBEE03A2DD8B366FBF4CB7" x="32.8725" fill="#1a1a18" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g6D36A68516CBEE03A2DD8B366FBF4CB7" x="0" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g83235F8599C32C22344876901707D8C2" x="3.21" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gDC328C9BC699C2129D3FF1CC3A4E6043" x="6.547499999999999" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g4B6A6BA459BB1918D6BA91CFCC5FBFE3" x="9.975" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gA0ACB123143960580F0160DE8E5A82D4" x="13.8675" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gC4F3015A92F4472CF8EAD37425178B73" x="19.2975" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gB0BFCC62D352F67446992032ECB8AFAD" x="25.5675" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g4A5F0B34BA8706AA1D49E24D8330F667" x="29.52" fill="#22333c" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g6D36A68516CBEE03A2DD8B366FBF4CB7" x="32.8725" fill="#22333c" fill-rule="nonzero"/>
                                                 </g>
                                             </g>
                                         </g>
@@ -196,10 +196,10 @@
                                         <g>
                                             <g transform="translate(0 4.935)">
                                                 <g class="typst-text" transform="scale(1, -1)">
-                                                    <use xlink:href="#g70483BD1E9AE19C16B7B286DE14339CC" x="0" fill="#7c7f6a" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gA210BA53B7E65B659B972528E8ED741E" x="3.12" fill="#7c7f6a" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g15FE0F0925FA5E6A36D4D26023E77429" x="6.9" fill="#7c7f6a" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gA0ACB123143960580F0160DE8E5A82D4" x="10.935" fill="#7c7f6a" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g70483BD1E9AE19C16B7B286DE14339CC" x="0" fill="#2e9bd6" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gA210BA53B7E65B659B972528E8ED741E" x="3.12" fill="#2e9bd6" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g15FE0F0925FA5E6A36D4D26023E77429" x="6.9" fill="#2e9bd6" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gA0ACB123143960580F0160DE8E5A82D4" x="10.935" fill="#2e9bd6" fill-rule="nonzero"/>
                                                 </g>
                                             </g>
                                         </g>
@@ -219,17 +219,17 @@
                                         <g>
                                             <g transform="translate(0 4.935)">
                                                 <g class="typst-text" transform="scale(1, -1)">
-                                                    <use xlink:href="#g15FE0F0925FA5E6A36D4D26023E77429" x="0" fill="#7c7f6a" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g4A5F0B34BA8706AA1D49E24D8330F667" x="4.035" fill="#7c7f6a" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g6D36A68516CBEE03A2DD8B366FBF4CB7" x="7.3875" fill="#7c7f6a" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gD9DAE9E830675D99CC0822E6BD711A3F" x="10.5975" fill="#7c7f6a" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g83235F8599C32C22344876901707D8C2" x="14.205" fill="#7c7f6a" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gF33BCA568611109E7F2E9B43B5FC788" x="17.5425" fill="#7c7f6a" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gB0BFCC62D352F67446992032ECB8AFAD" x="21.9375" fill="#7c7f6a" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g4A5F0B34BA8706AA1D49E24D8330F667" x="25.89" fill="#7c7f6a" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g83235F8599C32C22344876901707D8C2" x="29.2425" fill="#7c7f6a" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gF33BCA568611109E7F2E9B43B5FC788" x="32.58" fill="#7c7f6a" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gD9DAE9E830675D99CC0822E6BD711A3F" x="36.974999999999994" fill="#7c7f6a" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g15FE0F0925FA5E6A36D4D26023E77429" x="0" fill="#2e9bd6" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g4A5F0B34BA8706AA1D49E24D8330F667" x="4.035" fill="#2e9bd6" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g6D36A68516CBEE03A2DD8B366FBF4CB7" x="7.3875" fill="#2e9bd6" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gD9DAE9E830675D99CC0822E6BD711A3F" x="10.5975" fill="#2e9bd6" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g83235F8599C32C22344876901707D8C2" x="14.205" fill="#2e9bd6" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gF33BCA568611109E7F2E9B43B5FC788" x="17.5425" fill="#2e9bd6" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gB0BFCC62D352F67446992032ECB8AFAD" x="21.9375" fill="#2e9bd6" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g4A5F0B34BA8706AA1D49E24D8330F667" x="25.89" fill="#2e9bd6" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g83235F8599C32C22344876901707D8C2" x="29.2425" fill="#2e9bd6" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gF33BCA568611109E7F2E9B43B5FC788" x="32.58" fill="#2e9bd6" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gD9DAE9E830675D99CC0822E6BD711A3F" x="36.974999999999994" fill="#2e9bd6" fill-rule="nonzero"/>
                                                 </g>
                                             </g>
                                         </g>
@@ -249,10 +249,10 @@
                                         <g>
                                             <g transform="translate(0 4.935)">
                                                 <g class="typst-text" transform="scale(1, -1)">
-                                                    <use xlink:href="#g9C854CF28247E5DE8B4285761E14FB84" x="0" fill="#7c7f6a" fill-rule="nonzero"/>
-                                                    <use xlink:href="#g4A5F0B34BA8706AA1D49E24D8330F667" x="3.5925" fill="#7c7f6a" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gDBD9988ABC4057ABECD846DCD65A9F50" x="6.945" fill="#7c7f6a" fill-rule="nonzero"/>
-                                                    <use xlink:href="#gDC328C9BC699C2129D3FF1CC3A4E6043" x="10.71" fill="#7c7f6a" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g9C854CF28247E5DE8B4285761E14FB84" x="0" fill="#2e9bd6" fill-rule="nonzero"/>
+                                                    <use xlink:href="#g4A5F0B34BA8706AA1D49E24D8330F667" x="3.5925" fill="#2e9bd6" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gDBD9988ABC4057ABECD846DCD65A9F50" x="6.945" fill="#2e9bd6" fill-rule="nonzero"/>
+                                                    <use xlink:href="#gDC328C9BC699C2129D3FF1CC3A4E6043" x="10.71" fill="#2e9bd6" fill-rule="nonzero"/>
                                                 </g>
                                             </g>
                                         </g>
