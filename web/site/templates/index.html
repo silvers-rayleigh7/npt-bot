@@ -43,6 +43,7 @@
 {% endblock %}
 {% block head %}
 <link rel="stylesheet" href="/assets/home.css?v={{ asset_v }}">
+<script defer src="/assets/constructor.js?v={{ asset_v }}"></script>
 {% endblock %}
 
 
@@ -223,6 +224,46 @@
         <p>Связывает наблюдение с научным принципом и переносит его на следующий объект.
            Знание закрепляется, потому что пригодилось.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Конструктор маршрута ── -->
+<section class="section section-sand" id="constructor">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow rise">Конструктор маршрута</span>
+      <h2 class="h2 rise">Задайте параметры — соберём маршрут из банка</h2>
+      <p class="lead rise">Подбор идёт по реальному банку сюжетов. Если под ваши условия
+        материала пока нет, так и скажем — вместо случайного набора.</p>
+    </div>
+    <div class="builder rise" id="builder">
+      <div class="b-tabs" role="tablist">
+        <button class="b-tab active" type="button" role="tab" aria-selected="true" data-track="place">Территориям</button>
+        <button class="b-tab" type="button" role="tab" aria-selected="false" data-track="guide">Гидам</button>
+        <button class="b-tab" type="button" role="tab" aria-selected="false" data-track="teacher">Учителям</button>
+      </div>
+      <div class="b-fields">
+        <div class="b-field">
+          <label for="b-region">Местность</label>
+          <select class="field" id="b-region"><option value="">Любая местность</option></select>
+        </div>
+        <div class="b-field">
+          <label for="b-field-sel">Дисциплина</label>
+          <select class="field" id="b-field-sel"><option value="">Любая дисциплина</option></select>
+        </div>
+        <div class="b-field">
+          <label for="b-time">Сколько времени</label>
+          <select class="field" id="b-time">
+            <option value="30">30 минут</option>
+            <option value="60" selected>1 час</option>
+            <option value="90">1,5 часа</option>
+            <option value="120">2 часа</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary b-run" id="b-run" type="button" disabled>Собрать маршрут</button>
+      <div class="b-result" id="b-result"></div>
     </div>
   </div>
 </section>

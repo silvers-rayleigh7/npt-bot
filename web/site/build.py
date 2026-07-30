@@ -597,6 +597,7 @@ def build():
         os.path.join(OUT, "assets", "tokens.css"), os.path.join(OUT, "assets", "reveal.js"),
         os.path.join(OUT, "assets", "layout.css"), os.path.join(OUT, "assets", "layout.js"),
         os.path.join(OUT, "assets", "home.css"),
+        os.path.join(OUT, "assets", "constructor.js"),
         os.path.join(OUT, "assets", "fonts", "fonts.css"),
     )
     storylines = load_storylines()
@@ -622,6 +623,17 @@ def build():
         "routes": len(routes),
         "points": len({s["slug"] for s in storylines if s.get("geo")}),
     }
+    # Индекс для конструктора маршрута: подбор идёт по реальному банку сюжетов,
+    # а не по выдуманному списку. Кладём рядом с ассетами, читается на клиенте.
+    index = [{
+        "slug": s["slug"], "title": s["title"], "tags": s.get("tags") or [],
+        "region": s.get("region") or "", "geo": bool(s.get("geo")),
+        "routes": s.get("routes") or [],
+    } for s in storylines]
+    with open(os.path.join(OUT, "assets", "storylines-index.json"), "w") as f:
+        json.dump(index, f, ensure_ascii=False, separators=(",", ":"))
+    print(f"  assets/storylines-index.json ({len(index)} сюжетов)")
+
     # для тизера библиотеки — несколько сюжетов с картинкой-схемой
     teaser = [s for s in storylines if s.get("geo")][:6]
     with open(os.path.join(OUT, "index.html"), "w") as f:

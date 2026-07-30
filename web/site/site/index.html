@@ -18,12 +18,12 @@
 <!-- Дизайн-система: шрифты локально + токены. Подключается ДО постраничных
      стилей — пока страница не переверстана, её собственные переменные
      перекрывают одноимённые здесь, и вид не меняется. -->
-<link rel="stylesheet" href="/assets/fonts/fonts.css?v=c220bd02">
-<link rel="stylesheet" href="/assets/tokens.css?v=c220bd02">
-<link rel="stylesheet" href="/assets/layout.css?v=c220bd02">
-<script defer src="/assets/reveal.js?v=c220bd02"></script>
-<script defer src="/assets/layout.js?v=c220bd02"></script>
-<link rel="stylesheet" href="/assets/site-bar/bot.css?v=c220bd02">
+<link rel="stylesheet" href="/assets/fonts/fonts.css?v=09632145">
+<link rel="stylesheet" href="/assets/tokens.css?v=09632145">
+<link rel="stylesheet" href="/assets/layout.css?v=09632145">
+<script defer src="/assets/reveal.js?v=09632145"></script>
+<script defer src="/assets/layout.js?v=09632145"></script>
+<link rel="stylesheet" href="/assets/site-bar/bot.css?v=09632145">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
@@ -47,7 +47,8 @@
 </script>
 <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
 
-<link rel="stylesheet" href="/assets/home.css?v=c220bd02">
+<link rel="stylesheet" href="/assets/home.css?v=09632145">
+<script defer src="/assets/constructor.js?v=09632145"></script>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -279,6 +280,46 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
         <p>Связывает наблюдение с научным принципом и переносит его на следующий объект.
            Знание закрепляется, потому что пригодилось.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Конструктор маршрута ── -->
+<section class="section section-sand" id="constructor">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow rise">Конструктор маршрута</span>
+      <h2 class="h2 rise">Задайте параметры — соберём маршрут из банка</h2>
+      <p class="lead rise">Подбор идёт по реальному банку сюжетов. Если под ваши условия
+        материала пока нет, так и скажем — вместо случайного набора.</p>
+    </div>
+    <div class="builder rise" id="builder">
+      <div class="b-tabs" role="tablist">
+        <button class="b-tab active" type="button" role="tab" aria-selected="true" data-track="place">Территориям</button>
+        <button class="b-tab" type="button" role="tab" aria-selected="false" data-track="guide">Гидам</button>
+        <button class="b-tab" type="button" role="tab" aria-selected="false" data-track="teacher">Учителям</button>
+      </div>
+      <div class="b-fields">
+        <div class="b-field">
+          <label for="b-region">Местность</label>
+          <select class="field" id="b-region"><option value="">Любая местность</option></select>
+        </div>
+        <div class="b-field">
+          <label for="b-field-sel">Дисциплина</label>
+          <select class="field" id="b-field-sel"><option value="">Любая дисциплина</option></select>
+        </div>
+        <div class="b-field">
+          <label for="b-time">Сколько времени</label>
+          <select class="field" id="b-time">
+            <option value="30">30 минут</option>
+            <option value="60" selected>1 час</option>
+            <option value="90">1,5 часа</option>
+            <option value="120">2 часа</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary b-run" id="b-run" type="button" disabled>Собрать маршрут</button>
+      <div class="b-result" id="b-result"></div>
     </div>
   </div>
 </section>
@@ -535,7 +576,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
   </div>
 </footer>
 <script>lucide.createIcons({attrs:{'stroke-width':1}});</script>
-<script defer src="/assets/site-bar/bot.js?v=c220bd02"></script>
+<script defer src="/assets/site-bar/bot.js?v=09632145"></script>
 
 <script>
 (function(){
