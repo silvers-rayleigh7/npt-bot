@@ -3,50 +3,7 @@
 {% block head %}
 <link rel="stylesheet" href="/assets/home.css?v={{ asset_v }}">
 {% endblock %}
-{% block styles %}
-.section{padding:48px 0}
-.section-label{font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--g);margin-bottom:8px;display:block}
-.section h2{font-size:1.5rem;font-weight:700;margin-bottom:8px}
-.section-desc{color:var(--tm);font-size:0.92rem;margin-bottom:24px}
-.route-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
-.route-card{display:block;background:#fff;border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;transition:all 0.15s}
-.route-card:hover{border-color:var(--g);box-shadow:0 4px 16px rgba(47,111,99,0.08);text-decoration:none;transform:translateY(-2px)}
-.route-card .rc-map{height:180px;background:#eef2f0;position:relative}
-.route-card .rc-map img{width:100%;height:100%;object-fit:cover}
-.route-card .rc-status{position:absolute;top:10px;right:10px;font-size:0.7rem;padding:3px 8px;border-radius:6px;font-weight:500}
-.rc-status.draft{background:#fef3c7;color:#92400e}
-.rc-status.ready{background:var(--gl);color:var(--g)}
-.route-card .rc-body{padding:16px}
-.route-card .rc-name{font-weight:600;font-size:1rem;color:var(--tx)}
-.route-card .rc-meta{font-size:0.82rem;color:var(--tm);margin-top:3px}
-.flow-section{padding:48px 0 32px}
-.flow-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-.flow-col-label{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--g);margin-bottom:12px}
-.flow-col{display:flex;flex-direction:column;gap:0}
-.flow-step{display:flex;align-items:center;gap:10px;padding:10px 14px}
-.flow-step i{width:18px;height:18px;color:var(--g);flex-shrink:0}
-.flow-step span{font-size:0.88rem;font-weight:500}
-.flow-dot{padding:0 0 0 18px;height:20px;position:relative}
-.flow-dot::before{content:'';position:absolute;left:22px;top:0;width:1.5px;height:100%;background:var(--bd)}
-.arch-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
-.arch-card.full{grid-column:1/-1}
-.arch-card{padding:20px;background:#fff;border:1px solid var(--bd);border-radius:var(--r)}
-.arch-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.arch-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.arch-icon i{width:20px;height:20px}
-.arch-icon.site{background:var(--gl);color:var(--olive)}
-.arch-icon.bot{background:var(--gl);color:var(--char)}
-.arch-icon.skills{background:var(--gl);color:var(--sage)}
-.arch-skills-list{display:flex;flex-wrap:wrap;gap:8px;list-style:none}
-.arch-skills-list li{display:flex;align-items:center;gap:6px;font-size:0.82rem;padding:6px 12px;background:var(--gl);border-radius:20px;color:var(--tx)}
-.arch-skills-list li i{width:14px;height:14px;color:var(--tm)}
-.arch-title{font-weight:700;font-size:0.95rem;line-height:1.2}
-.arch-path{font-size:0.75rem;color:var(--tm);font-family:monospace}
-.arch-items{list-style:none;display:flex;flex-direction:column;gap:6px}
-.arch-items li{display:flex;align-items:center;gap:8px;font-size:0.82rem;color:var(--tx)}
-.arch-items li i{width:14px;height:14px;color:var(--tm);flex-shrink:0}
-@media(max-width:540px){.arch-grid{grid-template-columns:1fr}.flow-grid{grid-template-columns:1fr;gap:32px}}
-{% endblock %}
+
 
 {% block content %}
 <section class="hero">
@@ -120,93 +77,189 @@
   </div>
 </section>
 
-<div class="w">
-<div class="flow-section">
-  <div class="flow-grid">
-    <div>
-      <div class="flow-col-label">Как мы делаем тропу</div>
-      <div class="flow-col">
-        <div class="flow-step"><i data-lucide="lightbulb"></i><span>Научный сюжет</span></div>
-        <div class="flow-dot"></div>
-        <div class="flow-step"><i data-lucide="map-pin"></i><span>Привязка к месту</span></div>
-        <div class="flow-dot"></div>
-        <div class="flow-step"><i data-lucide="layers"></i><span>Тексты трёх уровней</span></div>
-        <div class="flow-dot"></div>
-        <div class="flow-step"><i data-lucide="audio-lines"></i><span>Озвучка</span></div>
-        <div class="flow-dot"></div>
-        <div class="flow-step"><i data-lucide="route"></i><span>Готовый маршрут</span></div>
-      </div>
+<!-- ── Три входа в банк сюжетов ── -->
+<section class="section section-milk" id="tracks">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow rise">Три входа в один банк сюжетов</span>
+      <h2 class="h2 rise">Выберите, что собираем</h2>
+      <p class="lead rise">В основе — банк научных сюжетов: вопросов о том, что человек
+        действительно видит вокруг себя. Территория, гид и учитель берут из него разное
+        и собирают своё.</p>
     </div>
-    <div>
-      <div class="flow-col-label">Как проходят тропу</div>
-      <div class="flow-col">
-        <div class="flow-step"><i data-lucide="footprints"></i><span>Подходишь к точке</span></div>
-        <div class="flow-dot"></div>
-        <div class="flow-step"><i data-lucide="radar"></i><span>Бот видит локацию</span></div>
-        <div class="flow-dot"></div>
-        <div class="flow-step"><i data-lucide="volume-2"></i><span>Голосовой рассказ</span></div>
-        <div class="flow-dot"></div>
-        <div class="flow-step"><i data-lucide="message-circle"></i><span>Задаёшь вопрос</span></div>
-        <div class="flow-dot"></div>
-        <div class="flow-step"><i data-lucide="brain"></i><span>Ответ от ИИ</span></div>
-      </div>
+    <div class="tracks stagger">
+      <a class="track" href="/routes/" style="--tc:var(--grass);--tc-soft:var(--meadow)">
+        <span class="track-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20l-5.5 2V6L9 4m0 16l6-2m-6 2V4m6 14l5.5 2V4L15 6m0 12V6m0 0L9 4"/></svg></span>
+        <span class="mono" style="font-size:12px">Регионы, парки, наукограды</span>
+        <h3>Территориям</h3>
+        <p>Выберите площадку — маршрут соберётся из сюжетов, которые работают именно
+           на вашем ландшафте.</p>
+        <span class="track-go">Собрать тропу <span>→</span></span>
+      </a>
+      <a class="track" href="/guides/" style="--tc:var(--sky);--tc-soft:var(--mist)">
+        <span class="track-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg></span>
+        <span class="mono" style="font-size:12px">Экскурсоводы и туркоманды</span>
+        <h3>Гидам</h3>
+        <p>Задайте место, аудиторию и время — получите маршрут с готовой канвой рассказа
+           и точками остановок.</p>
+        <span class="track-go">Собрать экскурсию <span>→</span></span>
+      </a>
+      <a class="track" href="/teacher/" style="--tc:var(--terra);--tc-soft:var(--sand)">
+        <span class="track-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></span>
+        <span class="mono" style="font-size:12px">Школа и внеурочные занятия</span>
+        <h3>Учителям</h3>
+        <p>Укажите класс и предмет — получите урок под открытым небом: наблюдения,
+           мини-опыты и вопросы детям.</p>
+        <span class="track-go">Собрать урок <span>→</span></span>
+      </a>
     </div>
   </div>
-</div>
+</section>
 
-<div class="section" id="arch">
-  <h2>Что внутри</h2>
-  <div class="arch-grid">
-    <div class="arch-card">
-      <div class="arch-head">
-        <div class="arch-icon site"><i data-lucide="globe"></i></div>
-        <div>
-          <div class="arch-title">Сайт</div>
-          <div class="arch-path">site/</div>
-        </div>
-      </div>
-      <ul class="arch-items">
-        <li><i data-lucide="layout"></i> Страницы маршрутов с картой</li>
-        <li><i data-lucide="headphones"></i> Аудиогиды по каждой точке</li>
-        <li><i data-lucide="file-text"></i> PDF-карточки для печати</li>
-      </ul>
+<!-- ── Зачем это нужно ── -->
+<section class="section" id="idea">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow rise">Зачем это нужно</span>
+      <h2 class="h2 rise">Знаний становится больше. Ценнее — умение в них разбираться</h2>
     </div>
-    <div class="arch-card">
-      <div class="arch-head">
-        <div class="arch-icon bot"><i data-lucide="bot"></i></div>
-        <div>
-          <div class="arch-title">Telegram-бот</div>
-          <div class="arch-path">bot/</div>
-        </div>
+    <div class="why">
+      <div class="why-card why-problem slide-l">
+        <h3>Проблема</h3>
+        <p>Объём знаний растёт непрерывно, и запомнить всё уже невозможно. В потоке
+           информации выигрывает тот, кто понимает, как устроен научный взгляд на мир:
+           откуда берётся факт, как его проверить, где проходит граница между
+           наблюдением и догадкой.</p>
+        <p>Это не школьный предмет, а навык — и осваивается он не с экрана, а там,
+           где явление можно потрогать, измерить и сравнить.</p>
       </div>
-      <ul class="arch-items">
-        <li><i data-lucide="radar"></i> Следит за геолокацией</li>
-        <li><i data-lucide="audio-lines"></i> Запускает рассказ у каждой точки</li>
-        <li><i data-lucide="brain"></i> Отвечает на вопросы через ИИ</li>
-        <li><i data-lucide="layers"></i> Базовый · с формулами · доп. факты</li>
-      </ul>
+      <div class="why-card why-solution slide-r">
+        <h3>Решение</h3>
+        <p>Мы проектируем научные тропы: от сюжета и текста до стенда, маршрута
+           и цифрового гида. Территория получает не набор табличек, а связную
+           образовательную среду, привязанную к своему ландшафту.</p>
+        <p>Научная экспертиза, методика и производство собраны в одном месте —
+           в университетской команде.</p>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
-<div class="section" id="routes">
-  <h2>Маршруты</h2>
-  <div class="route-gallery">
-  {% for route in routes %}
-  <a href="/{{ route.id }}/" class="route-card">
-    <div class="rc-map">
-      <img src="/assets/{{ route.id }}-map.png" alt="{{ route.name }}" onerror="this.parentElement.style.background='var(--gl)'">
-      <span class="rc-status {% if route.status == 'ready' %}ready{% else %}draft{% endif %}">{{ 'готов' if route.status == 'ready' else 'черновик' }}</span>
+<!-- ── Четыре шага ── -->
+<section class="section section-meadow" id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow rise">Суть научной тропы</span>
+      <h2 class="h2 rise">Обустроенный маршрут, на котором человек проходит четыре шага</h2>
+      <p class="lead rise">Порядок здесь важен: сначала движение и наблюдение, и только
+        потом объяснение. Тропа ведёт от увиденного к принципу, а не наоборот.</p>
     </div>
-    <div class="rc-body">
-      <div class="rc-name">{{ route.name }}</div>
-      <div class="rc-meta">{{ route.city }} &middot; {{ route.distance_km }} км &middot; {{ route.points }} точек &middot; {{ route.time_min }} мин</div>
+    <div class="steps">
+      <div class="step" style="--sc:var(--grass)">
+        <div class="step-n">01</div>
+        <h4>Путешествует</h4>
+        <p>Проходит через природную среду и ключевые точки маршрута. Смена мест сама
+           задаёт ритм и удерживает внимание.</p>
+      </div>
+      <div class="step" style="--sc:var(--sky)">
+        <div class="step-n">02</div>
+        <h4>Наблюдает</h4>
+        <p>Видит реальные процессы и работает с экспонатами: крутит, измеряет,
+           сравнивает, проверяет догадку руками.</p>
+      </div>
+      <div class="step" style="--sc:var(--violet)">
+        <div class="step-n">03</div>
+        <h4>Узнаёт</h4>
+        <p>Задаёт вопросы и получает объяснение: на стенде, от гида или от научного
+           гида в телефоне.</p>
+      </div>
+      <div class="step" style="--sc:var(--terra)">
+        <div class="step-n">04</div>
+        <h4>Понимает</h4>
+        <p>Связывает наблюдение с научным принципом и переносит его на следующий объект.
+           Знание закрепляется, потому что пригодилось.</p>
+      </div>
     </div>
-  </a>
-  {% endfor %}
   </div>
-</div>
-</div>
+</section>
+
+<!-- ── Маршруты ── -->
+<section class="section" id="routes">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow rise">Маршруты</span>
+      <h2 class="h2 rise">Что мы проектируем сейчас</h2>
+    </div>
+    <div class="cards stagger">
+      {% for r in routes %}
+      <a class="pcard" href="/{{ r.id }}/">
+        <div class="pcard-fig">
+          {% if r.preview %}<img src="{{ r.preview }}" alt="" loading="lazy">
+          {% else %}<svg viewBox="0 0 200 120" style="width:70%"><path d="M18 100 C60 84 70 52 108 44 C140 37 160 26 184 20"
+            fill="none" stroke="#7C7F6A" stroke-width="2.5" stroke-dasharray="6 7" stroke-linecap="round"/>
+            <circle cx="18" cy="100" r="7" fill="#E9863B"/><circle cx="108" cy="44" r="7" fill="#2E9BD6"/>
+            <circle cx="184" cy="20" r="7" fill="#7A6FE0"/></svg>{% endif %}
+        </div>
+        <div class="pcard-body">
+          <h4>{{ r.name }}</h4>
+          <div class="pcard-meta">{{ r.points }} точек{% if r.length_km %} · {{ r.length_km }} км{% endif %}</div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ── Библиотека сюжетов ── -->
+<section class="section section-milk" id="libraryTeaser">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow rise">Банк сюжетов</span>
+      <h2 class="h2 rise">Библиотека научных сюжетов</h2>
+      <p class="lead rise">Каждый сюжет — ответ на вопрос, который возникает на месте.
+        Три уровня подачи: коротко, как это работает и глубже — с формулами и источниками.</p>
+    </div>
+    <div class="cards stagger">
+      {% for s in teaser %}
+      <a class="pcard" href="/storylines/{{ s.slug }}/">
+        <div class="pcard-fig">
+          <img src="/assets/figures/{{ s.slug }}-1.svg" alt="" loading="lazy"
+               onerror="this.closest('.pcard-fig').style.display='none'">
+        </div>
+        <div class="pcard-body">
+          <div class="pcard-tags">
+            {% for t in s.tags[:2] %}<span class="pcard-tag">{{ t }}</span>{% endfor %}
+          </div>
+          <h4>{{ s.title }}</h4>
+          {% if s.region %}<div class="pcard-meta">{{ s.region }}</div>{% endif %}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    <div class="sec-more"><a href="/storylines/" class="btn btn-ghost">Вся библиотека — {{ stats.storylines }} сюжета</a></div>
+  </div>
+</section>
+
+<!-- ── Научный гид ── -->
+<section class="section" id="guide">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow rise">Научный гид</span>
+      <h2 class="h2 rise">Спросите — и поймёте</h2>
+      <p class="lead rise">На маршруте и на сайте работает гид: задайте вопрос голосом
+        или текстом — получите объяснение с научным принципом, а не пересказ.
+        В телефоне он ещё и видит, где вы стоите.</p>
+      <div class="hero-actions">
+        <a href="/bot/" class="btn btn-primary">Как работает бот</a>
+        <a href="{{ site.links.telegram }}" class="btn btn-ghost">Написать боту</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 {% endblock %}
 
 

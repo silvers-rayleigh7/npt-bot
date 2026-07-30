@@ -18,8 +18,14 @@
     document.documentElement.classList.add('js-reveal');
   }
 
+  // Типы появления: .rev — базовый, остальные подобраны под смысл блока
+  // (карточки выходят снизу, парные блоки — с боков, схемы — приближением,
+  // списки — каскадом, шаги маршрута — вместе с линией тропы).
+  var SEL = ['.rev', '.rise', '.slide-l', '.slide-r', '.zoom', '.stagger', '.steps', '.step', '.track']
+    .map(function (c) { return c + ':not(.in)'; }).join(',');
+
   function initReveal(root) {
-    var nodes = (root || document).querySelectorAll('.rev:not(.in)');
+    var nodes = (root || document).querySelectorAll(SEL);
     if (!nodes.length) return;
 
     // Нет поддержки наблюдателя или анимации отключены системно —

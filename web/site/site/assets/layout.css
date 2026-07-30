@@ -47,20 +47,20 @@
 
 /* ── Бургер: три полоски, которые складываются в крестик ── */
 .burger {
-  display: none; width: 42px; height: 42px; margin-left: auto;
+  display: none; width: 44px; height: 44px; margin-left: auto;  /* минимальная тач-цель */
   border: 1px solid var(--line); border-radius: 12px; background: var(--card);
   cursor: pointer; position: relative;
 }
 .burger span,
 .burger::before,
 .burger::after {
-  content: ''; position: absolute; left: 11px; width: 18px; height: 2px;
+  content: ''; position: absolute; left: 12px; width: 18px; height: 2px;
   background: var(--ink); border-radius: 2px;
   transition: transform .25s var(--ease), opacity .2s var(--ease);
 }
-.burger::before { top: 14px; }
-.burger span { top: 20px; }
-.burger::after { top: 26px; }
+.burger::before { top: 15px; }
+.burger span { top: 21px; }
+.burger::after { top: 27px; }
 .burger[aria-expanded="true"]::before { transform: translateY(6px) rotate(45deg); }
 .burger[aria-expanded="true"] span { opacity: 0; }
 .burger[aria-expanded="true"]::after { transform: translateY(-6px) rotate(-45deg); }

@@ -622,8 +622,11 @@ def build():
         "routes": len(routes),
         "points": len({s["slug"] for s in storylines if s.get("geo")}),
     }
+    # для тизера библиотеки — несколько сюжетов с картинкой-схемой
+    teaser = [s for s in storylines if s.get("geo")][:6]
     with open(os.path.join(OUT, "index.html"), "w") as f:
-        f.write(env.get_template("index.html").render(site=site, routes=cards, stats=stats))
+        f.write(env.get_template("index.html").render(
+            site=site, routes=cards, stats=stats, teaser=teaser))
     print(f"  index.html ({len(cards)} routes, {stats['storylines']} сюжетов, "
           f"{stats['fields']} областей)")
 
