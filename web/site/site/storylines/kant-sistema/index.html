@@ -145,7 +145,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
 
 <div class="w">
   <div class="sg-hero">
-    <img class="sg-icon" src="/assets/icons/kant-sistema.webp?v=d41d8cd9" alt="" width="440" height="200">
+    <img class="sg-icon" src="/assets/icons/kant-sistema.webp?v=be16bd2d" alt="" width="440" height="200">
     
     <div class="sg-kicker">Калининградская область</div>
     <h1>Рождение Солнечной системы</h1>
@@ -162,12 +162,12 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Кёнигсберг — город Иммануила Канта: здесь он прожил всю жизнь и здесь похоронен у стен собора. Кант знаменит философией, но в 1755 году он замахнулся и на космос — и угадал, как устроено рождение Солнечной системы, за полтора века до телескопов, способных это проверить.</p>
 <p>Его догадка: Солнце и планеты родились из единого <strong>вращающегося газопылевого облака</strong>. Поначалу облако разреженное и холодное, но его удерживает от расплывания собственное тяготение — каждая частица притягивает все остальные. Когда тяготение пересиливает тепловое давление газа, облако начинает падать само на себя, сжимается и разогревается в центре — там потом и вспыхнет Солнце, а из остатков соберутся планеты.</p>
-<figure class="fig"><img src="/assets/figures/kant-sistema-1.svg" alt="Вращающееся газопылевое облако под собственным тяготением сжимается, раскручивается и сплющивается в диск; в центре загорается звезда, из диска собираются планеты."><figcaption>Вращающееся газопылевое облако под собственным тяготением сжимается, раскручивается и сплющивается в диск; в центре загорается звезда, из диска собираются планеты.</figcaption></figure>
+<figure class="fig"><img src="/assets/figures/kant-sistema-1.svg?v=8c63325a" alt="Вращающееся газопылевое облако под собственным тяготением сжимается, раскручивается и сплющивается в диск; в центре загорается звезда, из диска собираются планеты."><figcaption>Вращающееся газопылевое облако под собственным тяготением сжимается, раскручивается и сплющивается в диск; в центре загорается звезда, из диска собираются планеты.</figcaption></figure>
 <p>В этой картине два чуда механики: почему облако, сжимаясь, <strong>раскручивается</strong> всё быстрее, и почему оно становится <strong>плоским диском</strong>, а не шаром. Оба объясняет один закон.</p></div>
   
   <div class="body lvl" data-i="1" style="display:none"><p>Облако всегда вращается хоть чуть-чуть. А у вращения есть сохраняющаяся величина — <strong>момент импульса</strong>:</p>
@@ -239,7 +239,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
 <script defer src="/assets/site-bar/bot.js?v=854ccec9"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Как из облака холодной пыли родились Солнце и планеты?", "Почему, сжимаясь, облако раскручивается и сплющивается?", null];
 
 (function(){

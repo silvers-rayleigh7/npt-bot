@@ -145,7 +145,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
 
 <div class="w">
   <div class="sg-hero">
-    <img class="sg-icon" src="/assets/icons/belyaev.webp?v=d41d8cd9" alt="" width="440" height="200">
+    <img class="sg-icon" src="/assets/icons/belyaev.webp?v=be16bd2d" alt="" width="440" height="200">
     
     <div class="sg-kicker">Новосибирск · Академгородок</div>
     <h1>Одомашнивание лисиц</h1>
@@ -162,12 +162,12 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Собаку от волка отделяют тысячи лет. А что, если повторить одомашнивание заново, на глазах у одного исследователя, и отбирать зверей всего по одному признаку? Такой опыт в 1959 году в новосибирском Академгородке начал генетик Дмитрий Беляев.</p>
 <p>Из тысяч серебристо-чёрных лисиц с зверофермы он отбирал только самых спокойных и дружелюбных к человеку — и скрещивал между собой именно их. Никаких других условий: единственный критерий отбора — <strong>дружелюбие</strong>. Уже через несколько поколений появились лисы, которые сами искали контакт с человеком, виляли хвостом и вели себя почти как собаки.</p>
-<figure class="fig"><img src="/assets/figures/belyaev-1.svg" alt="Эксперимент Беляева: из популяции лисиц отбирают самых дружелюбных, скрещивают их, получают новое поколение — и повторяют. Критерий один — поведение."><figcaption>Эксперимент Беляева: из популяции лисиц отбирают самых дружелюбных, скрещивают их, получают новое поколение — и повторяют. Критерий один — поведение.</figcaption></figure>
+<figure class="fig"><img src="/assets/figures/belyaev-1.svg?v=8c63325a" alt="Эксперимент Беляева: из популяции лисиц отбирают самых дружелюбных, скрещивают их, получают новое поколение — и повторяют. Критерий один — поведение."><figcaption>Эксперимент Беляева: из популяции лисиц отбирают самых дружелюбных, скрещивают их, получают новое поколение — и повторяют. Критерий один — поведение.</figcaption></figure>
 <p>Но дальше началось неожиданное: вместе с характером у ручных лис изменилась и внешность, хотя её никто не отбирал. Почему — в следующем разделе.</p></div>
   
   <div class="body lvl" data-i="1" style="display:none"><p>У ручных лисят, поколение за поколением, стали появляться признаки, за которые никто не отбирал: белые пятна на шерсти, висячие уши, укороченная морда, хвост колечком, более длительное «детское» поведение. Биологи зовут этот набор <strong>синдромом доместикации</strong> — он повторяется у самых разных одомашненных видов, от собак до кроликов<sup id="fnref:domsynd"><a class="footnote-ref" href="#fn:domsynd">1</a></sup>.</p>
@@ -240,7 +240,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
 <script defer src="/assets/site-bar/bot.js?v=854ccec9"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Как из дикой лисы за несколько поколений вышла почти собака?", "Почему отбор по характеру изменил и внешность?", null];
 
 (function(){

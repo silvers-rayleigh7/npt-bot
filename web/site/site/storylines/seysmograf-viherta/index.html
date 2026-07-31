@@ -145,7 +145,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
 
 <div class="w">
   <div class="sg-hero">
-    <img class="sg-icon" src="/assets/icons/seysmograf-viherta.webp?v=d41d8cd9" alt="" width="440" height="200">
+    <img class="sg-icon" src="/assets/icons/seysmograf-viherta.webp?v=be16bd2d" alt="" width="440" height="200">
     
     <div class="sg-kicker">Калининградская область</div>
     <h1>Сейсмограф Вихерта</h1>
@@ -162,12 +162,12 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Засекать землетрясение, стоя на той же земле, — всё равно что измерять качку, прыгая вместе с палубой. Прибор, привинченный к грунту, трясётся заодно с ним, и смещение «относительно земли» ему не поймать: линейка и то, что меряют, движутся вместе.</p>
 <p>Выход нашёл Эмиль Вихерт, работавший в Кёнигсберге, — он собрал здесь один из первых высокоточных сейсмографов. Хитрость — в <strong>инерции</strong>. Подвесь тяжёлый груз так, чтобы он мог висеть почти свободно. Когда земля дёрнется, рама прибора уедет вместе с почвой, а массивный груз по инерции на миг <strong>останется на месте</strong>. Прибор записывает не движение земли напрямую, а смещение груза $z$ относительно своего корпуса — и по этому смещению восстанавливает толчок.</p>
-<figure class="fig"><img src="/assets/figures/seysmograf-viherta-1.svg" alt="Рама привинчена к грунту и движется с ним; тяжёлый груз на пружине по инерции отстаёт. Перо чертит смещение груза относительно корпуса на вращающемся барабане."><figcaption>Рама привинчена к грунту и движется с ним; тяжёлый груз на пружине по инерции отстаёт. Перо чертит смещение груза относительно корпуса на вращающемся барабане.</figcaption></figure>
+<figure class="fig"><img src="/assets/figures/seysmograf-viherta-1.svg?v=8c63325a" alt="Рама привинчена к грунту и движется с ним; тяжёлый груз на пружине по инерции отстаёт. Перо чертит смещение груза относительно корпуса на вращающемся барабане."><figcaption>Рама привинчена к грунту и движется с ним; тяжёлый груз на пружине по инерции отстаёт. Перо чертит смещение груза относительно корпуса на вращающемся барабане.</figcaption></figure>
 <p>Но просто подвесить груз мало: качнувшись, он начнёт звенеть сам по себе и испортит запись. Поэтому Вихерт добавил тормоз — и в этом была вся соль.</p></div>
   
   <div class="body lvl" data-i="1" style="display:none"><p>Груз на пружине — это маятник, и его движение описывает уравнение колебаний с вынуждающей силой от тряски почвы:</p>
@@ -247,7 +247,7 @@ $$</p>
 <script defer src="/assets/site-bar/bot.js?v=854ccec9"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Как поймать дрожь земли, если дрожишь вместе с ней?", "Зачем сейсмографу тормоз?", null];
 
 (function(){

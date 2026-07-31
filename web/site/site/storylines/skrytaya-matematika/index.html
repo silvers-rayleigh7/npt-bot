@@ -145,7 +145,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
 
 <div class="w">
   <div class="sg-hero">
-    <img class="sg-icon" src="/assets/icons/skrytaya-matematika.webp?v=d41d8cd9" alt="" width="440" height="200">
+    <img class="sg-icon" src="/assets/icons/skrytaya-matematika.webp?v=be16bd2d" alt="" width="440" height="200">
     
     <div class="sg-kicker">Новосибирск · Академгородок</div>
     <h1>Скрытая математика размера</h1>
@@ -162,12 +162,12 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Казалось бы, возьми мышь, раздуй в тысячу раз — вот тебе и слон. Но живой организм так не масштабируется, и виной тому простая геометрия. Кислород для обмена веществ поступает <strong>через поверхность</strong> — стенки лёгких и капилляров, — а питать нужно весь <strong>объём</strong> тела. Поверхность и объём растут с размером по-разному, и это рассогласование перекраивает всё устройство животного.</p>
 <p>Оценим грубо. Если считать орган газообмена гладким, его площадь растёт как квадрат линейного размера, $S \sim L^2$. А масса, которую надо кормить, — как куб, $M \sim L^3$. Если мощность обмена $B$ упирается в площадь, то $B \sim S \sim L^2 \sim M^{2/3}$.</p>
-<figure class="fig"><img src="/assets/figures/skrytaya-matematika-1.svg" alt="Поверхность растёт как $L^2$, а объём — как $L^3$: у большого тела поверхности на единицу объёма меньше. Поэтому слона нельзя просто «раздуть» из мыши."><figcaption>Поверхность растёт как $L^2$, а объём — как $L^3$: у большого тела поверхности на единицу объёма меньше. Поэтому слона нельзя просто «раздуть» из мыши.</figcaption></figure>
+<figure class="fig"><img src="/assets/figures/skrytaya-matematika-1.svg?v=8c63325a" alt="Поверхность растёт как $L^2$, а объём — как $L^3$: у большого тела поверхности на единицу объёма меньше. Поэтому слона нельзя просто «раздуть» из мыши."><figcaption>Поверхность растёт как $L^2$, а объём — как $L^3$: у большого тела поверхности на единицу объёма меньше. Поэтому слона нельзя просто «раздуть» из мыши.</figcaption></figure>
 <p>Стройная оценка даёт показатель <strong>2/3</strong>. Беда в том, что природа с ней не согласна.</p></div>
   
   <div class="body lvl" data-i="1" style="display:none"><p>Если измерить обмен веществ у множества зверей — от мыши до слона — и нанести на график, точки лягут не на наклон 2/3, а на другой степенной закон. Это <strong>закон Клайбера</strong>:</p>
@@ -246,7 +246,7 @@ $$</p>
 <script defer src="/assets/site-bar/bot.js?v=854ccec9"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Почему слона нельзя просто «увеличить» из мыши?", "Откуда берётся «лишняя» четвертушка?", null];
 
 (function(){

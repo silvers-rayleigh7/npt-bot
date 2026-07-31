@@ -145,7 +145,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
 
 <div class="w">
   <div class="sg-hero">
-    <img class="sg-icon" src="/assets/icons/vishtynec.webp?v=d41d8cd9" alt="" width="440" height="200">
+    <img class="sg-icon" src="/assets/icons/vishtynec.webp?v=be16bd2d" alt="" width="440" height="200">
     
     <div class="sg-kicker">Калининградская область</div>
     <h1>Озеро Виштынец</h1>
@@ -162,12 +162,12 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Нырни в жаркий день в глубокое озеро — у поверхности парное молоко, а копни ластами на пару метров вниз, и ноги обдаёт холодом. Озеро Виштынец, самое глубокое в области, живёт именно так: летом оно разделено на «этажи».</p>
 <p>Солнце прогревает только верхушку. Сверху лежит тёплый, перемешанный ветром слой — <strong>эпилимнион</strong> (18–22 °C). У дна — холодный и неподвижный <strong>гиполимнион</strong> (4–6 °C). А между ними — тонкая прослойка, <strong>термоклин</strong>, где температура падает примерно на градус с каждым метром. Перейти эту границу теплу почти не удаётся: этажи держатся раздельно всё лето.</p>
-<figure class="fig"><img src="/assets/figures/vishtynec-1.svg" alt="Летом озеро делится на три слоя: тёплый эпилимнион сверху, холодный гиполимнион у дна и резкий термоклин между ними, где температура круто падает."><figcaption>Летом озеро делится на три слоя: тёплый эпилимнион сверху, холодный гиполимнион у дна и резкий термоклин между ними, где температура круто падает.</figcaption></figure>
+<figure class="fig"><img src="/assets/figures/vishtynec-1.svg?v=8c63325a" alt="Летом озеро делится на три слоя: тёплый эпилимнион сверху, холодный гиполимнион у дна и резкий термоклин между ними, где температура круто падает."><figcaption>Летом озеро делится на три слоя: тёплый эпилимнион сверху, холодный гиполимнион у дна и резкий термоклин между ними, где температура круто падает.</figcaption></figure>
 <p>Что мешает слоям перемешаться — ведь ветер день за днём гонит волну? И почему дважды в год озеро всё-таки «переворачивается»? Дело в плотности воды.</p></div>
   
   <div class="body lvl" data-i="1" style="display:none"><p>Тёплая вода легче холодной. Разница плотностей тёплого и холодного слоёв всего около <strong>2 кг/м³</strong> — кажется, пустяк, но этого хватает: лёгкая вода лежит на тяжёлой устойчиво, и ветру энергетически «дорого» поднимать плотную придонную воду наверх. Чем резче скачок плотности на термоклине, тем устойчивее граница; меру этой устойчивости задаёт <strong>частота Брюнта–Вяйсяля</strong>:</p>
@@ -247,7 +247,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
 <script defer src="/assets/site-bar/bot.js?v=854ccec9"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Почему летом вода в озере тёплая только у поверхности, а на глубине — ледяная?", "Что держит слои раздельно — и почему озеро «переворачивается»?", "Почему придонной воде не холоднее +4 °C?"];
 
 (function(){

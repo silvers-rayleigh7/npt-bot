@@ -145,7 +145,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
 
 <div class="w">
   <div class="sg-hero">
-    <img class="sg-icon" src="/assets/icons/bessel.webp?v=d41d8cd9" alt="" width="440" height="200">
+    <img class="sg-icon" src="/assets/icons/bessel.webp?v=be16bd2d" alt="" width="440" height="200">
     
     <div class="sg-kicker">Калининградская область</div>
     <h1>Расстояние до звезды</h1>
@@ -162,12 +162,12 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Вытяни руку с поднятым пальцем и смотри на него поочерёдно то одним глазом, то другим. Палец прыгает на фоне дальней стены — а если поднести его ближе, прыгает сильнее. Это <strong>параллакс</strong>: чем ближе предмет, тем заметнее он смещается, когда меняешь точку зрения. По величине смещения можно вычислить расстояние, ни на шаг не приблизившись.</p>
 <p>Тем же приёмом, но с двумя «глазами» размером с земную орбиту, в Кёнигсбергской обсерватории работал Фридрих Бессель. В 1838 году он навёл точнейший прибор — гелиометр Фраунгофера — на звезду 61 Лебедя и за полгода поймал, как она чуть смещается на фоне далёких звёзд. Смещение вышло крошечным: $p \approx 0{,}31''$ — угол, под которым монета видна с <strong>14 километров</strong>. Из него Бессель и получил расстояние: около $3{,}2$ парсека, примерно $10{,}4$ световых года. Это было <strong>первое в истории измеренное расстояние до звезды</strong><sup id="fnref:bessel"><a class="footnote-ref" href="#fn:bessel">1</a></sup>.</p>
-<figure class="fig"><img src="/assets/figures/bessel-1.svg" alt="Параллакс: за полгода Земля переходит на другой край орбиты, и близкая звезда смещается на фоне далёких на угол p. Чем меньше угол, тем дальше звезда."><figcaption>Параллакс: за полгода Земля переходит на другой край орбиты, и близкая звезда смещается на фоне далёких на угол p. Чем меньше угол, тем дальше звезда.</figcaption></figure>
+<figure class="fig"><img src="/assets/figures/bessel-1.svg?v=8c63325a" alt="Параллакс: за полгода Земля переходит на другой край орбиты, и близкая звезда смещается на фоне далёких на угол p. Чем меньше угол, тем дальше звезда."><figcaption>Параллакс: за полгода Земля переходит на другой край орбиты, и близкая звезда смещается на фоне далёких на угол p. Чем меньше угол, тем дальше звезда.</figcaption></figure>
 <p>Удивительно, что из почти неуловимого уголка получается расстояние в десятки триллионов километров. Как — в следующем разделе.</p>
 <div class="footnote">
 <hr />
@@ -273,7 +273,7 @@ $$</p>
 <script defer src="/assets/site-bar/bot.js?v=854ccec9"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Как измерить расстояние до звезды, не отправив к ней ничего?", "Как из крошечного угла рождается огромное расстояние?", null];
 
 (function(){

@@ -36,6 +36,7 @@ def _assets_version(*paths):
             pass
     return h.hexdigest()[:8]
 
+FIGURES_V = ""      # версия схем, задаётся в main() после их сборки
 MD_EXT = ["extra", "sane_lists"]
 LEVEL_ROLE = {"Кратко": "a", "Как это работает": "b", "Глубже": "c"}
 
@@ -110,6 +111,10 @@ def md_levels(text, all_defs=None):
     html = md(_typo(text))
     # картинка-врезка → <figure> с подписью
     html = re.sub(r"<p>\s*<img[^>]*>\s*</p>", _fig_wrap, html)
+    # Версия к схемам: без неё перерисованная схема не доедет до тех, у кого
+    # прежняя уже лежит в кэше браузера по тому же адресу.
+    if FIGURES_V:
+        html = re.sub(r'(src="/assets/figures/[^"]+\.svg)"', rf'\1?v={FIGURES_V}"', html)
     # одиночная жирная строка = подзаголовок
     html = re.sub(r"<p><strong>([^<]{1,80}?)</strong></p>", r"<h3>\1</h3>", html)
     return re.sub(r"<p>(.*?)</p>", repl, html, flags=re.S)
@@ -532,7 +537,12 @@ def _md_to_typst(text, base_fndefs=None):
 def build_pdf(out_dir, slug, role, label, title, body_md, tags, url, icon=None, base_fndefs=None):
     """Сгенерировать красивый PDF уровня через Typst. Возвращает имя файла или None."""
     if icon:
-        mastimg = 'image("/site/%s", width: 7cm)' % icon
+        # Typst не читает WebP, а заставки на сайте именно в нём — для печати
+        # подкладываем PNG-копию того же кадра.
+        pdf_copy = os.path.join("content", "figures", "covers-pdf",
+                                os.path.basename(icon).rsplit(".", 1)[0] + ".png")
+        src = "/" + pdf_copy if os.path.exists(os.path.join(ROOT, pdf_copy)) else "/site/" + icon
+        mastimg = 'image("%s", width: 7cm)' % src
     else:
         mastimg = 'image("/site/assets/glyphs/mountains.png", width: 2.4cm)'
     deck, rest = _split_deck(body_md)
@@ -590,6 +600,11 @@ def build_figures():
 def build():
     os.makedirs(CACHE, exist_ok=True)
     build_figures()
+    # версию считаем ПОСЛЕ сборки схем: она должна отражать их новое содержимое
+    global FIGURES_V
+    fig_dir = os.path.join(OUT, "assets", "figures")
+    FIGURES_V = _assets_version(*sorted(
+        os.path.join(fig_dir, f) for f in os.listdir(fig_dir) if f.endswith(".svg")))
     site = load_yaml(os.path.join(CONTENT, "site.yaml"))
     # URL сайта — из переменной окружения (генератор подставляет), затем site.yaml, затем дефолт
     site["url"] = os.environ.get("TROPA_URL") or site.get("url") or "tropa.fmin.xyz"
@@ -601,7 +616,7 @@ def build():
     env.globals["icons_v"] = _assets_version(
         *sorted(os.path.join(OUT, "assets", "icons", f)
                 for f in os.listdir(os.path.join(OUT, "assets", "icons"))
-                if f.endswith((".svg", ".png"))))
+                if f.endswith((".svg", ".png", ".webp", ".jpg"))))
     env.globals["asset_v"] = _assets_version(
         os.path.join(SITE_ASSETS, "bot.js"), os.path.join(SITE_ASSETS, "bot.css"),
         os.path.join(OUT, "assets", "tokens.css"), os.path.join(OUT, "assets", "reveal.js"),

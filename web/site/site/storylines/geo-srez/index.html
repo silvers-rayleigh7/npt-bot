@@ -145,7 +145,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
 
 <div class="w">
   <div class="sg-hero">
-    <img class="sg-icon" src="/assets/icons/geo-srez.webp?v=d41d8cd9" alt="" width="440" height="200">
+    <img class="sg-icon" src="/assets/icons/geo-srez.webp?v=be16bd2d" alt="" width="440" height="200">
     
     <div class="sg-kicker">Научная тропа Иннополиса</div>
     <h1>Геологический срез</h1>
@@ -162,11 +162,11 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Цветные полосы на этой колонке — не раскраска. Каждая из них — отпечаток времени, когда над этой землёй было что-то совсем другое: то море, то берег, то ледник.</p>
-<figure class="fig"><img src="/assets/figures/geo-srez-1.svg" alt="Колонка слоёв: что осело раньше — ниже, что позже — выше. Цвет и состав каждого слоя выдают среду, в которой он лёг."><figcaption>Колонка слоёв: что осело раньше — ниже, что позже — выше. Цвет и состав каждого слоя выдают среду, в которой он лёг.</figcaption></figure>
+<figure class="fig"><img src="/assets/figures/geo-srez-1.svg?v=8c63325a" alt="Колонка слоёв: что осело раньше — ниже, что позже — выше. Цвет и состав каждого слоя выдают среду, в которой он лёг."><figcaption>Колонка слоёв: что осело раньше — ниже, что позже — выше. Цвет и состав каждого слоя выдают среду, в которой он лёг.</figcaption></figure>
 <p>Посмотри на колонку снизу вверх. Внизу лежит то, что осело раньше, сверху — то, что легло позже. Так устроен любой осадок: снег на земле, ил на дне озера — что упало первым, окажется в самом низу (если ничто не потревожит). Этот простой порядок — главный инструмент геолога: разрез читается как лента времени, снизу вверх.</p>
 <h3>Цвет слоя — подпись эпохи</h3>
 <p>Материал каждого слоя — подпись среды, в которой он родился. Известняк внизу сложён из раковин и скелетов морских существ: значит, здесь было мелководное море. Выше — грубые, песчанистые отложения: море отступало, появлялся берег. Ещё выше — рыхлые породы, что принесли ледники, реки и ветер. А тонкий тёмный слой наверху — современная почва, самый молодой участок разреза. Среда диктует осадок, осадок диктует цвет и зернистость — поэтому по виду слоя читается обстановка, в которой он лёг.</p>
@@ -274,7 +274,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
 <script defer src="/assets/site-bar/bot.js?v=854ccec9"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Где здесь миллион лет?", "Сколько лет умещается в одном метре?", null];
 
 (function(){

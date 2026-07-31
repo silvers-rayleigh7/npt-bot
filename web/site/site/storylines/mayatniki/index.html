@@ -145,7 +145,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
 
 <div class="w">
   <div class="sg-hero">
-    <img class="sg-icon" src="/assets/icons/mayatniki.webp?v=d41d8cd9" alt="" width="440" height="200">
+    <img class="sg-icon" src="/assets/icons/mayatniki.webp?v=be16bd2d" alt="" width="440" height="200">
     
     <div class="sg-kicker">Научная тропа Иннополиса</div>
     <h1>Маятниковая роща</h1>
@@ -162,10 +162,10 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
-  <div class="body lvl" data-i="0" style=""><figure class="fig"><img src="/assets/figures/mayatniki-1.svg" alt="Период маятника задаёт длина, не масса: вчетверо длиннее — вдвое медленнее."><figcaption>Период маятника задаёт длина, не масса: вчетверо длиннее — вдвое медленнее.</figcaption></figure>
+  <div class="body lvl" data-i="0" style=""><figure class="fig"><img src="/assets/figures/mayatniki-1.svg?v=8c63325a" alt="Период маятника задаёт длина, не масса: вчетверо длиннее — вдвое медленнее."><figcaption>Период маятника задаёт длина, не масса: вчетверо длиннее — вдвое медленнее.</figcaption></figure>
 <p>Перед тобой две пары маятников — попробуй их раскачать. Кажется, что массивный груз разгоняется лениво и должен отставать. Проверь.</p>
 <p>Левая пара: нити одинаковой длины, но один шар тяжелее другого в 2,5 раза. Отведи оба на один угол и отпусти вместе — они идут в один ритм, почти не расходясь. Масса на темп качания не влияет.</p>
 <p>Правая пара: шары одинаковые, нити различаются в четыре раза, 25 сантиметров и 1 метр. Здесь разница сразу видна: короткий маятник частит, длинный ленится. Но вот что неожиданно — длину увеличили вчетверо, а период вырос лишь вдвое. Время одного качания растёт как квадратный корень из длины.</p></div>
@@ -303,7 +303,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
 <script defer src="/assets/site-bar/bot.js?v=854ccec9"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Тяжёлый шар качается медленнее лёгкого?", "Почему масса не в счёт, а длина решает всё?", "Что общего у маятника, груза на пружине и тока в радиоприёмнике?"];
 
 (function(){

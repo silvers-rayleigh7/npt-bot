@@ -145,7 +145,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
 
 <div class="w">
   <div class="sg-hero">
-    <img class="sg-icon" src="/assets/icons/fraktalnaya-ramka.webp?v=d41d8cd9" alt="" width="440" height="200">
+    <img class="sg-icon" src="/assets/icons/fraktalnaya-ramka.webp?v=be16bd2d" alt="" width="440" height="200">
     
     <div class="sg-kicker">Научная тропа Иннополиса</div>
     <h1>Фрактальная рамка</h1>
@@ -162,11 +162,11 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
   
   <div class="tabs">
     <button class="tab active" data-i="0">Кратко</button><button class="tab " data-i="1">Как это работает</button><button class="tab " data-i="2">Глубже</button>
-    
+    <a class="tab-pdf" id="pdf-link" href="a.pdf"><i data-lucide="download"></i> PDF</a>
   </div>
   
   <div class="body lvl" data-i="0" style=""><p>Посмотри через рамку на склон. Маленькая промоина сбоку по форме похожа на большую ветвь балки — только уменьшенную. Убери мысленно траву, кусты и крыши вдалеке, оставь один контур — и ответ будет «нет»: по одной форме уже не понять, метровая это промоина или стометровая балка. Масштаба у формы нет.</p>
-<figure class="fig"><img src="/assets/figures/fraktalnaya-ramka-2.svg" alt="Малый отвершек, если его увеличить, по форме не отличить от всей балки: ветвящийся узор повторяется на всех масштабах."><figcaption>Малый отвершек, если его увеличить, по форме не отличить от всей балки: ветвящийся узор повторяется на всех масштабах.</figcaption></figure>
+<figure class="fig"><img src="/assets/figures/fraktalnaya-ramka-2.svg?v=8c63325a" alt="Малый отвершек, если его увеличить, по форме не отличить от всей балки: ветвящийся узор повторяется на всех масштабах."><figcaption>Малый отвершек, если его увеличить, по форме не отличить от всей балки: ветвящийся узор повторяется на всех масштабах.</figcaption></figure>
 <p>Сетка на рамке как раз и ловит эту похожесть. Крупная ячейка накрывает большие ветви рельефа, мелкая — маленькие отвершки, а контуры в обоих случаях выходят узнаваемо одинаковыми. И вот осязаемое число прямо у рамки: уменьши ячейку вдвое — задетых контуром клеток станет почти втрое больше. Не вдвое, как было бы у простой линии, и не вчетверо, как у закрашенного пятна. Форма живёт где-то посередине между линией и плоскостью.</p>
 <h3>Откуда берётся это сходство</h3>
 <p>Любой овраг начинается одинаково. Струйка воды находит понижение, промывает в нём русло, русло собирает следующие струйки, углубляется и ветвится. Тот же самый процесс, но в сто раз крупнее, создаёт большую балку. Когда один механизм работает и на сантиметрах, и на сотнях метров, форма получается похожей на всех масштабах. Это свойство называют самоподобием<sup id="fnref:samo"><a class="footnote-ref" href="#fn:samo">1</a></sup>: овраги наследуют форму у того процесса, которым сделаны.</p>
@@ -182,7 +182,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
 </ol>
 </div></div>
   
-  <div class="body lvl" data-i="1" style="display:none"><figure class="fig"><img src="/assets/figures/fraktalnaya-ramka-1.svg" alt="Box-counting: накрываем контур сеткой и считаем задетые клетки. Мельче сетка — больше клеток; наклон лог-лог-прямой даёт размерность D."><figcaption>Box-counting: накрываем контур сеткой и считаем задетые клетки. Мельче сетка — больше клеток; наклон лог-лог-прямой даёт размерность D.</figcaption></figure>
+  <div class="body lvl" data-i="1" style="display:none"><figure class="fig"><img src="/assets/figures/fraktalnaya-ramka-1.svg?v=8c63325a" alt="Box-counting: накрываем контур сеткой и считаем задетые клетки. Мельче сетка — больше клеток; наклон лог-лог-прямой даёт размерность D."><figcaption>Box-counting: накрываем контур сеткой и считаем задетые клетки. Мельче сетка — больше клеток; наклон лог-лог-прямой даёт размерность D.</figcaption></figure>
 <p>Та сетка на рамке перед тобой — это и есть прибор. Накрываешь контур оврага клетками и считаешь, сколько клеток он задевает. Берёшь сетку мельче — число задетых клеток растёт. Весь вопрос в том, насколько быстро оно растёт. Обозначим размер клетки $\varepsilon$, а число задетых клеток — $N(\varepsilon)$. Связь между ними оказывается степенной:</p>
 <p>$$ N(\varepsilon) \sim \varepsilon^{-D}, \qquad D = \lim_{\varepsilon \to 0} \frac{\ln N(\varepsilon)}{\ln (1/\varepsilon)} $$</p>
 <p>Показатель $D$ и называют фрактальной размерностью<sup id="fnref:razm"><a class="footnote-ref" href="#fn:razm">1</a></sup> — это попросту наклон прямой, если отложить $\ln N$ против $\ln(1/\varepsilon)$. У ровной гладкой линии $D = 1$: измельчили клетку вдвое — задетых стало вдвое больше. У закрашенного пятна $D = 2$: вдвое мельче клетка — вчетверо больше клеток. Овражный контур попадает между ними.</p>
@@ -263,7 +263,7 @@ a{color:var(--accent-600);text-decoration:none}a:hover{text-decoration:underline
 <script defer src="/assets/site-bar/bot.js?v=854ccec9"></script>
 
 <script>
-var TROPA_PDFS = [null, null, null];
+var TROPA_PDFS = ["a.pdf", "b.pdf", "c.pdf"];
 var TROPA_DECKS = ["Можно ли по форме отличить метровую промоину от стометровой балки?", "Как сосчитать форму, у которой нет «правильного» масштаба", null];
 
 (function(){
